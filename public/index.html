@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NetWorth | Sign in</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages.css" />
+  </head>
+  <body>
+    <div class="auth-shell">
+      <div class="auth-card">
+        <div>
+          <div class="chip">NetWorth</div>
+          <h1 id="auth-title" class="auth-title">Welcome back</h1>
+          <p class="auth-hint">
+            Track your assets, liabilities and spending with a clean, private dashboard.
+          </p>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <div class="field">
+            <label for="auth-email">Email</label>
+            <input id="auth-email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="auth-password">Password</label>
+            <input
+              id="auth-password"
+              type="password"
+              autocomplete="current-password"
+              required
+              minlength="6"
+            />
+          </div>
+          <div id="auth-error" class="banner-error" style="display:none"></div>
+          <div class="auth-actions">
+            <div class="auth-hint">
+              <span id="auth-switch-text">New here?</span>
+              <button type="button" id="auth-switch-btn">Create an account</button>
+            </div>
+            <button id="auth-submit" type="submit" class="btn btn-primary auth-submit">
+              Sign in
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>
+
+

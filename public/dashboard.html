@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NetWorth | Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="desktop-sidebar">
+        <div class="chip">NetWorth</div>
+        <div class="desktop-sidebar-nav">
+          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span>Dashboard</a>
+          <a href="/transactions.html" data-nav-link><span class="icon">📄</span>Transactions</a>
+          <a href="/assets.html" data-nav-link><span class="icon">💼</span>Assets</a>
+          <a href="/analysis.html" data-nav-link><span class="icon">📊</span>Analysis</a>
+          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span>Settings</a>
+        </div>
+      </aside>
+      <main class="app-main">
+        <header class="app-header">
+          <div>
+            <div class="app-title">Dashboard</div>
+            <div class="app-subtitle">Your net worth at a glance</div>
+          </div>
+          <button id="logout-btn" class="btn btn-outline" type="button">Logout</button>
+        </header>
+
+        <section class="grid-cards">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Net worth</div>
+              <span class="chip">Today</span>
+            </div>
+            <div id="summary-networth" class="card-value">$0.00</div>
+          </article>
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Total assets</div>
+            </div>
+            <div id="summary-assets" class="card-value">$0.00</div>
+          </article>
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Total liabilities</div>
+            </div>
+            <div id="summary-liabilities" class="card-value">$0.00</div>
+          </article>
+        </section>
+
+        <section class="grid-two">
+          <article class="card" style="min-height: 260px">
+            <div class="card-header">
+              <div class="card-title">Net worth over time</div>
+            </div>
+            <div style="position: relative; height: 210px">
+              <canvas id="networth-chart"></canvas>
+            </div>
+          </article>
+
+          <article class="card" style="min-height: 260px">
+            <div class="card-header">
+              <div class="card-title">Income vs expenses (this year)</div>
+            </div>
+            <div style="position: relative; height: 210px">
+              <canvas id="income-expense-chart"></canvas>
+            </div>
+          </article>
+        </section>
+
+        <section style="margin-top: 1.1rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Recent transactions</div>
+            </div>
+            <div class="transactions-list">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-transactions-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="/dashboard.html" data-nav-link>
+          <span class="bottom-nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="/transactions.html" data-nav-link>
+          <span class="bottom-nav-icon">📄</span>
+          <span>Transactions</span>
+        </a>
+        <a href="/assets.html" data-nav-link>
+          <span class="bottom-nav-icon">💼</span>
+          <span>Assets</span>
+        </a>
+        <a href="/analysis.html" data-nav-link>
+          <span class="bottom-nav-icon">📊</span>
+          <span>Analysis</span>
+        </a>
+        <a href="/settings.html" data-nav-link>
+          <span class="bottom-nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/dashboard.js"></script>
+    <script>
+      document.getElementById("logout-btn").addEventListener("click", async () => {
+        try {
+          await apiRequest("/api/auth/logout", { method: "POST" });
+          window.location.href = "/index.html";
+        } catch (e) {
+          window.location.href = "/index.html";
+        }
+      });
+    </script>
+  </body>
+</html>
+
+

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NetWorth | Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="desktop-sidebar">
+        <div class="chip">NetWorth</div>
+        <div class="desktop-sidebar-nav">
+          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span>Dashboard</a>
+          <a href="/transactions.html" data-nav-link><span class="icon">📄</span>Transactions</a>
+          <a href="/assets.html" data-nav-link><span class="icon">💼</span>Assets</a>
+          <a href="/analysis.html" data-nav-link><span class="icon">📊</span>Analysis</a>
+          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span>Settings</a>
+        </div>
+      </aside>
+      <main class="app-main">
+        <header class="app-header">
+          <div>
+            <div class="app-title">Settings</div>
+            <div class="app-subtitle">Manage your profile and security</div>
+          </div>
+          <button id="logout-btn" class="btn btn-outline" type="button">Logout</button>
+        </header>
+
+        <section style="margin-top:0.6rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Account</div>
+            </div>
+            <div id="settings-user" class="page-description">Loading...</div>
+          </article>
+        </section>
+
+        <section style="margin-top:0.9rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Change password</div>
+            </div>
+            <form id="password-form" class="auth-form">
+              <div class="field">
+                <label for="pwd-current">Current password</label>
+                <input id="pwd-current" type="password" required />
+              </div>
+              <div class="field">
+                <label for="pwd-new">New password</label>
+                <input id="pwd-new" type="password" minlength="6" required />
+              </div>
+              <div id="pwd-message" class="banner-success" style="display:none"></div>
+              <div id="pwd-error" class="banner-error" style="display:none"></div>
+              <div style="margin-top:0.4rem; display:flex; justify-content:flex-end">
+                <button type="submit" class="btn btn-primary">Update password</button>
+              </div>
+            </form>
+          </article>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="/dashboard.html" data-nav-link>
+          <span class="bottom-nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="/transactions.html" data-nav-link>
+          <span class="bottom-nav-icon">📄</span>
+          <span>Transactions</span>
+        </a>
+        <a href="/assets.html" data-nav-link>
+          <span class="bottom-nav-icon">💼</span>
+          <span>Assets</span>
+        </a>
+        <a href="/analysis.html" data-nav-link>
+          <span class="bottom-nav-icon">📊</span>
+          <span>Analysis</span>
+        </a>
+        <a href="/settings.html" data-nav-link>
+          <span class="bottom-nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/settings.js"></script>
+    <script>
+      document.getElementById("logout-btn").addEventListener("click", async () => {
+        try {
+          await apiRequest("/api/auth/logout", { method: "POST" });
+        } finally {
+          window.location.href = "/index.html";
+        }
+      });
+    </script>
+  </body>
+</html>
+
+

@@ -1,0 +1,80 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "badhrinarayanan79@gmail.com",
+      "passwordHash": "$2a$10$Vd4GlEVG.WATWYIh9zaUXu043mR2UJpLLaR8aIPiuDROvvNRhnxqe",
+      "createdAt": "2025-12-04T13:21:34.300Z"
+    }
+  ],
+  "categories": [],
+  "subcategories": [],
+  "transactions": [],
+  "assets": [
+    {
+      "id": 1,
+      "name": "In hand",
+      "type": "CASH",
+      "value": 2093,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:25:49.735Z"
+    },
+    {
+      "id": 2,
+      "name": "From Akka",
+      "type": "OTHER",
+      "value": 3479,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:26:36.872Z"
+    },
+    {
+      "id": 3,
+      "name": "Amma Bank",
+      "type": "BANK",
+      "value": 4000,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:26:52.673Z"
+    },
+    {
+      "id": 4,
+      "name": "Nuts",
+      "type": "OTHER",
+      "value": 1350,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:27:05.108Z"
+    },
+    {
+      "id": 5,
+      "name": "IOB Acc",
+      "type": "BANK",
+      "value": 1148,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:27:24.116Z"
+    },
+    {
+      "id": 6,
+      "name": "KVB Acc",
+      "type": "BANK",
+      "value": 301.9,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:27:39.139Z"
+    },
+    {
+      "id": 7,
+      "name": "Fixed Deposite",
+      "type": "INVESTMENT",
+      "value": 328261,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:28:01.580Z"
+    },
+    {
+      "id": 8,
+      "name": "From Kiruba",
+      "type": "CRYPTO",
+      "value": 9732,
+      "userId": 1,
+      "updatedAt": "2025-12-04T13:28:16.418Z"
+    }
+  ],
+  "liabilities": []
+}

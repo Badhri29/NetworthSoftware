@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NetWorth | Transactions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="desktop-sidebar">
+        <div class="chip">NetWorth</div>
+        <div class="desktop-sidebar-nav">
+          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span>Dashboard</a>
+          <a href="/transactions.html" data-nav-link><span class="icon">📄</span>Transactions</a>
+          <a href="/assets.html" data-nav-link><span class="icon">💼</span>Assets</a>
+          <a href="/analysis.html" data-nav-link><span class="icon">📊</span>Analysis</a>
+          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span>Settings</a>
+        </div>
+      </aside>
+      <main class="app-main">
+        <header class="app-header">
+          <div>
+            <div class="app-title">Transactions</div>
+            <div class="app-subtitle">Search, filter and manage your cashflow</div>
+          </div>
+          <button id="add-tx-btn" class="btn btn-primary" type="button">Add</button>
+        </header>
+
+        <section>
+          <div class="transactions-filters">
+            <div class="field">
+              <label for="filter-start">From</label>
+              <input id="filter-start" type="date" />
+            </div>
+            <div class="field">
+              <label for="filter-end">To</label>
+              <input id="filter-end" type="date" />
+            </div>
+            <div class="field">
+              <label for="filter-type">Type</label>
+              <select id="filter-type">
+                <option value="">All</option>
+                <option value="INCOME">Income</option>
+                <option value="EXPENSE">Expense</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="filter-category">Category</label>
+              <select id="filter-category">
+                <option value="">All</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="filter-search">Search</label>
+              <input
+                id="filter-search"
+                type="text"
+                placeholder="Description contains..."
+              />
+            </div>
+          </div>
+          <div class="transactions-actions">
+            <span class="page-description" id="tx-count"></span>
+            <button id="apply-filters-btn" class="btn btn-outline" type="button">
+              Apply filters
+            </button>
+          </div>
+        </section>
+
+        <section style="margin-top: 0.8rem">
+          <article class="card">
+            <div class="transactions-list">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Subcategory</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="transactions-body"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section style="margin-top: 0.8rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Add / Edit transaction</div>
+            </div>
+            <form id="tx-form" class="auth-form">
+              <input type="hidden" id="tx-id" />
+              <div class="field">
+                <label for="tx-date">Date</label>
+                <input id="tx-date" type="date" required />
+              </div>
+              <div class="field">
+                <label for="tx-type">Type</label>
+                <select id="tx-type" required>
+                  <option value="INCOME">Income</option>
+                  <option value="EXPENSE">Expense</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="tx-amount">Amount</label>
+                <input id="tx-amount" type="number" step="0.01" required />
+              </div>
+              <div class="field">
+                <label for="tx-category">Category</label>
+                <select id="tx-category" required></select>
+              </div>
+              <div class="field">
+                <label for="tx-subcategory">Subcategory</label>
+                <select id="tx-subcategory">
+                  <option value="">None</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="tx-description">Description</label>
+                <textarea id="tx-description" placeholder="Optional note"></textarea>
+              </div>
+              <div id="tx-error" class="banner-error" style="display:none"></div>
+              <div style="margin-top: 0.4rem; display:flex; gap:0.5rem; justify-content:flex-end">
+                <button type="button" id="tx-reset-btn" class="btn btn-outline">
+                  Clear
+                </button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </article>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="/dashboard.html" data-nav-link>
+          <span class="bottom-nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="/transactions.html" data-nav-link>
+          <span class="bottom-nav-icon">📄</span>
+          <span>Transactions</span>
+        </a>
+        <a href="/assets.html" data-nav-link>
+          <span class="bottom-nav-icon">💼</span>
+          <span>Assets</span>
+        </a>
+        <a href="/analysis.html" data-nav-link>
+          <span class="bottom-nav-icon">📊</span>
+          <span>Analysis</span>
+        </a>
+        <a href="/settings.html" data-nav-link>
+          <span class="bottom-nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/transactions.js"></script>
+  </body>
+</html>
+
+

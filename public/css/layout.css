@@ -1,0 +1,153 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1rem 4.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.25rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.app-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.app-subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.desktop-sidebar {
+  display: none;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.98);
+  border-top: 1px solid var(--color-border);
+  backdrop-filter: blur(18px);
+  display: flex;
+  justify-content: space-around;
+  padding: 0.3rem 0.75rem 0.65rem;
+  z-index: 40;
+}
+
+.bottom-nav a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  padding: 0.35rem 0.25rem;
+  border-radius: 999px;
+}
+
+.bottom-nav a.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.bottom-nav-icon {
+  font-size: 1.1rem;
+}
+
+.grid-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+.grid-two {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 481px) {
+  .app-main {
+    padding: 1.2rem 1.5rem 4.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .app-shell {
+    flex-direction: row;
+  }
+
+  .desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 230px;
+    padding: 1.5rem 1rem;
+    border-right: 1px solid var(--color-border);
+    background: radial-gradient(circle at top left, #020617 0, #020617 40%, #000 100%);
+  }
+
+  .desktop-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 1.25rem;
+  }
+
+  .desktop-sidebar-nav a {
+    padding: 0.55rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .desktop-sidebar-nav a span.icon {
+    font-size: 1rem;
+  }
+
+  .desktop-sidebar-nav a.active {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+
+  .app-main {
+    padding: 1.5rem 2rem 2rem;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .grid-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid-two {
+    grid-template-columns: 2fr 2fr;
+  }
+}
+
+

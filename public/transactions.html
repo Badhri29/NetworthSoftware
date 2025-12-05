@@ -114,8 +114,15 @@
                 <input id="tx-amount" type="number" step="0.01" required />
               </div>
               <div class="field">
-                <label for="tx-category">Category</label>
-                <select id="tx-category" required></select>
+                <label for="transaction-category">Category</label>
+                <select id="transaction-category" name="category" required>
+                  <option value="">Select category</option>
+                  <option value="INCOME">Income</option>
+                  <option value="EXPENSE">Expense</option>
+                  <option value="TRANSFER">Transfer</option>
+                  <option value="INVESTMENT">Investment</option>
+                  <option value="OTHER">Other</option>
+                </select>
               </div>
               <div class="field">
                 <label for="tx-subcategory">Subcategory</label>

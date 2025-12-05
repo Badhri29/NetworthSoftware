@@ -1,4 +1,73 @@
-<!doctype html>
+// ...existing code...
+        <header class="app-header">
+          <div>
+            <div class="app-title">Assets & Liabilities</div>
+            <div class="app-subtitle">Maintain balances and compute net worth</div>
+          </div>
++         <div style="margin-left:auto; display:flex; align-items:center; gap:0.5rem;">
++           <button id="open-profile-btn" class="btn btn-outline" title="Edit profile">Profile</button>
++         </div>
+        </header>
+ // ...existing code...
++      <!-- Profile modal -->
++      <div id="profile-modal" class="modal" style="display:none;">
++        <div class="modal-backdrop" id="profile-backdrop"></div>
++        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="profile-title">
++          <header class="modal-header">
++            <h2 id="profile-title">Edit Profile</h2>
++            <button id="close-profile-btn" class="btn btn-ghost" aria-label="Close">✕</button>
++          </header>
++          <form id="profile-form" class="auth-form" style="padding:1rem; max-width:480px;">
++            <div class="field">
++              <label for="profile-name">Name</label>
++              <input id="profile-name" name="name" type="text" required />
++            </div>
++            <div class="field" style="display:flex; gap:0.5rem;">
++              <div style="flex:1">
++                <label for="profile-age">Age</label>
++                <input id="profile-age" name="age" type="number" min="0" />
++              </div>
++              <div style="flex:1">
++                <label for="profile-gender">Gender</label>
++                <select id="profile-gender" name="gender">
++                  <option value="">—</option>
++                  <option value="male">Male</option>
++                  <option value="female">Female</option>
++                  <option value="other">Other</option>
++                </select>
++              </div>
++            </div>
++            <div class="field">
++              <label for="profile-phone">Phone</label>
++              <input id="profile-phone" name="phone" type="tel" />
++            </div>
++            <div class="field">
++              <label for="profile-email">Email</label>
++              <input id="profile-email" name="email" type="email" />
++            </div>
++            <div class="field">
++              <label for="profile-password">Password</label>
++              <input id="profile-password" name="password" type="password" />
++            </div>
++            <div class="field">
++              <label for="profile-photo">Profile photo</label>
++              <input id="profile-photo" name="photo" type="file" accept="image/*" />
++              <div id="profile-photo-preview" style="margin-top:0.5rem;"></div>
++            </div>
++            <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
++              <button type="button" id="profile-cancel" class="btn btn-outline">Cancel</button>
++              <button type="submit" class="btn btn-primary">Save</button>
++            </div>
++          </form>
++        </div>
++      </div>
+ // ...existing code...
+    <script src="/js/api.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/assets.js"></script>
++   <script src="/js/profile.js"></script>
+   </body>
+ </html><!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />

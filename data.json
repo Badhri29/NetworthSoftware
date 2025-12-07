@@ -3,8 +3,12 @@
     {
       "id": 1,
       "email": "badhrinarayanan79@gmail.com",
-      "passwordHash": "$2a$10$Vd4GlEVG.WATWYIh9zaUXu043mR2UJpLLaR8aIPiuDROvvNRhnxqe",
-      "createdAt": "2025-12-04T13:21:34.300Z"
+      "passwordHash": "$2a$10$az4XIRcNn7F.Gxm9Cb5PY.QKrRkvAsyKKmHBMAAa3oIq0P8M0kUh6",
+      "createdAt": "2025-12-04T13:21:34.300Z",
+      "name": "Badhri",
+      "age": 26,
+      "gender": "male",
+      "phone": "8110064611"
     }
   ],
   "categories": [],

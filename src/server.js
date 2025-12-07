@@ -17,8 +17,9 @@ const profileRoutes = require("./routes/profile");
 const app = express();
 
 app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Increase body parser limits to allow image uploads as base64 in JSON (up to ~25MB)
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(attachUserIfPresent);

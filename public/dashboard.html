@@ -13,12 +13,15 @@
     <div class="app-shell">
       <aside class="desktop-sidebar">
         <div class="chip">NetWorth</div>
+          <!-- sidebar avatar removed per request -->
         <div class="desktop-sidebar-nav">
           <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span>Dashboard</a>
           <a href="/transactions.html" data-nav-link><span class="icon">📄</span>Transactions</a>
           <a href="/assets.html" data-nav-link><span class="icon">💼</span>Assets</a>
           <a href="/analysis.html" data-nav-link><span class="icon">📊</span>Analysis</a>
           <a href="/settings.html" data-nav-link><span class="icon">⚙️</span>Settings</a>
+          <a href="/edit-profile.html" data-nav-link><span class="icon">👤</span>Profile</a>
+          <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">🔴</span>Logout</a>
         </div>
       </aside>
       <main class="app-main">
@@ -27,7 +30,10 @@
             <div class="app-title">Dashboard</div>
             <div class="app-subtitle">Your net worth at a glance</div>
           </div>
-          <button id="logout-btn" class="btn btn-outline" type="button">Logout</button>
+          <div style="margin-left:auto; display:flex; align-items:center; gap:0.6rem;">
+            <img id="header-avatar" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:none" />
+            <span id="header-username" style="font-weight:600; color:var(--muted); display:none"></span>
+          </div>
         </header>
 
         <section class="grid-cards">
@@ -115,6 +121,14 @@
           <span class="bottom-nav-icon">⚙️</span>
           <span>Settings</span>
         </a>
+        <a href="/edit-profile.html" data-nav-link>
+          <span class="bottom-nav-icon">👤</span>
+          <span>Profile</span>
+        </a>
+        <a href="#" class="bottom-logout logout-link" style="display:flex; align-items:center; gap:0.4rem; justify-content:center;">
+          <span class="bottom-nav-icon">🔴</span>
+          <span style="color:#c62828; font-weight:600">Logout</span>
+        </a>
       </nav>
     </div>
 
@@ -122,16 +136,7 @@
     <script src="/js/api.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/dashboard.js"></script>
-    <script>
-      document.getElementById("logout-btn").addEventListener("click", async () => {
-        try {
-          await apiRequest("/api/auth/logout", { method: "POST" });
-          window.location.href = "/index.html";
-        } catch (e) {
-          window.location.href = "/index.html";
-        }
-      });
-    </script>
+    
   </body>
 </html>
 

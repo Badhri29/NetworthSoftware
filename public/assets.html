@@ -13,12 +13,15 @@
     <div class="app-shell">
       <aside class="desktop-sidebar">
         <div class="chip">NetWorth</div>
+        <!-- sidebar avatar removed per request -->
         <div class="desktop-sidebar-nav">
           <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span>Dashboard</a>
           <a href="/transactions.html" data-nav-link><span class="icon">📄</span>Transactions</a>
           <a href="/assets.html" data-nav-link><span class="icon">💼</span>Assets</a>
           <a href="/analysis.html" data-nav-link><span class="icon">📊</span>Analysis</a>
           <a href="/settings.html" data-nav-link><span class="icon">⚙️</span>Settings</a>
+          <a href="/edit-profile.html" data-nav-link><span class="icon">👤</span>Profile</a>
+          <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">🔴</span>Logout</a>
         </div>
       </aside>
       <main class="app-main">
@@ -27,8 +30,9 @@
             <div class="app-title">Assets & Liabilities</div>
             <div class="app-subtitle">Maintain balances and compute net worth</div>
           </div>
-          <div style="margin-left:auto; display:flex; align-items:center; gap:0.5rem;">
-            <button id="open-profile-btn" class="btn btn-outline" title="Edit profile">Profile</button>
+          <div style="margin-left:auto; display:flex; align-items:center; gap:0.6rem;">
+            <img id="header-avatar" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:none" />
+            <span id="header-username" style="font-weight:600; color:var(--muted); display:none"></span>
           </div>
         </header>
 
@@ -170,66 +174,16 @@
           <span class="bottom-nav-icon">⚙️</span>
           <span>Settings</span>
         </a>
+        <a href="#" class="bottom-logout logout-link" style="display:flex; align-items:center; gap:0.4rem; justify-content:center;">
+          <span class="bottom-nav-icon">🔴</span>
+          <span style="color:#c62828; font-weight:600">Logout</span>
+        </a>
       </nav>
-    </div>
-
-    <!-- Profile modal -->
-    <div id="profile-modal" class="modal" style="display:none;">
-      <div class="modal-backdrop" id="profile-backdrop"></div>
-      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="profile-title">
-        <header class="modal-header">
-          <h2 id="profile-title">Edit Profile</h2>
-          <button id="close-profile-btn" class="btn btn-ghost" aria-label="Close">✕</button>
-        </header>
-        <form id="profile-form" class="auth-form" style="padding:1rem; max-width:480px;">
-          <div class="field">
-            <label for="profile-name">Name</label>
-            <input id="profile-name" name="name" type="text" required />
-          </div>
-          <div class="field" style="display:flex; gap:0.5rem;">
-            <div style="flex:1">
-              <label for="profile-age">Age</label>
-              <input id="profile-age" name="age" type="number" min="0" />
-            </div>
-            <div style="flex:1">
-              <label for="profile-gender">Gender</label>
-              <select id="profile-gender" name="gender">
-                <option value="">—</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="profile-phone">Phone</label>
-            <input id="profile-phone" name="phone" type="tel" />
-          </div>
-          <div class="field">
-            <label for="profile-email">Email</label>
-            <input id="profile-email" name="email" type="email" />
-          </div>
-          <div class="field">
-            <label for="profile-password">Password</label>
-            <input id="profile-password" name="password" type="password" />
-          </div>
-          <div class="field">
-            <label for="profile-photo">Profile photo</label>
-            <input id="profile-photo" name="photo" type="file" accept="image/*" />
-            <div id="profile-photo-preview" style="margin-top:0.5rem;"></div>
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.6rem;">
-            <button type="button" id="profile-cancel" class="btn btn-outline">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save</button>
-          </div>
-        </form>
-      </div>
     </div>
 
     <script src="/js/api.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/assets.js"></script>
-    <script src="/js/profile.js"></script>
   </body>
 </html>
 

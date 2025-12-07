@@ -91,6 +91,26 @@
         <section style="margin-top:0.9rem">
           <article class="card">
             <div class="card-header">
+              <div class="card-title">Appearance</div>
+            </div>
+            <div style="padding:1rem;">
+              <div class="field">
+                <label for="theme-toggle" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer;">
+                  <span>Dark Mode</span>
+                  <label class="theme-switch-wrapper">
+                    <input type="checkbox" id="theme-toggle" class="theme-switch" />
+                    <div class="slider"></div>
+                  </label>
+                </label>
+                <div style="font-size:0.85rem; color:#999; margin-top:0.5rem;">Toggle between light and dark mode</div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section style="margin-top:0.9rem">
+          <article class="card">
+            <div class="card-header">
               <div class="card-title">Change password</div>
             </div>
             <form id="password-form" class="auth-form">
@@ -141,6 +161,7 @@
     </div>
 
     <script src="/js/api.js"></script>
+    <script src="/js/theme.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/settings.js"></script>
     

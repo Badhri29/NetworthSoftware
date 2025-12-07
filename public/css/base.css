@@ -12,6 +12,17 @@
   --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.8);
 }
 
+:root[data-theme="light"] {
+  --color-bg: #f8fafc;
+  --color-bg-elevated: #e2e8f0;
+  --color-primary: #0066cc;
+  --color-primary-soft: rgba(0, 102, 204, 0.12);
+  --color-danger: #dc2626;
+  --color-text: #0f172a;
+  --color-text-muted: #475569;
+  --color-border: #cbd5e1;
+}
+
 *,
 *::before,
 *::after {
@@ -25,6 +36,10 @@ body {
   background: radial-gradient(circle at top, #020617 0, #020617 40%, #000 100%);
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
+}
+
+:root[data-theme="light"] body {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
 }
 
 a {

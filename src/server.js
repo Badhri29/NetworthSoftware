@@ -12,6 +12,7 @@ const categoriesRoutes = require("./routes/categories");
 const transactionsRoutes = require("./routes/transactions");
 const assetsRoutes = require("./routes/assets");
 const dashboardRoutes = require("./routes/dashboard");
+const profileRoutes = require("./routes/profile");
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use("/api", categoriesRoutes);
 app.use("/api/transactions", transactionsRoutes);
 app.use("/api", assetsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api", profileRoutes);
 
 // Fallback to dashboard for authenticated users, else index (login)
 app.get("*", (req, res) => {

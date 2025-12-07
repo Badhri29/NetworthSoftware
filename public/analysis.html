@@ -12,16 +12,18 @@
   <body>
     <div class="app-shell">
       <aside class="desktop-sidebar">
-        <div class="chip">NetWorth</div>
-        <!-- sidebar avatar removed per request -->
+          <!-- sidebar avatar removed per request -->
+        <div class="sidebar-header">
+          <div class="sidebar-menu-text">Menu</div>
+          <button class="sidebar-toggle-btn" id="sidebar-toggle">☰</button>
+        </div>
         <div class="desktop-sidebar-nav">
-          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span>Dashboard</a>
-          <a href="/transactions.html" data-nav-link><span class="icon">📄</span>Transactions</a>
-          <a href="/assets.html" data-nav-link><span class="icon">💼</span>Assets</a>
-          <a href="/analysis.html" data-nav-link><span class="icon">📊</span>Analysis</a>
-          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span>Settings</a>
-          <a href="/edit-profile.html" data-nav-link><span class="icon">👤</span>Profile</a>
-          <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">🔴</span>Logout</a>
+          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span><span class="nav-text">Dashboard</span></a>
+          <a href="/transactions.html" data-nav-link><span class="icon">📄</span><span class="nav-text">Transactions</span></a>
+          <a href="/assets.html" data-nav-link><span class="icon">💼</span><span class="nav-text">Assets</span></a>
+          <a href="/analysis.html" data-nav-link><span class="icon">📊</span><span class="nav-text">Analysis</span></a>
+          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span><span class="nav-text">Settings</span></a>
+          <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">⏻</span><span class="nav-text">Logout</span></a>
         </div>
       </aside>
       <main class="app-main">
@@ -96,12 +98,8 @@
           <span class="bottom-nav-icon">⚙️</span>
           <span>Settings</span>
         </a>
-        <a href="/edit-profile.html" data-nav-link>
-          <span class="bottom-nav-icon">👤</span>
-          <span>Profile</span>
-        </a>
         <a href="#" class="bottom-logout logout-link" style="display:flex; align-items:center; gap:0.4rem; justify-content:center;">
-          <span class="bottom-nav-icon">🔴</span>
+          <span class="bottom-nav-icon">⏻</span>
           <span style="color:#c62828; font-weight:600">Logout</span>
         </a>
       </nav>

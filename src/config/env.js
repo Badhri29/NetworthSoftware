@@ -6,7 +6,7 @@ require("dotenv").config();
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 
 // Use Railway's dynamic port if available, fallback to 3000 locally
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // Use MySQL database URL from environment, no fallback to SQLite
 const DATABASE_URL = process.env.DATABASE_URL;

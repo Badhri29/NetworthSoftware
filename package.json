@@ -4,13 +4,12 @@
   "description": "Personal Net Worth Tracker - Node/Express + SQLite (Prisma) with responsive HTML/CSS/JS frontend",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name init",
-    "prisma:studio": "prisma studio",
-    "postinstall": "npx prisma generate"
-  },
+  "dev": "nodemon src/server.js",
+  "start": "node src/server.js",
+  "postinstall": "npx prisma generate",
+  "prisma:generate": "npx prisma generate",
+  "prisma:migrate:deploy": "npx prisma migrate deploy"
+},
   "keywords": [
     "net-worth",
     "finance",

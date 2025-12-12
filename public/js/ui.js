@@ -67,24 +67,134 @@ function setActiveNav(pathname) {
 
 const DEFAULT_AVATAR_DATAURL = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect fill='%230e1720' width='100%' height='100%'/><g fill='%23ffffff' opacity='0.9'><circle cx='60' cy='40' r='24'/><path d='M30 94c0-17 26-26 30-26s30 9 30 26v6H30v-6z'/></g></svg>";
 
+// Create sidebar backdrop if it doesn't exist
+function createSidebarBackdrop() {
+  let backdrop = document.querySelector(".sidebar-backdrop");
+  if (!backdrop) {
+    backdrop = document.createElement("div");
+    backdrop.className = "sidebar-backdrop";
+    document.body.appendChild(backdrop);
+  }
+  return backdrop;
+}
+
+// Check if we're on mobile view
+function isMobileView() {
+  return window.innerWidth < 1025;
+}
+
+// Close mobile sidebar
+function closeMobileSidebar() {
+  const sidebar = document.querySelector(".desktop-sidebar");
+  const backdrop = document.querySelector(".sidebar-backdrop");
+  if (sidebar) {
+    sidebar.classList.remove("mobile-open");
+  }
+  if (backdrop) {
+    backdrop.classList.remove("active");
+  }
+}
+
+// Open mobile sidebar
+function openMobileSidebar() {
+  const sidebar = document.querySelector(".desktop-sidebar");
+  const backdrop = createSidebarBackdrop();
+  if (sidebar) {
+    sidebar.classList.add("mobile-open");
+  }
+  if (backdrop) {
+    backdrop.classList.add("active");
+  }
+}
+
+// Toggle mobile sidebar
+function toggleMobileSidebar() {
+  const sidebar = document.querySelector(".desktop-sidebar");
+  if (sidebar && sidebar.classList.contains("mobile-open")) {
+    closeMobileSidebar();
+  } else {
+    openMobileSidebar();
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   setActiveNav(location.pathname);
   
   // Sidebar toggle functionality
   const sidebar = document.querySelector(".desktop-sidebar");
   const toggleBtn = document.getElementById("sidebar-toggle");
+  const backdrop = createSidebarBackdrop();
+  
+  // Handle desktop sidebar toggle (collapse/expand)
   if (toggleBtn && sidebar) {
-    // Load saved state from localStorage
+    toggleBtn.addEventListener("click", (e) => {
+      if (isMobileView()) {
+        // On mobile, toggle open/close
+        toggleMobileSidebar();
+      } else {
+        // On desktop, toggle collapsed state
+        sidebar.classList.toggle("collapsed");
+        const isCollapsed = sidebar.classList.contains("collapsed");
+        localStorage.setItem("sidebarCollapsed", isCollapsed);
+      }
+    });
+  }
+  
+  // Handle mobile menu button click (by class or ID)
+  const mobileMenuBtnByClass = document.querySelector(".mobile-menu-btn");
+  const mobileMenuBtnById = document.getElementById("mobile-menu-toggle");
+  const mobileMenuBtn = mobileMenuBtnByClass || mobileMenuBtnById;
+  
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleMobileSidebar();
+    });
+  }
+  
+  // Close sidebar when clicking on backdrop
+  if (backdrop) {
+    backdrop.addEventListener("click", () => {
+      closeMobileSidebar();
+    });
+  }
+  
+  // Close sidebar when clicking navigation links on mobile
+  const navLinks = document.querySelectorAll(".desktop-sidebar-nav a[data-nav-link]");
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      if (isMobileView()) {
+        closeMobileSidebar();
+      }
+    });
+  });
+  
+  // Handle window resize - close mobile sidebar if switching to desktop
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (!isMobileView()) {
+        closeMobileSidebar();
+        // Load desktop sidebar collapsed state
+        if (sidebar && toggleBtn) {
+          const isSidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
+          if (isSidebarCollapsed) {
+            sidebar.classList.add("collapsed");
+          } else {
+            sidebar.classList.remove("collapsed");
+          }
+        }
+      }
+    }, 100);
+  });
+  
+  // Load desktop sidebar state on page load
+  if (sidebar && toggleBtn && !isMobileView()) {
     const isSidebarCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
     if (isSidebarCollapsed) {
       sidebar.classList.add("collapsed");
     }
-    
-    toggleBtn.addEventListener("click", () => {
-      sidebar.classList.toggle("collapsed");
-      const isCollapsed = sidebar.classList.contains("collapsed");
-      localStorage.setItem("sidebarCollapsed", isCollapsed);
-    });
   }
   
   // Try to load current user and set avatar in any `#user-avatar` element

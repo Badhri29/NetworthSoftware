@@ -8,7 +8,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1rem 1rem 4.5rem;
+  padding: 1rem 1rem 1rem;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -42,18 +42,190 @@
   display: none;
 }
 
+/* Mobile sidebar styles */
+@media (max-width: 1024px) {
+  .desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100vh;
+    padding: 1.5rem 1rem;
+    background: radial-gradient(circle at top left, #020617 0, #020617 40%, #000 100%);
+    border-right: 1px solid var(--color-border);
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+  }
+
+  .desktop-sidebar .desktop-sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :root[data-theme="light"] .desktop-sidebar {
+    background: linear-gradient(135deg, #e2e8f0 0%, #dbeafe 100%);
+  }
+
+  .desktop-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .desktop-sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 1.25rem;
+  }
+
+  .desktop-sidebar-nav a .nav-text {
+    display: inline;
+  }
+
+  .desktop-sidebar-nav a {
+    padding: 0.55rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .desktop-sidebar-nav a:hover {
+    transform: scale(1.08);
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+  }
+
+  .desktop-sidebar-nav a.active {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+
+  /* Ensure logout button text is always visible on mobile */
+  .desktop-sidebar-nav a.nav-logout {
+    margin-top: auto;
+    align-self: center;
+    transform: translateX(6px);
+    color: #c62828;
+    font-weight: 700;
+    border: 1px solid rgba(139,0,0,0.65);
+    padding: 0.45rem 0.8rem;
+  }
+
+  .desktop-sidebar-nav a.nav-logout .nav-text {
+    display: inline !important;
+  }
+
+  .desktop-sidebar-nav a.nav-logout .icon {
+    display: none !important;
+  }
+
+  .desktop-sidebar-nav a.nav-logout:hover {
+    background: linear-gradient(135deg, rgba(198,40,40,0.12), rgba(139,0,0,0.12));
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(198,40,40,0.12), 0 2px 6px rgba(0,0,0,0.35);
+    transform: translateX(6px) scale(1.03) translateY(-2px);
+    border-color: rgba(139,0,0,0.9);
+  }
+
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-menu-text {
+    padding: 1rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex: 1;
+  }
+
+  .sidebar-toggle-btn {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .sidebar-toggle-btn:hover {
+    color: #fff;
+  }
+
+  /* Mobile sidebar backdrop */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  /* Mobile hamburger menu button */
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-menu-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .mobile-menu-btn:active {
+    transform: scale(0.95);
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobile-menu-btn {
+    display: none;
+  }
+
+  .sidebar-backdrop {
+    display: none !important;
+  }
+}
+
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(15, 23, 42, 0.98);
-  border-top: 1px solid var(--color-border);
-  backdrop-filter: blur(18px);
-  display: flex;
-  justify-content: space-around;
-  padding: 0.3rem 0.75rem 0.65rem;
-  z-index: 40;
+  display: none;
 }
 
 .bottom-nav a {
@@ -92,7 +264,7 @@
 
 @media (min-width: 481px) {
   .app-main {
-    padding: 1.2rem 1.5rem 4.5rem;
+    padding: 1.2rem 1.5rem 1.2rem;
   }
 }
 

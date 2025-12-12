@@ -29,6 +29,7 @@
       </aside>
       <main class="app-main">
         <header class="app-header">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
           <div>
             <div class="app-title">Settings</div>
             <div class="app-subtitle">Manage your profile and security</div>
@@ -128,6 +129,25 @@
                 <button type="submit" class="btn btn-primary">Update password</button>
               </div>
             </form>
+          </article>
+        </section>
+
+        <section style="margin-top:0.9rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Account</div>
+            </div>
+            <div style="padding:1rem;">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+                <div>
+                  <div style="font-weight:600; margin-bottom:0.3rem;">Logout</div>
+                  <div style="font-size:0.85rem; color:#999;">Sign out of your account</div>
+                </div>
+                <button id="settings-logout-btn" class="btn logout-link" style="background:#c62828; color:#fff; border:1px solid rgba(139,0,0,0.65); white-space:nowrap; transition:all 0.2s ease;" type="button">
+                  Logout
+                </button>
+              </div>
+            </div>
           </article>
         </section>
       </main>

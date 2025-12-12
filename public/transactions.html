@@ -28,6 +28,7 @@
       </aside>
       <main class="app-main">
         <header class="app-header">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
           <div>
             <div class="app-title">Transactions</div>
             <div class="app-subtitle">Search, filter and manage your cashflow</div>
@@ -35,54 +36,74 @@
           <div style="margin-left:auto; display:flex; align-items:center; gap:0.6rem;">
             <img id="header-avatar" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:none" />
             <span id="header-username" style="font-weight:600; color:var(--muted); display:none"></span>
-            <button id="add-tx-btn" class="btn btn-primary" type="button">Add</button>
           </div>
         </header>
 
-        <section>
-          <div class="transactions-filters">
-            <div class="field">
-              <label for="filter-start">From</label>
-              <input id="filter-start" type="date" />
+        <section style="margin-top:0.6rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Transaction Actions</div>
             </div>
-            <div class="field">
-              <label for="filter-end">To</label>
-              <input id="filter-end" type="date" />
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <button id="add-tx-btn" class="btn btn-primary" type="button" onclick="window.showAddTransactionForm && window.showAddTransactionForm(); return false;">Add Transaction</button>
+              <button id="get-tx-btn" class="btn btn-outline" type="button" onclick="window.showGetTransactionForm && window.showGetTransactionForm(); return false;">Get Transaction Data</button>
             </div>
-            <div class="field">
-              <label for="filter-type">Type</label>
-              <select id="filter-type">
-                <option value="">All</option>
-                <option value="INCOME">Income</option>
-                <option value="EXPENSE">Expense</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="filter-category">Category</label>
-              <select id="filter-category">
-                <option value="">All</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="filter-search">Search</label>
-              <input
-                id="filter-search"
-                type="text"
-                placeholder="Description contains..."
-              />
-            </div>
-          </div>
-          <div class="transactions-actions">
-            <span class="page-description" id="tx-count"></span>
-            <button id="apply-filters-btn" class="btn btn-outline" type="button">
-              Apply filters
-            </button>
-          </div>
+          </article>
         </section>
 
-        <section style="margin-top: 0.8rem">
+        <section style="margin-top: 0.8rem; display:none;" id="filter-section">
           <article class="card">
-            <div class="transactions-list">
+            <div class="card-header">
+              <div class="card-title">Filter Transactions</div>
+            </div>
+            <div class="transactions-filters">
+              <div class="field">
+                <label for="filter-start">From</label>
+                <input id="filter-start" type="date" />
+              </div>
+              <div class="field">
+                <label for="filter-end">To</label>
+                <input id="filter-end" type="date" />
+              </div>
+              <div class="field">
+                <label for="filter-type">Type</label>
+                <select id="filter-type">
+                  <option value="">All</option>
+                  <option value="INCOME">Income</option>
+                  <option value="SAVINGS">Savings</option>
+                  <option value="EXPENSE">Expense</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="filter-category">Category</label>
+                <select id="filter-category">
+                  <option value="">All</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="filter-search">Search</label>
+                <input
+                  id="filter-search"
+                  type="text"
+                  placeholder="Description contains..."
+                />
+              </div>
+            </div>
+            <div class="transactions-actions">
+              <span class="page-description" id="tx-count"></span>
+              <button id="apply-filters-btn" class="btn btn-primary" type="button">
+                Apply filters
+              </button>
+            </div>
+          </article>
+        </section>
+
+        <section style="margin-top: 0.8rem;" id="transactions-list-section">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title" id="transactions-list-title">Recent Transactions</div>
+            </div>
+            <div class="transactions-list" style="max-height: 500px; overflow-y: auto;">
               <table class="table">
                 <thead>
                   <tr>
@@ -90,8 +111,10 @@
                     <th>Category</th>
                     <th>Subcategory</th>
                     <th>Type</th>
+                    <th>Mode</th>
                     <th>Amount</th>
-                    <th></th>
+                    <th>Details</th>
+                    <th style="text-align:right;">Action</th>
                   </tr>
                 </thead>
                 <tbody id="transactions-body"></tbody>
@@ -100,7 +123,7 @@
           </article>
         </section>
 
-        <section style="margin-top: 0.8rem">
+        <section style="margin-top: 0.8rem; display:none;" id="tx-form-section">
           <article class="card">
             <div class="card-header">
               <div class="card-title">Add / Edit transaction</div>
@@ -112,25 +135,17 @@
                 <input id="tx-date" type="date" required />
               </div>
               <div class="field">
-                <label for="tx-type">Type</label>
+                <label for="tx-type">Transaction Type</label>
                 <select id="tx-type" required>
                   <option value="INCOME">Income</option>
+                  <option value="SAVINGS">Savings</option>
                   <option value="EXPENSE">Expense</option>
                 </select>
-              </div>
-              <div class="field">
-                <label for="tx-amount">Amount</label>
-                <input id="tx-amount" type="number" step="0.01" required />
               </div>
               <div class="field">
                 <label for="transaction-category">Category</label>
                 <select id="transaction-category" name="category" required>
                   <option value="">Select category</option>
-                  <option value="INCOME">Income</option>
-                  <option value="EXPENSE">Expense</option>
-                  <option value="TRANSFER">Transfer</option>
-                  <option value="INVESTMENT">Investment</option>
-                  <option value="OTHER">Other</option>
                 </select>
               </div>
               <div class="field">
@@ -140,15 +155,26 @@
                 </select>
               </div>
               <div class="field">
-                <label for="tx-description">Description</label>
-                <textarea id="tx-description" placeholder="Optional note"></textarea>
+                <label for="tx-details">Transaction Details</label>
+                <input id="tx-details" type="text" placeholder="Transaction Details" />
+              </div>
+              <div class="field">
+                <label for="tx-amount">Transaction Amount</label>
+                <input id="tx-amount" type="number" step="0.01" required placeholder="Transaction Amount" />
+              </div>
+              <div class="field">
+                <label for="tx-mode">Transaction Mode</label>
+                <select id="tx-mode" required>
+                  <option value="CASH">Cash</option>
+                  <option value="ONLINE">Online</option>
+                </select>
               </div>
               <div id="tx-error" class="banner-error" style="display:none"></div>
               <div style="margin-top: 0.4rem; display:flex; gap:0.5rem; justify-content:flex-end">
                 <button type="button" id="tx-reset-btn" class="btn btn-outline">
                   Clear
                 </button>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" id="tx-submit-btn">Submit Transaction</button>
               </div>
             </form>
           </article>

@@ -7,8 +7,15 @@
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/components.css" />
     <link rel="stylesheet" href="/css/pages.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
   </head>
   <body>
+    <div class="theme-toggle-container">
+      <label class="theme-switch-wrapper" title="Toggle dark/light mode">
+        <input type="checkbox" id="theme-toggle" class="theme-switch" />
+        <div class="slider"></div>
+      </label>
+    </div>
     <div class="auth-shell">
       <div class="auth-card">
         <div>
@@ -48,6 +55,7 @@
     </div>
 
     <script src="/js/api.js"></script>
+    <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
   </body>
 </html>

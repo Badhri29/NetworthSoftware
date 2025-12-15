@@ -7,26 +7,28 @@
     <link rel="stylesheet" href="/css/base.css" />
     <link rel="stylesheet" href="/css/layout.css" />
     <link rel="stylesheet" href="/css/components.css" />
-    <link rel="stylesheet" href="/css/pages.css" />
+    <link rel="stylesheet" href="/css/transactions.css" />
   </head>
   <body>
     <div class="app-shell">
+      <!-- Sidebar (collapsed by default on mobile) -->
       <aside class="desktop-sidebar">
-          <!-- sidebar avatar removed per request -->
         <div class="sidebar-header">
           <div class="sidebar-menu-text">Menu</div>
           <button class="sidebar-toggle-btn" id="sidebar-toggle">☰</button>
         </div>
-        <div class="desktop-sidebar-nav">
+        <nav class="desktop-sidebar-nav">
           <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span><span class="nav-text">Dashboard</span></a>
-          <a href="/transactions.html" data-nav-link><span class="icon">📄</span><span class="nav-text">Transactions</span></a>
+          <a href="/transactions.html" data-nav-link class="active"><span class="icon">📄</span><span class="nav-text">Transactions</span></a>
           <a href="/assets.html" data-nav-link><span class="icon">💼</span><span class="nav-text">Assets</span></a>
           <a href="/analysis.html" data-nav-link><span class="icon">📊</span><span class="nav-text">Analysis</span></a>
           <a href="/settings.html" data-nav-link><span class="icon">⚙️</span><span class="nav-text">Settings</span></a>
           <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">⏻</span><span class="nav-text">Logout</span></a>
-        </div>
+        </nav>
       </aside>
+
       <main class="app-main">
+        <!-- Header (keep as is) -->
         <header class="app-header">
           <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
           <div>
@@ -39,175 +41,21 @@
           </div>
         </header>
 
-        <section style="margin-top:0.6rem">
-          <article class="card">
-            <div class="card-header">
-              <div class="card-title">Transaction Actions</div>
-            </div>
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-              <button id="add-tx-btn" class="btn btn-primary" type="button" onclick="window.showAddTransactionForm && window.showAddTransactionForm(); return false;">Add Transaction</button>
-              <button id="get-tx-btn" class="btn btn-outline" type="button" onclick="window.showGetTransactionForm && window.showGetTransactionForm(); return false;">Get Transaction Data</button>
-            </div>
-          </article>
-        </section>
+        <!-- Toggle Buttons -->
+        <div class="view-toggle">
+          <button class="toggle-btn active" data-view="transactions">
+            Transactions
+          </button>
+          <button class="toggle-btn" data-view="categories">
+            Categories
+          </button>
+        </div>
 
-        <section style="margin-top: 0.8rem; display:none;" id="filter-section">
-          <article class="card">
-            <div class="card-header">
-              <div class="card-title">Filter Transactions</div>
-            </div>
-            <div class="transactions-filters">
-              <div class="field">
-                <label for="filter-start">From</label>
-                <input id="filter-start" type="date" />
-              </div>
-              <div class="field">
-                <label for="filter-end">To</label>
-                <input id="filter-end" type="date" />
-              </div>
-              <div class="field">
-                <label for="filter-type">Type</label>
-                <select id="filter-type">
-                  <option value="">All</option>
-                  <option value="INCOME">Income</option>
-                  <option value="SAVINGS">Savings</option>
-                  <option value="EXPENSE">Expense</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="filter-category">Category</label>
-                <select id="filter-category">
-                  <option value="">All</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="filter-search">Search</label>
-                <input
-                  id="filter-search"
-                  type="text"
-                  placeholder="Description contains..."
-                />
-              </div>
-            </div>
-            <div class="transactions-actions">
-              <span class="page-description" id="tx-count"></span>
-              <button id="apply-filters-btn" class="btn btn-primary" type="button">
-                Apply filters
-              </button>
-            </div>
-          </article>
-        </section>
-
-        <section style="margin-top: 0.8rem;" id="transactions-list-section">
-          <article class="card">
-            <div class="card-header">
-              <div class="card-title" id="transactions-list-title">Recent Transactions</div>
-            </div>
-            <div class="transactions-list" style="max-height: 500px; overflow-y: auto;">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Category</th>
-                    <th>Subcategory</th>
-                    <th>Type</th>
-                    <th>Mode</th>
-                    <th>Amount</th>
-                    <th>Details</th>
-                    <th style="text-align:right;">Action</th>
-                  </tr>
-                </thead>
-                <tbody id="transactions-body"></tbody>
-              </table>
-            </div>
-          </article>
-        </section>
-
-        <section style="margin-top: 0.8rem; display:none;" id="tx-form-section">
-          <article class="card">
-            <div class="card-header">
-              <div class="card-title">Add / Edit transaction</div>
-            </div>
-            <form id="tx-form" class="auth-form">
-              <input type="hidden" id="tx-id" />
-              <div class="field">
-                <label for="tx-date">Date</label>
-                <input id="tx-date" type="date" required />
-              </div>
-              <div class="field">
-                <label for="tx-type">Transaction Type</label>
-                <select id="tx-type" required>
-                  <option value="INCOME">Income</option>
-                  <option value="SAVINGS">Savings</option>
-                  <option value="EXPENSE">Expense</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="transaction-category">Category</label>
-                <select id="transaction-category" name="category" required>
-                  <option value="">Select category</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="tx-subcategory">Subcategory</label>
-                <select id="tx-subcategory">
-                  <option value="">None</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="tx-details">Transaction Details</label>
-                <input id="tx-details" type="text" placeholder="Transaction Details" />
-              </div>
-              <div class="field">
-                <label for="tx-amount">Transaction Amount</label>
-                <input id="tx-amount" type="number" step="0.01" required placeholder="Transaction Amount" />
-              </div>
-              <div class="field">
-                <label for="tx-mode">Transaction Mode</label>
-                <select id="tx-mode" required>
-                  <option value="CASH">Cash</option>
-                  <option value="ONLINE">Online</option>
-                </select>
-              </div>
-              <div id="tx-error" class="banner-error" style="display:none"></div>
-              <div style="margin-top: 0.4rem; display:flex; gap:0.5rem; justify-content:flex-end">
-                <button type="button" id="tx-reset-btn" class="btn btn-outline">
-                  Clear
-                </button>
-                <button type="submit" class="btn btn-primary" id="tx-submit-btn">Submit Transaction</button>
-              </div>
-            </form>
-          </article>
-        </section>
+        
       </main>
-
-      <nav class="bottom-nav">
-        <a href="/dashboard.html" data-nav-link>
-          <span class="bottom-nav-icon">🏠</span>
-          <span>Home</span>
-        </a>
-        <a href="/transactions.html" data-nav-link>
-          <span class="bottom-nav-icon">📄</span>
-          <span>Transactions</span>
-        </a>
-        <a href="/assets.html" data-nav-link>
-          <span class="bottom-nav-icon">💼</span>
-          <span>Assets</span>
-        </a>
-        <a href="/analysis.html" data-nav-link>
-          <span class="bottom-nav-icon">📊</span>
-          <span>Analysis</span>
-        </a>
-        <a href="/settings.html" data-nav-link>
-          <span class="bottom-nav-icon">⚙️</span>
-          <span>Settings</span>
-        </a>
-        <a href="#" class="bottom-logout logout-link" style="display:flex; align-items:center; gap:0.4rem; justify-content:center;">
-          <span class="bottom-nav-icon">⏻</span>
-          <span style="color:#c62828; font-weight:600">Logout</span>
-        </a>
-      </nav>
     </div>
+
+    
 
     <script src="/js/api.js"></script>
     <script src="/js/theme.js"></script>
@@ -215,5 +63,3 @@
     <script src="/js/transactions.js"></script>
   </body>
 </html>
-
-

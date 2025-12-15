@@ -1,0 +1,88 @@
+/* ===============================
+   THEME VARIABLES
+================================ */
+:root {
+  --primary-color: #4a6cf7;
+  --primary-hover: #3a5ce4;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --border-color: #E0E0E0;
+  --bg-color: white;
+  --card-bg: #ECECF0;
+  --radius-sm: 0.375rem;
+  --transition: all 0.2s ease-in-out;
+}
+
+html[data-theme="dark"] {
+  --primary-color: #5b7bf7;
+  --primary-hover: #6d8af8;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --bg-color: #020617;
+  --card-bg: #020617;
+}
+
+
+/* ===============================
+   VIEW TOGGLE
+================================ */
+.view-toggle {
+  display: inline-flex;
+  border-radius: 18px;
+  padding: 0.2rem;
+  margin: 0.5rem 0 1.5rem 0;
+  width: fit-content;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.toggle-btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 15px;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.toggle-btn.active {
+  background: var(--bg-color);
+  font-weight: bold;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* ===============================
+   DARK MODE – VIEW TOGGLE (ROBUST FIX)
+   Works whether theme is on html OR body
+================================ */
+
+html[data-theme="dark"] .view-toggle,
+body[data-theme="dark"] .view-toggle {
+  background: radial-gradient(
+    circle at top left,
+    #020617 0%,
+    #020617 35%,
+    #020617 70%,
+    #030712 100%
+  ) !important;
+  border: 1px solid rgba(15, 23, 42, 0.9) !important;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8) !important;
+}
+
+html[data-theme="dark"] .toggle-btn,
+body[data-theme="dark"] .toggle-btn {
+  color: #9ca3af !important;
+}
+
+html[data-theme="dark"] .toggle-btn.active,
+body[data-theme="dark"] .toggle-btn.active {
+  background: linear-gradient(135deg, #22c1c3, #38bdf8) !important;
+  color: #0b1120 !important;
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.45) !important;
+}

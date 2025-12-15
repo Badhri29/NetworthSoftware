@@ -23,7 +23,7 @@ html[data-theme="dark"] {
   --card-bg: #020617;
 }
 
-
+/* ------------------------------------toggle style Start----------------------- */
 /* ===============================
    VIEW TOGGLE
 ================================ */
@@ -61,7 +61,6 @@ html[data-theme="dark"] {
    DARK MODE – VIEW TOGGLE (ROBUST FIX)
    Works whether theme is on html OR body
 ================================ */
-
 html[data-theme="dark"] .view-toggle,
 body[data-theme="dark"] .view-toggle {
   background: radial-gradient(
@@ -85,4 +84,91 @@ body[data-theme="dark"] .toggle-btn.active {
   background: linear-gradient(135deg, #22c1c3, #38bdf8) !important;
   color: #0b1120 !important;
   box-shadow: 0 6px 18px rgba(56, 189, 248, 0.45) !important;
+}
+/* ------------------------------------toggle style over----------------------- */
+
+
+
+
+/* ------------------------------------main containser style start----------------------- */
+
+/* Toggle Content Container */
+.toggle-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  width: 100%;
+  align-items: center;
+}
+
+.toggle-section {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: var(--transition);
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+  display: flex;
+  flex-direction: column;
+  min-height: 450px;
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.toggle-section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Desktop view - side by side */
+@media (min-width: 768px) {
+  .toggle-content-container {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .toggle-section {
+    width: calc(50% - 0.25rem);
+  }
+}
+
+.toggle-section h4 {
+  margin: 0 0 0.75rem 0;
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  z-index: 1;
+  padding: 0.5rem 0;
+  margin: -0.5rem -0.5rem 0.75rem -0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.toggle-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--border-color);
+  opacity: 0.5;
+}
+
+/* Hover effect for better interactivity */
+.toggle-section:hover {
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.1);
+}
+
+[data-theme="dark"] .toggle-section:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }

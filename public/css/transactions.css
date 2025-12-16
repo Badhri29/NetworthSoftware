@@ -102,11 +102,10 @@ body[data-theme="dark"] .toggle-btn.active {
   align-items: center;
 }
 
-.section {
+.add-section {
   background: var(--bg-color);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  /* padding: 0 1rem ; */
   padding-left: 1rem;
   padding-right: 1rem;
   transition: var(--transition);
@@ -123,7 +122,7 @@ body[data-theme="dark"] .toggle-btn.active {
 }
 
 /* scroll bar hide */
-.section::-webkit-scrollbar {
+.add-section::-webkit-scrollbar {
   display: none;
 }
 
@@ -135,12 +134,12 @@ body[data-theme="dark"] .toggle-btn.active {
     gap: 0.5rem;
   }
   
-  .section {
+  .add-section {
     width: calc(50% - 0.25rem);
   }
 }
 
-.section h4 {
+.add-section h4 {
   margin: 0 0 0.75rem 0;
   color: var(--text-primary);
   font-size: 1rem;
@@ -154,15 +153,15 @@ body[data-theme="dark"] .toggle-btn.active {
   }
 
 /* Hover effect for better interactivity */
-.section:hover {
+.add-section:hover {
   box-shadow: 0 8px 24px rgba(2, 6, 23, 0.1);
 }
 
-[data-theme="dark"] .section:hover {
+[data-theme="dark"] .add-section:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 /* Sticky heading */
-.section-heading {
+.add-section-heading {
   position: sticky;
   top: 0;
   z-index: 2;
@@ -171,14 +170,86 @@ body[data-theme="dark"] .toggle-btn.active {
   
 }
 
-.section-content {
-  /* border: 1px solid var(--border-color); */
-}
-.section-bottom {
+.add-section-bottom {
   position: sticky;
   bottom: 0;
   z-index: 3;
   background: inherit;
   padding: 0.25rem 1rem;
-  border-top: 1px solid var(--border-color);
+  }
+/* ------------------------------------add transection toggle content style stop----------------------- */
+
+
+
+/* ------------------------------------get transection toggle content style start----------------------- */
+.get-section {
+  /* Remove scrollbar */
+  overflow-y: hidden; /* Changed from auto to hidden */
+  max-height: none;   /* Remove fixed max-height */
+  background: var(--bg-color);
+  border-radius: 12px;
+  min-height: 450px;
+  max-height: 70vh;
 }
+
+/* Style the heading and filter button */
+.get-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem 0.5rem; /* Adjusted padding */
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.get-section-heading h4 {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.get-section-filter {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.get-section-filter:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Adjust content area */
+.get-section-content {
+  flex: 1;
+  overflow-y: auto; /* Keep scroll only for content if needed */
+  padding: 0.5rem 1rem;
+  max-height: calc(100vh - 200px); /* Adjust based on your needs */
+}
+
+/* Hide scrollbar but keep functionality */
+.get-section-content {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.get-section-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.get-section-bottom {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background: inherit;
+  padding: 0.15rem 1rem;
+}
+/* ------------------------------------get transection toggle content style stop----------------------- */

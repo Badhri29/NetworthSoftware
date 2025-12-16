@@ -8,8 +8,8 @@ let transactions = [];
 ================================ */
 const listEl = document.getElementById("transactions-list");
 const toggleBtns = document.querySelectorAll(".toggle-btn");
-const transactionsView = document.getElementById("transactionsView");
-const categoriesView = document.getElementById("categoriesView");
+const addTransactionContent = document.querySelector(".add-transection-content");
+const getTransactionContent = document.querySelector(".get-transection-content");
 
 /* ===============================
    INIT
@@ -24,14 +24,22 @@ document.addEventListener("DOMContentLoaded", () => {
    VIEW TOGGLE
 ================================ */
 function setupViewToggle() {
+  // Initially hide get transaction content
+  getTransactionContent.style.display = 'none';
+  
   toggleBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       toggleBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
       const view = btn.dataset.view;
-      transactionsView.hidden = view !== "transactions";
-      categoriesView.hidden = view !== "categories";
+      if (view === 'transactions') {
+        addTransactionContent.style.display = 'flex';
+        getTransactionContent.style.display = 'none';
+      } else if (view === 'categories') {
+        addTransactionContent.style.display = 'none';
+        getTransactionContent.style.display = 'block';
+      }
     });
   });
 }

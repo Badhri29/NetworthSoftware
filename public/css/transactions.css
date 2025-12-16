@@ -379,9 +379,18 @@ Fill Details Style Start
 /* Dark mode adjustments */
 html[data-theme="dark"] .form-group input,
 html[data-theme="dark"] .form-group select,
-html[data-theme="dark"] .form-group textarea {
+html[data-theme="dark"] .form-group textarea,
+html[data-theme="dark"] #transaction-subcategory:not(:disabled) {
   background-color: #1e293b;
   border-color: #334155;
+  color: #f8fafc;
+}
+
+html[data-theme="dark"] #transaction-subcategory:disabled {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #64748b;
+  opacity: 0.8;
 }
 
 html[data-theme="dark"] .btn-secondary {

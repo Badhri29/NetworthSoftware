@@ -58,6 +58,97 @@
               <h4>Fill Details</h4>
             </div>
             <div class="add-section-content">
+              <form id="transaction-form" class="transaction-form">
+                <!-- Date and Transaction Type in one row -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="transaction-date">Date <span class="required">*</span></label>
+                    <input type="date" id="transaction-date" name="date" required>
+                    <div class="error-message" id="date-error"></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="transaction-type">Transaction Type <span class="required">*</span></label>
+                    <select id="transaction-type" name="type" required>
+                      <option value="">Select Type</option>
+                      <option value="income">Income</option>
+                      <option value="expense">Expense</option>
+                      <option value="savings">Savings</option>
+                    </select>
+                    <div class="error-message" id="type-error"></div>
+                  </div>
+                </div>
+
+                <!-- Category and Sub-Category in one row -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="transaction-category">Category</label>
+                    <select id="transaction-category" name="category">
+                      <option value="">Select Category</option>
+                      <option value="food">Food</option>
+                      <option value="travel">Travel</option>
+                      <option value="rent">Rent</option>
+                      <option value="utilities">Utilities</option>
+                      <option value="salary">Salary</option>
+                      <option value="investment">Investment</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="transaction-subcategory">Sub-Category</label>
+                    <select id="transaction-subcategory" name="subcategory" disabled>
+                      <option value="">Select Sub-Category</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Details (full width) -->
+                <div class="form-group">
+                  <label for="transaction-details">Details</label>
+                  <textarea id="transaction-details" name="details" maxlength="200" rows="3" placeholder="Enter transaction details (max 200 characters)"></textarea>
+                  <div class="char-count"><span id="char-count">0</span>/200</div>
+                </div>
+
+                <!-- Amount and Payment Mode in one row -->
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="transaction-amount">Amount (₹) <span class="required">*</span></label>
+                    <div class="amount-input">
+                      <span class="currency-symbol">₹</span>
+                      <input type="number" id="transaction-amount" name="amount" min="0" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="error-message" id="amount-error"></div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="payment-mode">Payment Mode <span class="required">*</span></label>
+                    <select id="payment-mode" name="paymentMode" required>
+                      <option value="">Select Payment Mode</option>
+                      <option value="cash">Cash</option>
+                      <option value="upi">UPI</option>
+                      <option value="debit">Debit Card</option>
+                      <option value="credit">Credit Card</option>
+                      <option value="netbanking">Net Banking</option>
+                    </select>
+                    <div class="error-message" id="payment-mode-error"></div>
+                  </div>
+                </div>
+
+                <div class="form-group" id="card-selection-group" style="display: none;">
+                  <label for="card-selection">Select Card</label>
+                  <select id="card-selection" name="card">
+                    <option value="">Select Card</option>
+                    <option value="axis">Axis Card</option>
+                    <option value="hdfc">HDFC Card</option>
+                    <option value="icici">ICICI Card</option>
+                  </select>
+                </div>
+
+                <div class="form-actions">
+                  <button type="button" id="clear-form" class="btn-secondary">Clear</button>
+                  <button type="submit" class="btn-primary">Submit</button>
+                </div>
+              </form>
             </div>
             <div class="add-section-bottom"></div>
           </div>
@@ -125,5 +216,6 @@
     <script src="/js/theme.js"></script>
     <script src="/js/ui.js"></script>
     <script src="/js/transactions.js"></script>
+    <script src="/js/transaction-form.js"></script>
   </body>
 </html>

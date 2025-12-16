@@ -508,7 +508,8 @@ Confirmation Style Start
 
 
 
-/* ------------------------------------get transection toggle content style start----------------------- */
+/* ------------------------------------get transaction toggle content style start----------------------- */
+
 .get-transection-content {
   margin: 1rem 0;
   width: 100%;
@@ -516,12 +517,12 @@ Confirmation Style Start
   transition: opacity 0.3s ease-in-out;
 }
 
+/* MAIN CARD */
 .get-section {
   background: var(--bg-color);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 1rem;
   transition: var(--transition);
   width: 100%;
   box-sizing: border-box;
@@ -529,62 +530,22 @@ Confirmation Style Start
   display: flex;
   flex-direction: column;
   min-height: 450px;
-  max-height: 70vh;
-  overflow-y: auto;
-  scrollbar-width: none;  
-  -ms-overflow-style: none; 
 }
 
-.get-section::-webkit-scrollbar {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .get-transection-content {
-    justify-content: center;
-  }
-  
-  .get-section {
-    width: 100%;
-  }
-}
-
-.get-section h4 {
-  margin: 0 0 0.75rem 0;
-  color: var(--text-primary);
-  font-size: 1rem;
-  font-weight: 500;
-  position: sticky;
-  top: 0;
-  background: var(--bg-color);
-  z-index: 3;
-  padding-top: 1rem;
-  padding-left: 0.5rem;
-  }
-
-.get-section:hover {
-  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.1);
-}
-
-[data-theme="dark"] .get-section:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-}
-
+/* ------------------------------------ */
+/* HEADER (ABOVE RED LINE – NOT SCROLLING) */
 .get-section-heading {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: inherit;
-  border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0.5rem 0.5rem 0.5rem;
+  padding: 0.75rem 0.5rem 0.75rem;
 }
 
 .get-section-heading h4 {
   margin: 0;
-  padding: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
 }
 
 .get-section-filter {
@@ -600,15 +561,15 @@ Confirmation Style Start
 
 .get-section-filter:hover {
   background: var(--primary-hover);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* ------------------------------------ */
+/* FILTER SECTION (STATIC – NOT STICKY) */
 .filter-section {
   background: var(--bg-color);
   border-radius: 8px;
   padding: 1rem;
   margin: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   border: 1px solid var(--border-color);
 }
 
@@ -648,156 +609,155 @@ Confirmation Style Start
   border-top: 1px solid var(--border-color);
 }
 
-.btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background: var(--primary-color);
-  color: white;
-}
-
-.btn-secondary {
-  background: var(--border-color);
-  color: var(--text-color);
-}
-
-.btn:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-}
-
-.get-section-bottom {
-  position: sticky;
-  bottom: 0;
-  z-index: 3;
-  background: inherit;
-  padding: 0.25rem 1rem;
-}
-/* Transactions Table Styles */
+/* ------------------------------------ */
+/* TABLE SCROLL CONTAINER */
 .table-responsive {
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  margin: 1rem 0;
+  max-height: 420px;        /* controls body scroll */
+  overflow-y: auto;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
+  scrollbar-width: none;
 }
 
+.table-responsive::-webkit-scrollbar {
+  display: none;
+}
+
+/* ------------------------------------ */
+/* TABLE */
 .transactions-table {
   width: 100%;
   border-collapse: collapse;
   background: var(--bg-color);
-  font-size: 0.9rem;
+  font-size: 0.6rem;  /* Reduced from 0.9rem */
 }
 
+/* ✅ STICKY TABLE HEADER */
+.transactions-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--card-bg);
+  border: none;
+  box-shadow: none;
+}
+
+/* CELLS */
 .transactions-table th,
 .transactions-table td {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem;  /* Reduced padding */
   text-align: left;
   border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
 }
 
-/* Allow wrapping only for Details column */
-.transactions-table td:nth-child(6) {
-  white-space: normal !important;
-  max-width: 250px;
-  word-break: break-word;
-}
-
-/* Table header styles */
+/* HEADER CELLS */
 .transactions-table th {
-  background-color: var(--card-bg);
-  color: var(--text-primary);
   font-weight: 600;
+  height: 3rem;
   text-transform: uppercase;
-  font-size: 0.8rem;
-  white-space: normal;
+  font-size: 0.7rem;
   text-align: center;
-  padding: 1rem 0.75rem;
+  white-space: normal !important;  /* Allow text wrapping */
+  word-break: break-word;         /* Break long words if needed */
+  padding: 0.5rem 0.3rem;         /* Adjust padding for wrapped text */
+  line-height: 1.2;               /* Better line spacing */
+  vertical-align: middle;         /* Center content vertically */
+}
+.transactions-table th:first-child,
+.transactions-table td:first-child {
+  width: 50px;
+  padding: 0.3rem 0.2rem;  /* Reduced padding for ID column */
+  text-align: center;      /* Center align ID numbers */
+  white-space: nowrap;     /* Prevent wrapping */
+  overflow: hidden;        /* Hide overflow */
+  text-overflow: ellipsis; /* Show ellipsis if content is too long */
+}
+.transactions-table th:nth-child(2),
+.transactions-table td:nth-child(2){
+  text-align: center;
+}
+
+.transactions-table td:nth-child(6) {
+  white-space: normal;
+  min-width: 250px;  
+  max-width: 350px;  
   word-break: break-word;
+  padding-right: 1rem;  
+}
+.transactions-table th:nth-child(7),
+.transactions-table td:nth-child(7){
+  text-align: center;
 }
 
-/* Transaction type colors */
-.transaction-income .amount {
-  color: #10b981; /* Green for income */
-  font-weight: 600;
+/* Make sure table cells don't overflow */
+table {
+  table-layout: fixed;
+  width: 100%;
 }
 
-.transaction-expense .amount {
-  color: #ef4444; /* Red for expense */
-  font-weight: 600;
+/* Adjust other columns to be more compact */
+.transactions-table th:not(:nth-child(6)),
+.transactions-table td:not(:nth-child(6)) {
+  max-width: 100px;  /* Reduced from 120px */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0.4rem 0.5rem;  /* More compact padding */
 }
 
-.transaction-saving .amount {
-  color: #3b82f6; /* Blue for saving */
-  font-weight: 600;
-}
-
-/* Hover effect */
-.transactions-table tbody tr {
-  transition: background-color 0.2s ease;
-}
-
+/* ROW HOVER */
 .transactions-table tbody tr:hover {
   background-color: var(--hover-bg);
 }
 
-/* Responsive table */
+/* ------------------------------------ */
+/* TRANSACTION COLORS */
+.transaction-income .amount {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.transaction-expense .amount {
+  color: #ef4444;
+  font-weight: 600;
+}
+
+.transaction-saving .amount {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+/* ------------------------------------ */
+/* MOBILE VIEW */
 @media (max-width: 1024px) {
-  .transactions-table {
-    display: block;
-  }
-  
   .transactions-table thead {
     display: none;
   }
-  
-  .transactions-table tbody {
+
+  .transactions-table {
     display: block;
   }
-  
+
   .transactions-table tbody tr {
     display: block;
     margin-bottom: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    overflow: hidden;
   }
-  
+
   .transactions-table tbody td {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 0.5rem 1rem;
-    text-align: right;
-    border-bottom: 1px solid var(--border-color);
-    white-space: nowrap;
   }
-  
+
   .transactions-table tbody td::before {
     content: attr(data-label);
     font-weight: 600;
-    margin-right: 1rem;
     color: var(--text-secondary);
-    text-transform: uppercase;
-    font-size: 0.75rem;
-  }
-  
-  .transactions-table tbody tr:last-child td:last-child {
-    border-bottom: none;
-  }
-  
-  .transactions-table tbody td[data-label="Details"] {
-    white-space: normal !important;
-    text-align: left;
   }
 }
 
-/* ------------------------------------get transection toggle content style stop----------------------- */
+/* ------------------------------------get transaction toggle content style stop----------------------- */

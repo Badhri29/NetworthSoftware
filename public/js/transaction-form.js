@@ -166,10 +166,53 @@ document.addEventListener('DOMContentLoaded', () => {
         return isValid;
     }
 
-    /**
-     * Handle form submission
-     * @param {Event} e - The form submission event
-     */
+    // Modal elements
+    const modal = document.getElementById('confirmationModal');
+    const transactionDetails = document.getElementById('transactionDetails');
+    const confirmBtn = document.getElementById('confirmSubmit');
+    const cancelBtn = document.getElementById('cancelSubmit');
+    
+    let formData = null;
+
+    // Show modal with transaction details
+    function showConfirmationModal(data) {
+        // Format the transaction details for display
+        const formattedDate = new Date(data.date).toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+        
+        const formattedAmount = new Intl.NumberFormat('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+            minimumFractionDigits: 2
+        }).format(data.amount);
+
+        // Create the details HTML
+        transactionDetails.innerHTML = `
+            <p><strong>Date:</strong> ${formattedDate}</p>
+            <p><strong>Type:</strong> ${data.type.charAt(0).toUpperCase() + data.type.slice(1)}</p>
+            ${data.category ? `<p><strong>Category:</strong> ${data.category.charAt(0).toUpperCase() + data.category.slice(1)}</p>` : ''}
+            ${data.subcategory ? `<p><strong>Subcategory:</strong> ${data.subcategory.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</p>` : ''}
+            ${data.details ? `<p><strong>Details:</strong> ${data.details}</p>` : ''}
+            <p><strong>Amount:</strong> <span class="${data.type === 'income' ? 'income' : 'expense'}">${formattedAmount}</span></p>
+            <p><strong>Payment Mode:</strong> ${data.paymentMode.charAt(0).toUpperCase() + data.paymentMode.slice(1)}</p>
+            ${data.card ? `<p><strong>Card:</strong> ${data.card.charAt(0).toUpperCase() + data.card.slice(1)}</p>` : ''}
+        `;
+        
+        // Show the modal
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+    }
+
+    // Hide modal
+    function hideConfirmationModal() {
+        modal.classList.remove('show');
+        document.body.style.overflow = ''; // Re-enable scrolling
+    }
+
+    // Handle form submission
     function handleSubmit(e) {
         e.preventDefault();
         
@@ -178,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Prepare form data
-        const formData = {
+        formData = {
             date: dateInput.value,
             type: transactionType.value,
             category: categorySelect.value || null,
@@ -190,14 +233,40 @@ document.addEventListener('DOMContentLoaded', () => {
             timestamp: new Date().toISOString()
         };
 
+        // Show confirmation modal instead of submitting directly
+        showConfirmationModal(formData);
+    }
+
+    // Confirm submission
+    function confirmSubmission() {
         // Here you would typically send the data to your backend
         console.log('Form submitted:', formData);
         
-        // For now, we'll just show an alert and reset the form
-        alert('Transaction added successfully!');
+        // Reset the form
         resetForm();
+        
+        // Hide the modal
+        hideConfirmationModal();
         
         // In a real app, you would make an API call here:
         // addTransaction(formData).then(...).catch(...);
     }
+
+    // Event listeners for modal buttons
+    confirmBtn.addEventListener('click', confirmSubmission);
+    cancelBtn.addEventListener('click', hideConfirmationModal);
+    
+    // Close modal when clicking outside the content
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            hideConfirmationModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            hideConfirmationModal();
+        }
+    });
 });

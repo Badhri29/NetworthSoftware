@@ -238,18 +238,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Confirm submission
-    function confirmSubmission() {
-        // Here you would typically send the data to your backend
-        console.log('Form submitted:', formData);
+    async function confirmSubmission() {
+        if (!formData) return;
         
-        // Reset the form
-        resetForm();
-        
-        // Hide the modal
-        hideConfirmationModal();
-        
-        // In a real app, you would make an API call here:
-        // addTransaction(formData).then(...).catch(...);
+        try {
+            // Send the data to the server
+            const response = await fetch('/api/transactions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    amount: parseFloat(formData.amount),
+                    date: formData.date,
+                    type: formData.type.toUpperCase(),
+                    categoryId: 1, // Default category ID, should be mapped from your categories
+                    description: formData.details || '',
+                    paymentMode: formData.paymentMode
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'Failed to add transaction');
+            }
+            
+            // Show success message
+            showNotification('Transaction added successfully!', 'success');
+            
+            // Hide modal and reset form
+            hideConfirmationModal();
+            resetForm();
+            
+            // Refresh transactions table
+            if (window.refreshTransactionsTable) {
+                window.refreshTransactionsTable();
+            }
+            
+        } catch (error) {
+            console.error('Error submitting transaction:', error);
+            showNotification(error.message || 'Failed to add transaction. Please try again.', 'error');
+        }
     }
 
     // Event listeners for modal buttons

@@ -529,7 +529,8 @@ Confirmation Style Start
   box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
   display: flex;
   flex-direction: column;
-  min-height: 450px;
+  min-height: 500px;
+  max-height: 700px;
 }
 
 /* ------------------------------------ */
@@ -673,24 +674,62 @@ Confirmation Style Start
   white-space: nowrap;     /* Prevent wrapping */
   overflow: hidden;        /* Hide overflow */
   text-overflow: ellipsis; /* Show ellipsis if content is too long */
+  border-right: 1px solid gray;
 }
 .transactions-table th:nth-child(2),
 .transactions-table td:nth-child(2){
+  width: 75px;
   text-align: center;
+  border-right: 1px solid gray;
 }
-
+.transactions-table th:nth-child(3),
+.transactions-table td:nth-child(3){
+  width: 100px;
+  text-align: center;
+  border-right: 1px solid gray;
+}
+.transactions-table th:nth-child(4),
+.transactions-table td:nth-child(4){
+  width: 100px;
+  text-align: center;
+  border-right: 1px solid gray;
+}
+.transactions-table th:nth-child(5),
+.transactions-table td:nth-child(5){
+  width: 100px;
+  text-align: center;
+  border-right: 1px solid gray;
+}
+.transactions-table th:nth-child(6),
+.transactions-table td:nth-child(6){
+  text-align: center;
+  border-right: 1px solid gray;
+  width: 350px;
+}
 .transactions-table td:nth-child(6) {
   white-space: normal;
   min-width: 250px;  
-  max-width: 350px;  
   word-break: break-word;
   padding-right: 1rem;  
 }
 .transactions-table th:nth-child(7),
 .transactions-table td:nth-child(7){
   text-align: center;
+  border-right: 1px solid gray;
+  width: 100px;
 }
-
+.transactions-table th:nth-child(8),
+.transactions-table td:nth-child(8){
+  border-right: 1px solid gray;
+  text-align: center;
+  width: 100px;
+}
+.transactions-table th:nth-child(9),
+.transactions-table td:nth-child(9){
+  border-right: 1px solid gray;
+  text-align: center;
+  width: 100px;
+}
 /* Make sure table cells don't overflow */
 table {
   table-layout: fixed;

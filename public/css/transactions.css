@@ -166,10 +166,6 @@ body[data-theme="dark"] .toggle-btn.active {
   
 }
 
-.add-section-content{
-  /* border:1px solid var(--border-color); */
-}
-
 .add-section-bottom {
   position: sticky;
   bottom: 0;
@@ -683,4 +679,125 @@ Confirmation Style Start
   background: inherit;
   padding: 0.25rem 1rem;
 }
+/* Transactions Table Styles */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-color);
+  font-size: 0.9rem;
+}
+
+.transactions-table th,
+.transactions-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+/* Allow wrapping only for Details column */
+.transactions-table td:nth-child(6) {
+  white-space: normal !important;
+  max-width: 250px;
+  word-break: break-word;
+}
+
+/* Table header styles */
+.transactions-table th {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  white-space: normal;
+  text-align: center;
+  padding: 1rem 0.75rem;
+  word-break: break-word;
+}
+
+/* Transaction type colors */
+.transaction-income .amount {
+  color: #10b981; /* Green for income */
+  font-weight: 600;
+}
+
+.transaction-expense .amount {
+  color: #ef4444; /* Red for expense */
+  font-weight: 600;
+}
+
+.transaction-saving .amount {
+  color: #3b82f6; /* Blue for saving */
+  font-weight: 600;
+}
+
+/* Hover effect */
+.transactions-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.transactions-table tbody tr:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Responsive table */
+@media (max-width: 1024px) {
+  .transactions-table {
+    display: block;
+  }
+  
+  .transactions-table thead {
+    display: none;
+  }
+  
+  .transactions-table tbody {
+    display: block;
+  }
+  
+  .transactions-table tbody tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  
+  .transactions-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+  }
+  
+  .transactions-table tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    margin-right: 1rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+  }
+  
+  .transactions-table tbody tr:last-child td:last-child {
+    border-bottom: none;
+  }
+  
+  .transactions-table tbody td[data-label="Details"] {
+    white-space: normal !important;
+    text-align: left;
+  }
+}
+
 /* ------------------------------------get transection toggle content style stop----------------------- */

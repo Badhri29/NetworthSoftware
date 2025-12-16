@@ -242,43 +242,68 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!formData) return;
         
         try {
+            // Show loading state
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            
+            // Close the modal immediately
+            hideConfirmationModal();
+            
             // Send the data to the server
             const response = await fetch('/api/transactions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 },
                 body: JSON.stringify({
-                    amount: parseFloat(formData.amount),
                     date: formData.date,
-                    type: formData.type.toUpperCase(),
-                    categoryId: 1, // Default category ID, should be mapped from your categories
-                    description: formData.details || '',
-                    paymentMode: formData.paymentMode
+                    type: formData.type,
+                    category: formData.category,
+                    subcategory: formData.subcategory,
+                    details: formData.details,
+                    amount: parseFloat(formData.amount),
+                    paymentMode: formData.paymentMode,
+                    card: formData.card
                 })
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'Failed to add transaction');
+                throw new Error(data.message || 'Failed to add transaction');
             }
             
             // Show success message
             showNotification('Transaction added successfully!', 'success');
             
-            // Hide modal and reset form
-            hideConfirmationModal();
+            // Reset form
             resetForm();
             
-            // Refresh transactions table
-            if (window.refreshTransactionsTable) {
-                window.refreshTransactionsTable();
+            // Switch to Get Transactions tab and refresh the table
+            const getTransactionsTab = document.querySelector('button[data-bs-target="#getTransactions"]');
+            if (getTransactionsTab) {
+                // Activate the tab
+                const tab = new bootstrap.Tab(getTransactionsTab);
+                tab.show();
+                
+                // Refresh the transactions table after a short delay
+                setTimeout(() => {
+                    if (window.refreshTransactionsTable) {
+                        window.refreshTransactionsTable();
+                    }
+                }, 300);
             }
             
         } catch (error) {
             console.error('Error submitting transaction:', error);
             showNotification(error.message || 'Failed to add transaction. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            if (confirmBtn) {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Confirm';
+            }
         }
     }
 
@@ -299,4 +324,88 @@ document.addEventListener('DOMContentLoaded', () => {
             hideConfirmationModal();
         }
     });
+
+    // Global function to refresh transactions table
+    window.refreshTransactionsTable = async function() {
+        try {
+            const response = await fetch('/api/transactions', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch transactions');
+            }
+            
+            const transactions = await response.json();
+            const tbody = document.querySelector('#transactionsTable tbody');
+            
+            if (!tbody) {
+                console.log('Transactions table not found');
+                return;
+            }
+            
+            // Clear existing rows
+            tbody.innerHTML = '';
+            
+            if (!transactions || transactions.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="9" class="text-center">No transactions found</td>';
+                tbody.appendChild(row);
+                return;
+            }
+            
+            // Add each transaction to the table
+            transactions.forEach(transaction => {
+                const row = document.createElement('tr');
+                
+                // Format date
+                const date = new Date(transaction.date);
+                const formattedDate = date.toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                // Format amount with INR symbol
+                const formattedAmount = new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    minimumFractionDigits: 2
+                }).format(transaction.amount);
+                
+                row.innerHTML = `
+                    <td>${transaction.id || ''}</td>
+                    <td>${formattedDate}</td>
+                    <td>${transaction.type ? transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1) : ''}</td>
+                    <td>${transaction.category ? transaction.category.charAt(0).toUpperCase() + transaction.category.slice(1) : ''}</td>
+                    <td>${transaction.subcategory ? transaction.subcategory.split('-').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ') : ''}</td>
+                    <td>${transaction.details || ''}</td>
+                    <td class="${transaction.type === 'income' ? 'text-success' : 'text-danger'}">
+                        ${formattedAmount}
+                    </td>
+                    <td>${transaction.paymentMode ? transaction.paymentMode.charAt(0).toUpperCase() + transaction.paymentMode.slice(1) : ''}</td>
+                    <td>${transaction.card ? transaction.card.charAt(0).toUpperCase() + transaction.card.slice(1) : ''}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+        } catch (error) {
+            console.error('Error refreshing transactions:', error);
+            const tbody = document.querySelector('#transactionsTable tbody');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-danger text-center">
+                            Error loading transactions: ${error.message}
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    };
 });

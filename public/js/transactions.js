@@ -17,6 +17,7 @@ const getTransactionContent = document.querySelector(".get-transection-content")
 document.addEventListener("DOMContentLoaded", () => {
   loadTransactions();
   setupViewToggle();
+  setupFilterToggle();
   renderTransactions();
 });
 
@@ -105,8 +106,126 @@ function formatDate(date) {
   });
 }
 
+/* ===============================
+   FILTER FUNCTIONALITY
+================================ */
+function setupFilterToggle() {
+  const filterToggle = document.getElementById('filter-toggle');
+  const filterSection = document.getElementById('filter-section');
+  const applyFilterBtn = document.getElementById('apply-filter');
+  const resetFilterBtn = document.getElementById('reset-filter');
+
+  // Toggle filter section visibility
+  filterToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+  });
+
+  // Close filter when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!filterSection.contains(e.target) && e.target !== filterToggle) {
+      filterSection.style.display = 'none';
+    }
+  });
+
+  // Apply filter
+  applyFilterBtn.addEventListener('click', () => {
+    const type = document.getElementById('filter-type').value;
+    const category = document.getElementById('filter-category').value;
+    const dateRange = document.getElementById('filter-date').value;
+    
+    // Filter logic will be implemented here
+    const filteredTransactions = filterTransactions(type, category, dateRange);
+    renderFilteredTransactions(filteredTransactions);
+    
+    // Close the filter section after applying
+    filterSection.style.display = 'none';
+  });
+
+  // Reset filter
+  resetFilterBtn.addEventListener('click', () => {
+    document.getElementById('filter-type').value = 'all';
+    document.getElementById('filter-category').value = 'all';
+    document.getElementById('filter-date').value = 'all';
+    renderTransactions(); // Reset to show all transactions
+    filterSection.style.display = 'none';
+  });
+
+  // Populate categories
+  updateCategoryFilter();
+}
+
+function filterTransactions(type, category, dateRange) {
+  return transactions.filter(tx => {
+    // Filter by type
+    if (type !== 'all' && tx.type !== type) return false;
+    
+    // Filter by category
+    if (category !== 'all' && tx.category !== category) return false;
+    
+    // Filter by date range
+    if (dateRange !== 'all') {
+      const txDate = new Date(tx.date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (dateRange === 'today') {
+        const txDateOnly = new Date(tx.date);
+        txDateOnly.setHours(0, 0, 0, 0);
+        if (txDateOnly.getTime() !== today.getTime()) return false;
+      } else if (dateRange === 'week') {
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
+        if (txDate < weekStart) return false;
+      } else if (dateRange === 'month') {
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        if (txDate < monthStart) return false;
+      }
+    }
+    
+    return true;
+  });
+}
+
+function updateCategoryFilter() {
+  const categorySelect = document.getElementById('filter-category');
+  // Clear existing options except the first one
+  while (categorySelect.options.length > 1) {
+    categorySelect.remove(1);
+  }
+  
+  // Get unique categories from transactions
+  const categories = [...new Set(transactions.map(tx => tx.category))];
+  
+  // Add categories to the select
+  categories.forEach(category => {
+    const option = document.createElement('option');
+    option.value = category;
+    option.textContent = category;
+    categorySelect.appendChild(option);
+  });
+}
+
+function renderFilteredTransactions(filteredTransactions) {
+  const listEl = document.querySelector('.get-section-content');
+  listEl.innerHTML = '';
+  
+  if (!filteredTransactions.length) {
+    listEl.innerHTML = '<p>No transactions match the selected filters</p>';
+    return;
+  }
+  
+  filteredTransactions.forEach(tx => {
+    listEl.appendChild(createTransactionEl(tx));
+  });
+}
+
 function sampleData() {
   const today = new Date().toISOString().split("T")[0];
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  
   return [
     {
       id: "1",
@@ -121,6 +240,20 @@ function sampleData() {
       type: "income",
       category: "Salary",
       amount: 50000
+    },
+    {
+      id: "3",
+      date: yesterdayStr,
+      type: "expense",
+      category: "Shopping",
+      amount: 1200
+    },
+    {
+      id: "4",
+      date: yesterdayStr,
+      type: "expense",
+      category: "Transport",
+      amount: 150
     }
   ];
 }

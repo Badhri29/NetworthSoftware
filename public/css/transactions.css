@@ -91,7 +91,6 @@ body[data-theme="dark"] .toggle-btn.active {
 
 
 /* ------------------------------------add transection toggle content style start----------------------- */
-
 .add-transection-content {
   display: flex;
   flex-direction: column;
@@ -177,25 +176,33 @@ body[data-theme="dark"] .toggle-btn.active {
 
 /* 
 =============================================
-Fill Details Style
+Fill Details Style Start
 =============================================
 */
+
+
+
+
+/* =================Stop================== */
 
 
 
 /*
 =============================================
-Recent Transection Style
+Recent Transection Style Start
 =============================================
 */
 
+
+
+
+/* =================Stop================== */
 
 /* ------------------------------------add transection toggle content style stop----------------------- */
 
 
 
 /* ------------------------------------get transection toggle content style start----------------------- */
-
 .get-transection-content {
   margin: 1rem 0;
   width: 100%;

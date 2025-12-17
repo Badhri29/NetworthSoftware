@@ -34,11 +34,11 @@ CREATE TABLE `Subcategory` (
 -- CreateTable
 CREATE TABLE `Transaction` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `amount` DECIMAL(65, 30) NOT NULL,
-    `date` DATETIME(3) NOT NULL,
+    `amount` DECIMAL(12, 2) NOT NULL,
+    `date` DATETIME NOT NULL,
     `type` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `userId` INTEGER NOT NULL,
     `categoryId` INTEGER NOT NULL,
     `subcategoryId` INTEGER NULL,

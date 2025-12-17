@@ -10,18 +10,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// prisma/schema.prisma
 model Transaction {
   id          Int      @id @default(autoincrement())
   date        DateTime
-  type        String   @db.VarChar(191)
-  category    String   @db.VarChar(191)
-  subcategory String?  @db.VarChar(191)
-  description String?  @db.VarChar(191)
-  amount      Float    @db.Decimal(10, 2)
-  paymentMode String   @db.VarChar(191)
-  card        String?  @db.VarChar(191)
-  createdAt   DateTime @default(now()) @db.DateTime(3)
-  updatedAt   DateTime @updatedAt @db.DateTime(3)
+  type        String
+  category    String?
+  subcategory String?
+  description String?
+  amount      Float
+  paymentMode String
+  card        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id])
 
-  @@map("Transaction")
+  @@map("transactions")
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String
+  name          String?
+  transactions  Transaction[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("users")
 }

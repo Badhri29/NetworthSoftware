@@ -1,10 +1,17 @@
-const express = require('express');
-const { PrismaClient } = require('@prisma/client');
+const express = require("express");
+const { PrismaClient } = require("@prisma/client");
+
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// CREATE TRANSACTION
-router.post('/', async (req, res) => {
+/**
+ * CREATE TRANSACTION
+ * POST /api/transactions
+ */
+router.post("/", async (req, res) => {
+  console.log("Authenticated user:", req.user);
+  console.log("Request body:", req.body);
+
   try {
     const {
       date,
@@ -17,73 +24,99 @@ router.post('/', async (req, res) => {
       card
     } = req.body;
 
-    console.log('Received transaction data:', req.body);
-
-    // Validate required fields
-    if (!date || !type || !amount || !paymentMode) {
-      console.log('Missing required fields:', { date, type, amount, paymentMode });
+    // ✅ Validate required fields
+    if (!date || !type || amount === undefined || !paymentMode) {
       return res.status(400).json({
         success: false,
-        message: 'Missing required fields: date, type, amount, and paymentMode are required'
+        message: "date, type, amount, and paymentMode are required"
       });
     }
 
-    // Create transaction using Prisma
+    const parsedAmount = Number(amount);
+    if (Number.isNaN(parsedAmount)) {
+      return res.status(400).json({
+        success: false,
+        message: "Amount must be a valid number"
+      });
+    }
+
+    // ✅ Create transaction with proper Prisma relation
     const transaction = await prisma.transaction.create({
       data: {
         date: new Date(date),
         type,
-        category,
+        category: category || null,
         subcategory: subcategory || null,
         description: details || null,
-        amount: parseFloat(amount),
+        amount: parsedAmount,
         paymentMode,
-        card: paymentMode === 'credit' ? card : null
+        card: paymentMode === "credit" ? card || null : null,
+
+        // 🔥 IMPORTANT: correct way to link user
+        user: {
+          connect: {
+            id: req.user.id
+          }
+        }
       }
     });
 
-    console.log('Transaction created:', transaction);
+    console.log("Transaction created successfully:", transaction);
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
-      message: 'Transaction stored successfully',
+      message: "Transaction created successfully",
       data: transaction
     });
 
   } catch (error) {
-    console.error('Transaction error:', error);
-    res.status(500).json({ 
-      success: false,
-      message: 'Failed to process transaction',
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    console.error("Transaction creation failed:", {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      stack: error.stack
     });
-  } finally {
-    await prisma.$disconnect();
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to create transaction",
+      error: process.env.NODE_ENV !== "production"
+        ? error.message
+        : undefined
+    });
   }
 });
 
-// GET all transactions
-router.get('/', async (req, res) => {
+/**
+ * GET TRANSACTIONS FOR LOGGED-IN USER
+ * GET /api/transactions
+ */
+router.get("/", async (req, res) => {
   try {
+    console.log("Fetching transactions for user:", req.user.id);
+
     const transactions = await prisma.transaction.findMany({
+      where: {
+        user: {
+          id: req.user.id
+        }
+      },
       orderBy: {
-        date: 'desc'
+        date: "desc"
       }
     });
-    
-    res.json({
+
+    return res.json({
       success: true,
       data: transactions
     });
   } catch (error) {
-    console.error('Error fetching transactions:', error);
-    res.status(500).json({
+    console.error("Failed to fetch transactions:", error);
+
+    return res.status(500).json({
       success: false,
-      message: 'Failed to fetch transactions',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: "Failed to fetch transactions"
     });
-  } finally {
-    await prisma.$disconnect();
   }
 });
 

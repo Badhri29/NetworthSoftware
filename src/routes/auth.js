@@ -1,6 +1,6 @@
 const express = require("express");
-const { hashPassword, verifyPassword } = require("../utils/password");
-const { getState, commit, nextId } = require("../utils/store");
+const bcrypt = require("bcryptjs");
+const { PrismaClient } = require("@prisma/client");
 const {
   createToken,
   setAuthCookie,
@@ -9,54 +9,82 @@ const {
 } = require("../middleware/auth");
 
 const router = express.Router();
+const prisma = new PrismaClient();
 
+/* =========================
+   REGISTER
+========================= */
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
-    const db = getState();
-    const existing = db.users.find((u) => u.email === email);
+
+    // Check if user exists in DB
+    const existing = await prisma.user.findUnique({
+      where: { email },
+    });
+
     if (existing) {
       return res.status(409).json({ error: "Email already registered" });
     }
-    const passwordHash = await hashPassword(password);
-    const user = {
-      id: nextId("users"),
-      email,
-      passwordHash,
-      createdAt: new Date().toISOString(),
-    };
-    commit((dbState) => {
-      dbState.users.push(user);
+
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Create user in DB
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: passwordHash,
+      },
     });
+
+    // Create JWT
     const token = createToken({ id: user.id, email: user.email });
     setAuthCookie(res, token);
-    return res.status(201).json({ user });
+
+    return res.status(201).json({
+      user: { id: user.id, email: user.email, createdAt: user.createdAt },
+    });
   } catch (err) {
     console.error("Register error:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
 
+/* =========================
+   LOGIN
+========================= */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
-    const db = getState();
-    const user = db.users.find((u) => u.email === email);
+
+    // Find user in DB
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    const valid = await verifyPassword(password, user.passwordHash);
+
+    // Verify password
+    const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
+
+    // Create JWT
     const token = createToken({ id: user.id, email: user.email });
     setAuthCookie(res, token);
+
     return res.json({
       user: { id: user.id, email: user.email, createdAt: user.createdAt },
     });
@@ -66,35 +94,47 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/* =========================
+   LOGOUT
+========================= */
 router.post("/logout", (req, res) => {
   clearAuthCookie(res);
   return res.json({ success: true });
 });
 
+/* =========================
+   CHANGE PASSWORD
+========================= */
 router.post("/change-password", requireAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
+
     if (!currentPassword || !newPassword) {
       return res
         .status(400)
         .json({ error: "Current and new passwords are required" });
     }
-    const db = getState();
-    const user = db.users.find((u) => u.id === req.user.id);
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    const valid = await verifyPassword(currentPassword, user.passwordHash);
+
+    const valid = await bcrypt.compare(currentPassword, user.password);
     if (!valid) {
       return res.status(401).json({ error: "Current password is incorrect" });
     }
-    const passwordHash = await hashPassword(newPassword);
-    commit((dbState) => {
-      const found = dbState.users.find((u) => u.id === user.id);
-      if (found) {
-        found.passwordHash = passwordHash;
-      }
+
+    const newHash = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { password: newHash },
     });
+
     return res.json({ success: true });
   } catch (err) {
     console.error("Change password error:", err);
@@ -102,13 +142,24 @@ router.post("/change-password", requireAuth, async (req, res) => {
   }
 });
 
+/* =========================
+   CURRENT USER
+========================= */
 router.get("/me", requireAuth, async (req, res) => {
   try {
-    const db = getState();
-    const user = db.users.find((u) => u.id === req.user.id);
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true,
+      },
+    });
+
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
+
     return res.json({ user });
   } catch (err) {
     console.error("Me error:", err);
@@ -117,5 +168,3 @@ router.get("/me", requireAuth, async (req, res) => {
 });
 
 module.exports = router;
-
-

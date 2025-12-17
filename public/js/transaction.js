@@ -134,34 +134,149 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 //   ===== Frontend sends POST API request =====
+  // async function submitToServer() {
+  //   if (!formData) return;
+
+  //   confirmBtn.disabled = true;
+  //   confirmBtn.textContent = 'Saving...';
+
+  //   try {
+  //     const res = await fetch('/api/transactions', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       credentials: 'include',
+  //       body: JSON.stringify(formData)
+  //     });
+  //     if (res.status === 401) {
+  //       alert('Session expired. Please login again.');
+  //       window.location.href = '/';
+  //       return;
+  //     }
+
+  //     const data = await res.json();
+  //     if (!res.ok) {
+  //       throw new Error(data.message || 'Transaction saving failed');
+  //     }
+
+  //     alert('Transaction saved successfully');
+  //     closeModal();
+  //     resetForm();
+
+  //   } catch (err) {
+  //     console.error('Transaction save failed:', err);
+  //     alert(err.message);
+  //   } finally {
+  //     confirmBtn.disabled = false;
+  //     confirmBtn.textContent = 'Confirm';
+  //   }
+  // }
+
   async function submitToServer() {
-    if (!formData) return;
+  if (!formData) {
+    console.error('No form data available');
+    return;
+  }
 
-    confirmBtn.disabled = true;
-    confirmBtn.textContent = 'Saving...';
+  const confirmBtn = document.getElementById('confirmSubmit');
+  if (!confirmBtn) {
+    console.error('Confirm button not found');
+    return;
+  }
 
-    try {
-      const res = await fetch('/api/transactions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+  // Save original button state
+  const originalText = confirmBtn.textContent;
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = 'Saving...';
+
+  try {
+    console.log('Submitting transaction:', formData);
+    
+    const response = await fetch('/api/transactions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(formData)
+    });
+
+    console.log('Response status:', response.status);
+    
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      const error = await response.json().catch(() => ({}));
+      console.error('Authentication error:', error);
+      alert('Your session has expired. Please log in again.');
+      window.location.href = '/login';
+      return;
+    }
+
+    const data = await response.json().catch(err => {
+      console.error('Failed to parse JSON response:', err);
+      throw new Error('Invalid server response');
+    });
+
+    // Handle non-2xx responses
+    if (!response.ok) {
+      console.error('Server error response:', {
+        status: response.status,
+        statusText: response.statusText,
+        data
       });
+      throw new Error(data.message || `Server error: ${response.statusText}`);
+    }
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Failed');
+    console.log('Transaction saved successfully:', data);
+    
+    // Show success message
+    const successMessage = document.createElement('div');
+    successMessage.className = 'alert alert-success';
+    successMessage.textContent = 'Transaction saved successfully!';
+    document.body.appendChild(successMessage);
+    
+    // Remove message after 3 seconds
+    setTimeout(() => {
+      successMessage.remove();
+    }, 3000);
 
-      alert('Transaction saved successfully');
-      closeModal();
-      resetForm();
-    } catch (err) {
-      alert(err.message);
-    } finally {
+    // Close modal and reset form
+    closeModal();
+    resetForm();
+    
+    // Optional: Refresh transactions list if needed
+    if (typeof loadTransactions === 'function') {
+      loadTransactions();
+    }
+
+  } catch (error) {
+    console.error('Transaction save failed:', {
+      error: error.message,
+      stack: error.stack
+    });
+    
+    // Show error message
+    const errorMessage = document.createElement('div');
+    errorMessage.className = 'alert alert-error';
+    errorMessage.textContent = `Error: ${error.message || 'Failed to save transaction'}`;
+    document.body.appendChild(errorMessage);
+    
+    // Remove message after 5 seconds
+    setTimeout(() => {
+      errorMessage.remove();
+    }, 5000);
+
+  } finally {
+    // Restore button state
+    if (confirmBtn) {
       confirmBtn.disabled = false;
-      confirmBtn.textContent = 'Confirm';
+      confirmBtn.textContent = originalText;
     }
   }
+}
+
 
 //   ===== form reset function =====
   function resetForm() {
@@ -196,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ========================================================================
 
 /* ===========STATE===========*/
-let transactions = [];
+// let transactions = [];
 
 /* ============DOM=========== */
 const listEl = document.getElementById("transactions-list");
@@ -240,56 +355,56 @@ function loadTransactions() {
   transactions = saved ? JSON.parse(saved) : sampleData();
 }
 
-function saveTransactions() {
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-}
+// function saveTransactions() {
+//   localStorage.setItem("transactions", JSON.stringify(transactions));
+// }
 
-function renderTransactions() {
-  listEl.innerHTML = "";
+// function renderTransactions() {
+//   listEl.innerHTML = "";
 
-  if (!transactions.length) {
-    listEl.innerHTML = `<p>No transactions found</p>`;
-    return;
-  }
+//   if (!transactions.length) {
+//     listEl.innerHTML = `<p>No transactions found</p>`;
+//     return;
+//   }
 
-  transactions.forEach(tx => {
-    listEl.appendChild(createTransactionEl(tx));
-  });
-}
+//   transactions.forEach(tx => {
+//     listEl.appendChild(createTransactionEl(tx));
+//   });
+// }
 
-function createTransactionEl(tx) {
-  const el = document.createElement("div");
-  el.className = "transaction-item";
+// function createTransactionEl(tx) {
+//   const el = document.createElement("div");
+//   el.className = "transaction-item";
 
-  el.innerHTML = `
-    <div class="transaction-row">
-      <span>${formatDate(tx.date)}</span>
-      <span>${tx.type}</span>
-      <span>${tx.category}</span>
-      <span class="${tx.type === "income" ? "income" : "expense"}">
-        ₹${tx.amount}
-      </span>
-      <button data-id="${tx.id}" class="delete-btn">🗑</button>
-    </div>
-  `;
+//   el.innerHTML = `
+//     <div class="transaction-row">
+//       <span>${formatDate(tx.date)}</span>
+//       <span>${tx.type}</span>
+//       <span>${tx.category}</span>
+//       <span class="${tx.type === "income" ? "income" : "expense"}">
+//         ₹${tx.amount}
+//       </span>
+//       <button data-id="${tx.id}" class="delete-btn">🗑</button>
+//     </div>
+//   `;
 
-  el.querySelector(".delete-btn").onclick = () => {
-    transactions = transactions.filter(t => t.id !== tx.id);
-    saveTransactions();
-    renderTransactions();
-  };
+//   el.querySelector(".delete-btn").onclick = () => {
+//     transactions = transactions.filter(t => t.id !== tx.id);
+//     saveTransactions();
+//     renderTransactions();
+//   };
 
-  return el;
-}
+//   return el;
+// }
 
 /* ======date formate change================= */
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric"
-  });
-}
+// function formatDate(date) {
+//   return new Date(date).toLocaleDateString("en-IN", {
+//     day: "2-digit",
+//     month: "short",
+//     year: "numeric"
+//   });
+// }
 
 /* =======FILTER FUNCTIONALITY=============== */
 function setupFilterToggle() {
@@ -407,43 +522,43 @@ function renderFilteredTransactions(filteredTransactions) {
   });
 }
 
-function sampleData() {
-  const today = new Date().toISOString().split("T")[0];
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+// function sampleData() {
+//   const today = new Date().toISOString().split("T")[0];
+//   const yesterday = new Date();
+//   yesterday.setDate(yesterday.getDate() - 1);
+//   const yesterdayStr = yesterday.toISOString().split("T")[0];
   
-  return [
-    {
-      id: "1",
-      date: today,
-      type: "expense",
-      category: "Food",
-      amount: 250
-    },
-    {
-      id: "2",
-      date: today,
-      type: "income",
-      category: "Salary",
-      amount: 50000
-    },
-    {
-      id: "3",
-      date: yesterdayStr,
-      type: "expense",
-      category: "Shopping",
-      amount: 1200
-    },
-    {
-      id: "4",
-      date: yesterdayStr,
-      type: "expense",
-      category: "Transport",
-      amount: 150
-    }
-  ];
-}
+//   return [
+//     {
+//       id: "1",
+//       date: today,
+//       type: "expense",
+//       category: "Food",
+//       amount: 250
+//     },
+//     {
+//       id: "2",
+//       date: today,
+//       type: "income",
+//       category: "Salary",
+//       amount: 50000
+//     },
+//     {
+//       id: "3",
+//       date: yesterdayStr,
+//       type: "expense",
+//       category: "Shopping",
+//       amount: 1200
+//     },
+//     {
+//       id: "4",
+//       date: yesterdayStr,
+//       type: "expense",
+//       category: "Transport",
+//       amount: 150
+//     }
+//   ];
+// }
 
 
 

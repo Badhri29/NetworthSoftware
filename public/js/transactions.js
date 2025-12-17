@@ -96,7 +96,7 @@ function createTransactionEl(tx) {
 }
 
 /* ===============================
-   HELPERS
+   date formate change
 ================================ */
 function formatDate(date) {
   return new Date(date).toLocaleDateString("en-IN", {
@@ -114,19 +114,23 @@ function setupFilterToggle() {
   const filterSection = document.getElementById('filter-section');
   const applyFilterBtn = document.getElementById('apply-filter');
   const resetFilterBtn = document.getElementById('reset-filter');
-
+filterSection.style.display = 'none';
+filterToggle.textContent = 'Show Filter'
   // Toggle filter section visibility
   filterToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    filterSection.style.display = filterSection.style.display === 'none' ? 'block' : 'none';
+    const isHidden = filterSection.style.display === 'none';
+    filterSection.style.display = isHidden ? 'block' : 'none';
+    filterToggle.textContent = isHidden ? 'Hide Filter' : 'Show Filter';
   });
 
   // Close filter when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!filterSection.contains(e.target) && e.target !== filterToggle) {
-      filterSection.style.display = 'none';
-    }
-  });
+document.addEventListener('click', (e) => {
+  if (!filterSection.contains(e.target) && e.target !== filterToggle) {
+    filterSection.style.display = 'none';
+    filterToggle.textContent = 'Show Filter';
+  }
+});
 
   // Apply filter
   applyFilterBtn.addEventListener('click', () => {

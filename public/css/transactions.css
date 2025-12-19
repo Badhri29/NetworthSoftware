@@ -529,43 +529,32 @@ Confirmation Style Start
 
 /* ------------------------------------get transaction toggle content style start----------------------- */
 
+/* =====================================================
+   GET TRANSACTION – DESKTOP (UNCHANGED)
+===================================================== */
+
 .get-transection-content {
   margin: 1rem 0;
   width: 100%;
   display: none;
-  transition: opacity 0.3s ease-in-out;
 }
 
-/* MAIN CARD */
 .get-section {
   background: var(--bg-color);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1rem;
-  transition: var(--transition);
-  width: 100%;
-  box-sizing: border-box;
-  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
   display: flex;
   flex-direction: column;
   min-height: 500px;
   max-height: 700px;
 }
 
-/* ------------------------------------ */
-/* HEADER (ABOVE RED LINE – NOT SCROLLING) */
 .get-section-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 0.5rem 0.75rem;
-}
-
-.get-section-heading h4 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-primary);
 }
 
 .get-section-filter {
@@ -573,249 +562,218 @@ Confirmation Style Start
   color: white;
   border: none;
   padding: 0.4rem 1rem;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: var(--transition);
 }
 
-.get-section-filter:hover {
-  background: var(--primary-hover);
-}
-
-/* ------------------------------------ */
-/* FILTER SECTION (STATIC – NOT STICKY) */
-.filter-section {
-  background: var(--bg-color);
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem 0;
-  border: 1px solid var(--border-color);
-}
-
-.filter-row {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.filter-group {
-  flex: 1;
-  min-width: 200px;
-}
-
-.filter-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.filter-group select {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  background: var(--bg-color);
-  color: var(--text-color);
-}
-
-.filter-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--border-color);
-}
-
-/* ------------------------------------ */
-/* TABLE SCROLL CONTAINER */
 .table-responsive {
   width: 100%;
-  max-height: 420px;        /* controls body scroll */
+  max-height: 420px;
   overflow-y: auto;
-  border-radius: var(--radius-sm);
   border: 1px solid var(--border-color);
-  scrollbar-width: none;
+  border-radius: var(--radius-sm);
 }
 
-.table-responsive::-webkit-scrollbar {
-  display: none;
+/* ================= DESKTOP TABLE ================= */
+
+@media (min-width: 769px) {
+
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+  }
+
+  .transactions-table thead {
+    position: sticky;
+    top: 0;
+    background: var(--card-bg);
+    z-index: 5;
+  }
+
+  .transactions-table th,
+  .transactions-table td {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .transactions-table th:nth-child(1),
+  .transactions-table td:nth-child(1) { width: 50px; }
+
+  .transactions-table th:nth-child(2),
+  .transactions-table td:nth-child(2) { width: 80px; }
+
+  .transactions-table th:nth-child(3),
+  .transactions-table td:nth-child(3) { width: 100px; }
+
+  .transactions-table th:nth-child(4),
+  .transactions-table td:nth-child(4) { width: 120px; }
+
+  .transactions-table th:nth-child(5),
+  .transactions-table td:nth-child(5) { width: 120px; }
+
+  .transactions-table th:nth-child(6),
+  .transactions-table td:nth-child(6) {
+    width: 200px;
+    white-space: normal;
+  }
 }
 
-/* ------------------------------------ */
-/* TABLE */
-.transactions-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--bg-color);
-  font-size: 0.6rem;  /* Reduced from 0.9rem */
-}
+/* =====================================================
+   GET TRANSACTION – MOBILE (FINAL BUG-FREE)
+===================================================== */
 
-/* ✅ STICKY TABLE HEADER */
-.transactions-table thead {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--card-bg);
-  border: none;
-  box-shadow: none;
-}
+@media (max-width: 768px) {
 
-/* CELLS */
-.transactions-table th,
-.transactions-table td {
-  padding: 0.5rem 0.75rem;  /* Reduced padding */
-  text-align: left;
-  border-bottom: 1px solid var(--border-color);
-  white-space: nowrap;
-}
+  /* RESET TABLE */
+  .transactions-table,
+  .transactions-table tbody,
+  .transactions-table tr,
+  .transactions-table td {
+    display: block;
+    width: 100%;
+  }
 
-/* HEADER CELLS */
-.transactions-table th {
-  font-weight: 600;
-  height: 3rem;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  text-align: center;
-  white-space: normal !important;  /* Allow text wrapping */
-  word-break: break-word;         /* Break long words if needed */
-  padding: 0.5rem 0.3rem;         /* Adjust padding for wrapped text */
-  line-height: 1.2;               /* Better line spacing */
-  vertical-align: middle;         /* Center content vertically */
-}
-.transactions-table th:first-child,
-.transactions-table td:first-child {
-  width: 50px;
-  padding: 0.3rem 0.2rem;  /* Reduced padding for ID column */
-  text-align: center;      /* Center align ID numbers */
-  white-space: nowrap;     /* Prevent wrapping */
-  overflow: hidden;        /* Hide overflow */
-  text-overflow: ellipsis; /* Show ellipsis if content is too long */
-  border-right: 1px solid gray;
-}
-.transactions-table th:nth-child(2),
-.transactions-table td:nth-child(2){
-  width: 75px;
-  text-align: center;
-  border-right: 1px solid gray;
-}
-.transactions-table th:nth-child(3),
-.transactions-table td:nth-child(3){
-  width: 100px;
-  text-align: center;
-  border-right: 1px solid gray;
-}
-.transactions-table th:nth-child(4),
-.transactions-table td:nth-child(4){
-  width: 100px;
-  text-align: center;
-  border-right: 1px solid gray;
-}
-.transactions-table th:nth-child(5),
-.transactions-table td:nth-child(5){
-  width: 100px;
-  text-align: center;
-  border-right: 1px solid gray;
-}
-.transactions-table th:nth-child(6),
-.transactions-table td:nth-child(6){
-  text-align: center;
-  border-right: 1px solid gray;
-  width: 350px;
-}
-.transactions-table td:nth-child(6) {
-  white-space: normal;
-  min-width: 250px;  
-  word-break: break-word;
-  padding-right: 1rem;  
-}
-.transactions-table th:nth-child(7),
-.transactions-table td:nth-child(7){
-  text-align: center;
-  border-right: 1px solid gray;
-  width: 100px;
-}
-.transactions-table th:nth-child(8),
-.transactions-table td:nth-child(8){
-  border-right: 1px solid gray;
-  text-align: center;
-  width: 100px;
-}
-.transactions-table th:nth-child(9),
-.transactions-table td:nth-child(9){
-  border-right: 1px solid gray;
-  text-align: center;
-  width: 100px;
-}
-/* Make sure table cells don't overflow */
-table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-/* Adjust other columns to be more compact */
-.transactions-table th:not(:nth-child(6)),
-.transactions-table td:not(:nth-child(6)) {
-  max-width: 100px;  /* Reduced from 120px */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0.4rem 0.5rem;  /* More compact padding */
-}
-
-/* ROW HOVER */
-.transactions-table tbody tr:hover {
-  background-color: var(--hover-bg);
-}
-
-/* ------------------------------------ */
-/* TRANSACTION COLORS */
-.transaction-income .amount {
-  color: #10b981;
-  font-weight: 600;
-}
-
-.transaction-expense .amount {
-  color: #ef4444;
-  font-weight: 600;
-}
-
-.transaction-saving .amount {
-  color: #3b82f6;
-  font-weight: 600;
-}
-
-/* ------------------------------------ */
-/* MOBILE VIEW */
-@media (max-width: 1024px) {
   .transactions-table thead {
     display: none;
   }
 
-  .transactions-table {
-    display: block;
-  }
-
+  /* CARD */
   .transactions-table tbody tr {
-    display: block;
-    margin-bottom: 1rem;
+    position: relative;
+    background: var(--bg-color);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+    border-radius: 14px;
+    padding: 0.75rem;
+    margin-bottom: 0.25rem;
+    box-shadow: 0 4px 14px rgba(2,6,23,0.06);
   }
 
+  /* RESET CELL */
   .transactions-table tbody td {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
+    padding: 0;
+    border: none;
+    text-align: left;
+    white-space: normal;
   }
 
-  .transactions-table tbody td::before {
-    content: attr(data-label);
+  /* ID + DATE + TIME */
+td[data-label="ID"],
+td[data-label="Date"] {
+  display: inline-block;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+td[data-label="ID"] {
+  font-weight: 600;
+  margin-right: 0.4rem;
+}
+
+/* keep date & time together */
+td[data-label="Date"] {
+  white-space: nowrap;
+}
+
+  
+
+  /* ================= AMOUNT (FIXED & COLORED) ================= */
+  .transactions-table tbody td.amount {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    font-size: 0.9rem;
     font-weight: 600;
+    text-align: right;
+  }
+
+  .transaction-income td.amount {
+    color: #10b981;
+  }
+
+  .transaction-expense td.amount {
+    color: #ef4444;
+  }
+
+  .transaction-saving td.amount {
+    color: #3b82f6;
+  }
+
+ /* ================= TYPE + CATEGORY SAME LINE ================= */
+td[data-label="Type"],
+td[data-label="Category"] {
+  display: inline-flex;
+  align-items: center;
+  width: auto;              
+  max-width: fit-content;  
+  margin-top: 0.4rem;
+}
+
+td[data-label="Type"] {
+  line-height: 1.2;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  display: inline-flex;
+}
+
+
+  /* TYPE COLORS */
+  .transaction-income td[data-label="Type"] {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px;
+  }
+
+  .transaction-expense td[data-label="Type"] {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px;
+  }
+
+  .transaction-saving td[data-label="Type"] {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px;
+  }
+
+  /* CATEGORY */
+  td[data-label="Category"] {
+    font-size: 0.75rem;
+    color: var(--text-primary);
+  }
+
+  /* STACKED DETAILS */
+  td[data-label="Sub-category"],
+  td[data-label="Details"],
+  td[data-label="Payment Mode"] {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
   }
+
+  /* HIDE UNUSED */
+  td[data-label="Card Type"] {
+    display: none;
+  }
+
+  /* CLEAR */
+  .transactions-table tbody tr::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+
+
 }
 
 /* ------------------------------------get transaction toggle content style stop----------------------- */

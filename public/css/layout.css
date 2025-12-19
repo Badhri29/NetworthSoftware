@@ -267,7 +267,14 @@
     padding: 1.2rem 1.5rem 1.2rem;
   }
 }
-
+@media(max-width: 768px){
+  #header-username{
+    display: none !important;
+  }
+  #header-avatar {
+    display: block !important;
+  }
+}
 @media (min-width: 1025px) {
   .app-shell {
     flex-direction: row;

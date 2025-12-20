@@ -13,7 +13,7 @@ datasource db {
 // prisma/schema.prisma
 model Transaction {
   id          Int      @id @default(autoincrement())
-  date        DateTime
+  date        DateTime @db.Date
   type        String
   category    String?
   subcategory String?

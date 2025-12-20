@@ -97,6 +97,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Clear Form =====
   clearBtn.addEventListener('click', resetForm);
 
+  // ===== Update Transaction Type Class =====
+  const updateTransactionTypeClass = (type) => {
+    const modalContent = document.querySelector('.modal-content');
+    // Remove all transaction type classes
+    modalContent.classList.remove('transaction-type-income', 'transaction-type-expense', 'transaction-type-savings');
+    
+    // Add the appropriate class based on the selected type
+    if (type) {
+      modalContent.classList.add(`transaction-type-${type}`);
+    }
+  };
+
+  // Listen for transaction type changes
+  transactionType.addEventListener('change', (e) => {
+    updateTransactionTypeClass(e.target.value);
+  });
+
   // ===== Form Submit =====
   document.querySelector('.btn-primary').addEventListener('click', e => {
     e.preventDefault();
@@ -113,6 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
       card: paymentMode.value === 'credit' ? cardSelect.value : null
     };
 
+    // Update modal class before showing
+    updateTransactionTypeClass(transactionType.value);
     showModal(formData);
   });
 

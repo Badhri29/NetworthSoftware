@@ -452,6 +452,22 @@ Confirmation Style Start
 */
 
 
+/* Transaction Type Colors */
+.transaction-type-income {
+  --transaction-color: #10b981;  /* Green for income */
+  --transaction-bg: rgba(16, 185, 129, 0.1);
+}
+
+.transaction-type-expense {
+  --transaction-color: #ef4444;  /* Red for expense */
+  --transaction-bg: rgba(239, 68, 68, 0.1);
+}
+
+.transaction-type-savings {
+  --transaction-color: #3b82f6;  /* Blue for savings */
+  --transaction-bg: rgba(59, 130, 246, 0.1);
+}
+
 /* Confirmation Modal */
 .modal {
   display: none;
@@ -497,7 +513,11 @@ Confirmation Style Start
 
 #transactionDetails {
   margin: 1rem 0;
-  padding: 1rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--transaction-bg, #f8fafc);
+  border-left: 4px solid var(--transaction-color, var(--primary-color));
+  transition: all 0.3s ease;
   background-color: var(--card-bg);
   border-radius: var(--radius-sm);
 }

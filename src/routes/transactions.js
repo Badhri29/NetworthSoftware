@@ -102,7 +102,7 @@ router.get("/", async (req, res) => {
         }
       },
       orderBy: {
-        date: "desc"
+        updatedAt: "desc"
       }
     });
 

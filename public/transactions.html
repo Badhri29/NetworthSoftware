@@ -488,12 +488,7 @@
       </main>
     </div>
 
-    
 
-    <script src="/js/api.js"></script>
-    <script src="/js/theme.js"></script>
-    <script src="/js/ui.js"></script>
-    <script src="/js/transaction.js"></script>
     <!-- Confirmation Modal -->
     <div id="confirmationModal" class="modal">
       <div class="modal-content">
@@ -505,5 +500,23 @@
         </div>
       </div>
     </div>
+
+    <!-- Transaction View Modal -->
+    <div class="modal" id="transactionViewModal">
+      <div class="modal-content">
+        <h3>Transaction Details</h3>
+
+        <div id="transactionViewBody"></div>
+
+        <div class="modal-buttons">
+          <button class="btn btn-secondary" id="closeViewModal">Close</button>
+        </div>
+      </div>
+    </div>
+  
+    <script src="/js/api.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/transaction.js"></script>
   </body>
 </html>

@@ -420,11 +420,11 @@ async function loadRecentTransactions() {
       credentials: 'include'
     });
 
-    const result = await res.json();   // ✅ correct
+    const result = await res.json();
 
     if (!res.ok) throw new Error(result.message);
 
-    renderRecentTransactions(result.data); // ✅ FIXED
+    renderRecentTransactions(result.data);
   } catch (err) {
     console.error('Failed to load recent transactions', err);
   }
@@ -434,67 +434,154 @@ function renderRecentTransactions(transactions) {
   const container = document.getElementById('recent-transactions-list');
   if (!container) return;
 
+  if (!Array.isArray(transactions)) {
+    console.warn('renderRecentTransactions expected array, got:', transactions);
+    transactions = [];
+  }
   container.innerHTML = '';
-
-  if (!transactions || !transactions.length) {
-    container.innerHTML = '<p>No recent transactions</p>';
+  if (transactions.length === 0) {
+    container.innerHTML = '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
     return;
   }
-
   transactions.slice(0, 5).forEach(tx => {
+    const d = new Date(tx.updatedAt);
+    const dateTime = `${d.toLocaleDateString('en-IN')} • ${d.toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })}`;
+
     const card = document.createElement('div');
     card.className = `recent-card ${tx.type}`;
 
     card.innerHTML = `
-      <div class="recent-grid top">
-        <div>
-          <div class="recent-label">Date</div>
-          <div class="recent-value">
-            ${new Date(tx.date).toLocaleDateString()}
-          </div>
+      <!-- ROW 1 -->
+      <div class="recent-row">
+        <div class="recent-box">
+          <div class="recent-label">Last Modified</div>
+          <div class="recent-value">${dateTime}</div>
         </div>
 
-        <div>
-          <div class="recent-label">Type</div>
-          <div class="recent-badge ${tx.type}">
-            ${tx.type}
-          </div>
-        </div>
-
-        <div>
+        <div class="recent-box">
           <div class="recent-label">Category</div>
           <div class="recent-value">${tx.category || '-'}</div>
         </div>
 
-        <div>
-          <div class="recent-label">Sub-Category</div>
+        <div class="recent-box">
+          <div class="recent-label">Payment Type</div>
+          <div class="recent-value ${tx.type}">${tx.type}</div>
+        </div>
+
+        <button class="recent-edit">✎</button>
+      </div>
+
+      <!-- ROW 2 -->
+      <div class="recent-row second">
+        <div class="recent-box">
+          <div class="recent-label">Payment Mode</div>
+          <div class="recent-value">${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Sub Category</div>
           <div class="recent-value">${tx.subcategory || '-'}</div>
         </div>
 
-        <button class="recent-edit">✎ Edit</button>
+        <div class="recent-box">
+          <div class="recent-label">Amount</div>
+          <div class="recent-value recent-amount">₹${tx.amount}</div>
+        </div>
       </div>
 
-      <div class="recent-grid bottom">
-        <div>
-          <div class="recent-label">Details</div>
-          <div class="recent-value">${tx.description || '-'}</div>
-        </div>
-
-        <div>
-          <div class="recent-label">Amount</div>
-          <div class="recent-amount">₹${tx.amount}</div>
-        </div>
-
-        <div>
-          <div class="recent-label">Mode</div>
-          <div class="recent-value">${tx.paymentMode}</div>
-        </div>
+      <!-- DETAILS -->
+      <div class="recent-details">
+        <div class="recent-label">Details</div>
+        ${tx.description || '-'}
       </div>
     `;
 
     container.appendChild(card);
   });
 }
+
+
+function formatDateTime(dateStr) {
+  const d = new Date(dateStr);
+
+  return {
+    date: d.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }),
+    time: d.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    })
+  };
+}
+
+function openTransactionView(tx) {
+  const modal = document.getElementById('transactionViewModal');
+  const body = document.getElementById('transactionViewBody');
+
+  const d = new Date(tx.updatedAt);
+  const date = d.toLocaleDateString("en-IN");
+  const time = d.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  });
+
+  body.innerHTML = `
+    <div class="view-grid">
+      <div class="view-box">
+        <div class="view-label">Last Modified</div>
+        <div class="view-value">${date} • ${time}</div>
+      </div>
+
+      <div class="view-box">
+        <div class="view-label">Category</div>
+        <div class="view-value">${tx.category || '-'}</div>
+      </div>
+
+      <div class="view-box">
+        <div class="view-label">Payment Type</div>
+        <div class="view-value">${tx.type}</div>
+      </div>
+
+      <div class="view-box">
+        <div class="view-label">Payment Mode</div>
+        <div class="view-value">
+          ${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}
+        </div>
+      </div>
+
+      <div class="view-box">
+        <div class="view-label">Sub Category</div>
+        <div class="view-value">${tx.subcategory || '-'}</div>
+      </div>
+
+      <div class="view-box">
+        <div class="view-label">Amount</div>
+        <div class="view-value">₹${tx.amount}</div>
+      </div>
+    </div>
+
+    <div class="view-details">
+      ${tx.description || '-'}
+    </div>
+  `;
+
+  modal.classList.add('show');
+}
+
+document.getElementById('closeViewModal')
+  .addEventListener('click', () => {
+    document.getElementById('transactionViewModal')
+      .classList.remove('show');
+  });
 
 // =========== recent transaction style stop ======================
 
@@ -527,7 +614,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTransactions();
   setupViewToggle();
   setupFilterToggle();
-  renderRecentTransactions();
   loadRecentTransactions();
 });
 

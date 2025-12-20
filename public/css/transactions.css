@@ -113,8 +113,7 @@ body[data-theme="dark"] .toggle-btn.active {
   box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
   display: flex;
   flex-direction: column;
-  min-height: 450px;
-  max-height: 70vh;
+  min-height: 500px;
   overflow-y: auto;
   scrollbar-width: none;  
   -ms-overflow-style: none; 
@@ -122,6 +121,10 @@ body[data-theme="dark"] .toggle-btn.active {
 
 .add-section::-webkit-scrollbar {
   display: none;
+}
+.add-section-content {
+  flex: 1;                /* takes remaining height */
+  overflow-y: auto;       /* scroll only content */
 }
 
 @media (min-width: 768px) {
@@ -163,16 +166,18 @@ body[data-theme="dark"] .toggle-btn.active {
   z-index: 2;
   background: inherit;       
   border-bottom: 1px solid #e5e7eb;
-  
+  min-height: 50px;
 }
 
 .add-section-bottom {
   position: sticky;
   bottom: 0;
-  z-index: 3;
+  z-index: 5;
   background: inherit;
   padding: 0.25rem 1rem;
   border-top:1px solid var(--border-color);
+  min-height: 50px;
+  align-content: center;
   }
 
 /* 
@@ -218,11 +223,24 @@ Fill Details Style Start
 @media (max-width: 768px) {
   .form-row {
     flex-direction: column;
-    gap: 1.25rem;
+    /* gap: 1.25rem; */
+    align-items:normal;
+    min-height: 80px;
+    max-height: 80px;
   }
   
   .form-row > .form-group {
     width: 100%;
+    max-height: 80px;
+  }
+  .add-section{
+    /* height: 500px; */
+  }
+  #transaction-form{
+    min-height: 500px;
+  }
+  .add-section-bottom{
+    padding: 2px;
   }
 }
 
@@ -802,6 +820,45 @@ td[data-label="Type"] {
   }
 
 
+  /* Default: stack everything */
+  .form-row {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  /* ---------- ROW 1: Date + Type ---------- */
+  .transaction-form > .form-row:nth-of-type(1) {
+    flex-direction: row;
+  }
+
+  .transaction-form > .form-row:nth-of-type(1) .form-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ---------- ROW 2: Category + Subcategory ---------- */
+  .transaction-form > .form-row:nth-of-type(2) {
+    flex-direction: row;
+  }
+
+  .transaction-form > .form-row:nth-of-type(2) .form-group {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ---------- DETAILS stays full width ---------- */
+  #transaction-details {
+    width: 100%;
+  } 
+
+  /* ---------- ROW 3: Amount + Payment + Card ---------- */
+  .transaction-form > .form-row:nth-of-type(4) {
+    flex-direction: row;
+  }
+  .transaction-form > .form-row:nth-of-type(4) {
+    flex: 1;
+    min-width: 0;
+  }
 }
 
 /* ------------------------------------get transaction toggle content style stop----------------------- */

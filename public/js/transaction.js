@@ -35,6 +35,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== Default Date =====
   const today = new Date().toISOString().split('T')[0];
   dateInput.value = today;
+
+  // Function to clear error for a specific field
+  const clearFieldError = (inputElement, errorId) => {
+    inputElement.classList.remove('error');
+    const errorElement = document.getElementById(errorId);
+    if (errorElement) {
+      errorElement.textContent = '';
+    }
+  };
+
+  // Add input event listeners to clear errors when user types
+  dateInput.addEventListener('input', () => clearFieldError(dateInput, 'date-error'));
+  transactionType.addEventListener('change', () => clearFieldError(transactionType, 'type-error'));
+  amountInput.addEventListener('input', () => clearFieldError(amountInput, 'amount-error'));
+  paymentMode.addEventListener('change', () => clearFieldError(paymentMode, 'payment-mode-error'));
   dateInput.max = today;
 
   // ===== Subcategory Map =====
@@ -107,11 +122,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== Form validation =====
   function validateForm() {
-    if (!dateInput.value) return alert('Date required');
-    if (!transactionType.value) return alert('Transaction type required');
-    if (!amountInput.value || amountInput.value <= 0) return alert('Invalid amount');
-    if (!paymentMode.value) return alert('Payment mode required');
-    return true;
+    let isValid = true;
+    
+    // Reset error messages
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    
+    // Validate date
+    if (!dateInput.value) {
+      document.getElementById('date-error').textContent = 'Date is required';
+      dateInput.classList.add('error');
+      isValid = false;
+    }
+    
+    // Validate transaction type
+    if (!transactionType.value) {
+      document.getElementById('type-error').textContent = 'Transaction type is required';
+      transactionType.classList.add('error');
+      isValid = false;
+    }
+    
+    // Validate amount
+    if (!amountInput.value || amountInput.value <= 0) {
+      document.getElementById('amount-error').textContent = 'Please enter a valid amount';
+      amountInput.classList.add('error');
+      isValid = false;
+    }
+    
+    // Validate payment mode
+    if (!paymentMode.value) {
+      document.getElementById('payment-mode-error').textContent = 'Payment mode is required';
+      paymentMode.classList.add('error');
+      isValid = false;
+    }
+    
+    return isValid;
   }
 
 //   ===== Confirmation screen display function =====

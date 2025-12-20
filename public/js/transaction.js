@@ -471,8 +471,6 @@ function renderRecentTransactions(transactions) {
           <div class="recent-label">Payment Type</div>
           <div class="recent-value ${tx.type}">${tx.type}</div>
         </div>
-
-        <button class="recent-edit">✎</button>
       </div>
 
       <!-- ROW 2 -->

@@ -287,6 +287,60 @@ document.addEventListener('DOMContentLoaded', () => {
     cardGroup.style.display = 'none';
     charCount.textContent = '0';
   }
+
+/* =====================================================
+     GET TRANSACTION TOGGLE LOGIC (FIXED FOR PRODUCTION)
+  ===================================================== */
+
+  const toggleBtns = document.querySelectorAll('.toggle-btn');
+  const addTransactionContent = document.querySelector('.add-transection-content');
+  const getTransactionContent = document.querySelector('.get-transection-content');
+
+  if (toggleBtns.length && addTransactionContent && getTransactionContent) {
+    addTransactionContent.style.display = 'flex';
+    getTransactionContent.style.display = 'none';
+
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        toggleBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (btn.dataset.view === 'transactions') {
+          addTransactionContent.style.display = 'flex';
+          getTransactionContent.style.display = 'none';
+        } else {
+          addTransactionContent.style.display = 'none';
+          getTransactionContent.style.display = 'block';
+        }
+      });
+    });
+  }
+
+  /* =====================================================
+     FILTER TOGGLE (SAFE)
+  ===================================================== */
+
+  const filterToggle = document.getElementById('filter-toggle');
+  const filterSection = document.getElementById('filter-section');
+
+  if (filterToggle && filterSection) {
+    filterSection.style.display = 'none';
+
+    filterToggle.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = filterSection.style.display === 'block';
+      filterSection.style.display = open ? 'none' : 'block';
+      filterToggle.textContent = open ? 'Show Filter' : 'Hide Filter';
+    });
+
+    document.addEventListener('click', e => {
+      if (!filterSection.contains(e.target) && e.target !== filterToggle) {
+        filterSection.style.display = 'none';
+        filterToggle.textContent = 'Show Filter';
+      }
+    });
+  }
+
 });
 
 // =======================form styles stop=======================

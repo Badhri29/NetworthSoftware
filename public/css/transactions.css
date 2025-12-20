@@ -233,9 +233,6 @@ Fill Details Style Start
     width: 100%;
     max-height: 80px;
   }
-  .add-section{
-    /* height: 500px; */
-  }
   #transaction-form{
     min-height: 500px;
   }

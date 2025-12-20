@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
   clearBtn.addEventListener('click', resetForm);
 
   // ===== Form Submit =====
-  form.addEventListener('submit', e => {
+  document.querySelector('.btn-primary').addEventListener('click', e => {
     e.preventDefault();
     if (!validateForm()) return;
 

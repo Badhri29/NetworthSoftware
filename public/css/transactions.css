@@ -584,6 +584,111 @@ Confirmation Style Start
 
 /* =================Stop================== */
 
+/*
+=============================================
+Recent transaction Style Start
+=============================================
+*/
+/* =========================================
+   FIGMA MATCH – RECENT TRANSACTIONS CARDS
+========================================= */
+
+#recent-transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* CARD */
+.recent-card {
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* BACKGROUNDS */
+.recent-card.income {
+  background: #ecfdf5;
+  border: 1px solid #bbf7d0;
+}
+.recent-card.expense {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+.recent-card.savings {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+/* GRID */
+.recent-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.recent-grid.top {
+  grid-template-columns: repeat(4, 1fr) auto;
+  align-items: center;
+}
+
+.recent-grid.bottom {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* LABEL + VALUE */
+.recent-label {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.recent-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+}
+
+/* BADGE */
+.recent-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.recent-badge.income {
+  background: #dcfce7;
+  color: #166534;
+}
+.recent-badge.expense {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.recent-badge.savings {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+/* AMOUNT */
+.recent-amount {
+  font-weight: 600;
+}
+
+/* EDIT */
+.recent-edit {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+
+
+/* =================Stop================== */
+
+
 /* ------------------------------------add transection toggle content style stop----------------------- */
 
 

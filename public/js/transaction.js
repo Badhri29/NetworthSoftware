@@ -309,7 +309,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Close modal and reset form
     closeModal();
     resetForm();
-    
+    await loadRecentTransactions();
+
     // Optional: Refresh transactions list if needed
     if (typeof loadTransactions === 'function') {
       loadTransactions();
@@ -410,9 +411,93 @@ document.addEventListener('DOMContentLoaded', () => {
 // =======================form styles stop=======================
 
 
-// ===========recent transection style start=====================
+// =========== recent transaction style start =====================
 
-// ===========recent transection style stop======================
+async function loadRecentTransactions() {
+  // console.log('Loading recent transactions...');
+  try {
+    const res = await fetch('/api/transactions', {
+      credentials: 'include'
+    });
+
+    const result = await res.json();   // ✅ correct
+
+    if (!res.ok) throw new Error(result.message);
+
+    renderRecentTransactions(result.data); // ✅ FIXED
+  } catch (err) {
+    console.error('Failed to load recent transactions', err);
+  }
+}
+
+function renderRecentTransactions(transactions) {
+  const container = document.getElementById('recent-transactions-list');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (!transactions || !transactions.length) {
+    container.innerHTML = '<p>No recent transactions</p>';
+    return;
+  }
+
+  transactions.slice(0, 5).forEach(tx => {
+    const card = document.createElement('div');
+    card.className = `recent-card ${tx.type}`;
+
+    card.innerHTML = `
+      <div class="recent-grid top">
+        <div>
+          <div class="recent-label">Date</div>
+          <div class="recent-value">
+            ${new Date(tx.date).toLocaleDateString()}
+          </div>
+        </div>
+
+        <div>
+          <div class="recent-label">Type</div>
+          <div class="recent-badge ${tx.type}">
+            ${tx.type}
+          </div>
+        </div>
+
+        <div>
+          <div class="recent-label">Category</div>
+          <div class="recent-value">${tx.category || '-'}</div>
+        </div>
+
+        <div>
+          <div class="recent-label">Sub-Category</div>
+          <div class="recent-value">${tx.subcategory || '-'}</div>
+        </div>
+
+        <button class="recent-edit">✎ Edit</button>
+      </div>
+
+      <div class="recent-grid bottom">
+        <div>
+          <div class="recent-label">Details</div>
+          <div class="recent-value">${tx.description || '-'}</div>
+        </div>
+
+        <div>
+          <div class="recent-label">Amount</div>
+          <div class="recent-amount">₹${tx.amount}</div>
+        </div>
+
+        <div>
+          <div class="recent-label">Mode</div>
+          <div class="recent-value">${tx.paymentMode}</div>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+// =========== recent transaction style stop ======================
+
 
 // ========================================================================
 //      <--------------     ADD TRANSECTION Styles stop 
@@ -442,7 +527,8 @@ document.addEventListener("DOMContentLoaded", () => {
   loadTransactions();
   setupViewToggle();
   setupFilterToggle();
-  renderTransactions();
+  renderRecentTransactions();
+  loadRecentTransactions();
 });
 
 /* ========VIEW TOGGLE======= */

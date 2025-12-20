@@ -595,6 +595,11 @@ Confirmation Style Start
   -webkit-overflow-scrolling: touch;
   display: block;
   margin: 1rem 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.table-responsive::-webkit-scrollbar{
+  display: none;
 }
 
 /* Ensure table doesn't collapse on small screens */

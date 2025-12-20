@@ -617,7 +617,35 @@ Confirmation Style Start
   text-overflow: ellipsis;
   max-width: 200px;
 }
+/* TYPE COLORS */
+  .transaction-income td[data-label="Type"] {
+    background: #dcfce7;
+    color: #166534;
+    padding: 4px;
+  }
 
+  .transaction-expense td[data-label="Type"] {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 4px;
+  }
+
+  .transaction-saving td[data-label="Type"] {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 4px;
+  }
+.transaction-income td.amount {
+    color: #10b981;
+  }
+
+  .transaction-expense td.amount {
+    color: #ef4444;
+  }
+
+  .transaction-saving td.amount {
+    color: #3b82f6;
+  }
 /* ================= DESKTOP TABLE ================= */
 
 @media (min-width: 769px) {
@@ -667,6 +695,82 @@ Confirmation Style Start
     width: 200px;
     white-space: normal;
   }
+  /* =====================================================
+   DESKTOP – TRANSACTION TYPE BADGE (FIGMA MATCH)
+   Fixes full-cell background issue
+===================================================== */
+
+
+
+  /* Remove background from full TD */
+  .transaction-income td[data-label="Type"],
+  .transaction-expense td[data-label="Type"],
+  .transaction-saving td[data-label="Type"] {
+    background: transparent !important;
+    padding: 0.5rem;
+  }
+
+  /* Create pill badge using inline-block */
+  .transaction-income td[data-label="Type"]::before,
+  .transaction-expense td[data-label="Type"]::before,
+  .transaction-saving td[data-label="Type"]::before {
+    content: attr(data-label);
+    display: none;
+  }
+
+  /* Wrap text visually as badge */
+  .transaction-income td[data-label="Type"],
+  .transaction-expense td[data-label="Type"],
+  .transaction-saving td[data-label="Type"] {
+    text-align: center;
+  }
+
+  .transaction-income td[data-label="Type"] span,
+  .transaction-expense td[data-label="Type"] span,
+  .transaction-saving td[data-label="Type"] span {
+    display: inline-block;
+  }
+
+  /* Badge styles */
+  .transaction-income td[data-label="Type"] {
+    color: #166534;
+  }
+  .transaction-income td[data-label="Type"]::after {
+    content: "Income";
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .transaction-expense td[data-label="Type"]::after {
+    content: "Expense";
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .transaction-saving td[data-label="Type"]::after {
+    content: "Saving";
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .transaction-income td[data-label="Type"]::after,
+  .transaction-expense td[data-label="Type"]::after,
+  .transaction-saving td[data-label="Type"]::after {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  /* Hide original text to avoid duplication */
+  .transaction-income td[data-label="Type"],
+  .transaction-expense td[data-label="Type"],
+  .transaction-saving td[data-label="Type"] {
+    color: transparent;
+  }
+
 }
 
 /* =====================================================
@@ -747,17 +851,7 @@ td[data-label="Date"] {
     text-overflow: ellipsis;
   }
 
-  .transaction-income td.amount {
-    color: #10b981;
-  }
-
-  .transaction-expense td.amount {
-    color: #ef4444;
-  }
-
-  .transaction-saving td.amount {
-    color: #3b82f6;
-  }
+  
 
  /* ================= TYPE + CATEGORY SAME LINE ================= */
 td[data-label="Type"],
@@ -778,25 +872,7 @@ td[data-label="Type"] {
 }
 
 
-  /* TYPE COLORS */
-  .transaction-income td[data-label="Type"] {
-    background: #dcfce7;
-    color: #166534;
-    padding: 4px;
-  }
-
-  .transaction-expense td[data-label="Type"] {
-    background: #fee2e2;
-    color: #991b1b;
-    padding: 4px;
-  }
-
-  .transaction-saving td[data-label="Type"] {
-    background: #dbeafe;
-    color: #1e40af;
-    padding: 4px;
-  }
-
+  
   /* CATEGORY */
   td[data-label="Category"] {
     font-size: 0.75rem;

@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // =========== recent transaction style start =====================
 
 async function loadRecentTransactions() {
-  // console.log('Loading recent transactions...');
+  console.log('Loading recent transactions...');
   try {
     const res = await fetch('/api/transactions', {
       credentials: 'include'
@@ -438,18 +438,26 @@ function renderRecentTransactions(transactions) {
     console.warn('renderRecentTransactions expected array, got:', transactions);
     transactions = [];
   }
+
   container.innerHTML = '';
+
   if (transactions.length === 0) {
-    container.innerHTML = '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
+    container.innerHTML =
+      '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
     return;
   }
-  transactions.slice(0, 5).forEach(tx => {
+
+  // 🔥 DO NOT slice, DO NOT sort
+  transactions.forEach(tx => {
     const d = new Date(tx.updatedAt);
-    const dateTime = `${d.toLocaleDateString('en-IN')} • ${d.toLocaleTimeString('en-IN', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    })}`;
+    const dateTime = `${d.toLocaleDateString('en-IN')} • ${d.toLocaleTimeString(
+      'en-IN',
+      {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }
+    )}`;
 
     const card = document.createElement('div');
     card.className = `recent-card ${tx.type}`;
@@ -477,7 +485,9 @@ function renderRecentTransactions(transactions) {
       <div class="recent-row second">
         <div class="recent-box">
           <div class="recent-label">Payment Mode</div>
-          <div class="recent-value">${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}</div>
+          <div class="recent-value">
+            ${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}
+          </div>
         </div>
 
         <div class="recent-box">
@@ -501,6 +511,7 @@ function renderRecentTransactions(transactions) {
     container.appendChild(card);
   });
 }
+
 
 
 function formatDateTime(dateStr) {

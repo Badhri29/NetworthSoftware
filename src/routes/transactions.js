@@ -103,7 +103,8 @@ router.get("/", async (req, res) => {
       },
       orderBy: {
         updatedAt: "desc"
-      }
+      },
+      take:15
     });
 
     return res.json({

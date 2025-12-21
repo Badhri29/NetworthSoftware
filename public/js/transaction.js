@@ -548,6 +548,21 @@ document.getElementById('closeViewModal')
 // =====================
 document.getElementById('applyFilterBtn')?.addEventListener('click', () => {
   applyTransactionFilters();
+  // 2️⃣ Close filter UI automatically
+  const inlineFilter = document.getElementById('filter-section');
+  const mobileModal = document.getElementById('mobileFilterModal');
+  const filterBtn = document.getElementById('filter-toggle');
+
+  // Desktop: close inline filter
+  if (window.innerWidth > 768 && inlineFilter) {
+    inlineFilter.classList.remove('open');
+    if (filterBtn) filterBtn.textContent = 'Filter';
+  }
+
+  // Mobile: close modal
+  if (window.innerWidth <= 768 && mobileModal) {
+    mobileModal.classList.remove('show');
+  }
 });
 
 document.getElementById('resetFilterBtn')?.addEventListener('click', () => {

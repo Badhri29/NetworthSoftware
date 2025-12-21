@@ -94,7 +94,7 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     console.log("Fetching transactions for user:", req.user.id);
-
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
     const transactions = await prisma.transaction.findMany({
       where: {
         user: {
@@ -104,7 +104,7 @@ router.get("/", async (req, res) => {
       orderBy: {
         updatedAt: "desc"
       },
-      take:15
+      ...(limit ? { take: limit } : {})
     });
 
     return res.json({

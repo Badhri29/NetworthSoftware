@@ -197,45 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.classList.remove('show');
   }
 
-//   ===== Frontend sends POST API request =====
-  // async function submitToServer() {
-  //   if (!formData) return;
-
-  //   confirmBtn.disabled = true;
-  //   confirmBtn.textContent = 'Saving...';
-
-  //   try {
-  //     const res = await fetch('/api/transactions', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       credentials: 'include',
-  //       body: JSON.stringify(formData)
-  //     });
-  //     if (res.status === 401) {
-  //       alert('Session expired. Please login again.');
-  //       window.location.href = '/';
-  //       return;
-  //     }
-
-  //     const data = await res.json();
-  //     if (!res.ok) {
-  //       throw new Error(data.message || 'Transaction saving failed');
-  //     }
-
-  //     alert('Transaction saved successfully');
-  //     closeModal();
-  //     resetForm();
-
-  //   } catch (err) {
-  //     console.error('Transaction save failed:', err);
-  //     alert(err.message);
-  //   } finally {
-  //     confirmBtn.disabled = false;
-  //     confirmBtn.textContent = 'Confirm';
-  //   }
-  // }
 
   async function submitToServer() {
   if (!formData) {
@@ -416,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadRecentTransactions() {
   console.log('Loading recent transactions...');
   try {
-    const res = await fetch('/api/transactions', {
+    const res = await fetch('/api/transactions?limit=5', {
       credentials: 'include'
     });
 
@@ -638,6 +599,7 @@ function setupViewToggle() {
         addTransactionContent.style.display = 'flex';
         getTransactionContent.style.display = 'none';
       } else if (view === 'categories') {
+        loadAllTransactions();
         addTransactionContent.style.display = 'none';
         getTransactionContent.style.display = 'block';
       }
@@ -759,6 +721,70 @@ function renderFilteredTransactions(filteredTransactions) {
   filteredTransactions.forEach(tx => {
     listEl.appendChild(createTransactionEl(tx));
   });
+}
+
+async function loadAllTransactions() {
+  try {
+    const res = await fetch('/api/transactions', {
+      credentials: 'include'
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message);
+
+    renderTransactionsTable(result.data);
+  } catch (err) {
+    console.error('Failed to load transactions:', err);
+  }
+}
+function renderTransactionsTable(transactions) {
+  const tbody = document.getElementById('transactions-table-body');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  if (!transactions.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" style="text-align:center;color:#6b7280;padding:12px">
+          No transactions found
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  transactions.forEach(tx => {
+    const tr = document.createElement('tr');
+
+    // Row color by type
+    tr.className =
+      tx.type === 'income'
+        ? 'transaction-income'
+        : tx.type === 'expense'
+        ? 'transaction-expense'
+        : 'transaction-saving';
+
+    tr.innerHTML = `
+      <td data-label="ID">${tx.id}</td>
+      <td data-label="Date">${formatDate(tx.date)}</td>
+      <td data-label="Type"><span>${capitalize(tx.type)}</span></td>
+      <td data-label="Category">${tx.category || '-'}</td>
+      <td data-label="Sub-category">${tx.subcategory || '-'}</td>
+      <td data-label="Details">${tx.description || '-'}</td>
+      <td data-label="Amount" class="amount">₹${tx.amount}</td>
+      <td data-label="Payment Mode">${tx.paymentMode}</td>
+      <td data-label="Card Type">${tx.card || '-'}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-IN');
+}
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // ========================================================================

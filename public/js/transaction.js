@@ -342,33 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* =====================================================
-     FILTER TOGGLE (SAFE)
-  ===================================================== */
-
-  const filterToggle = document.getElementById('filter-toggle');
-  const filterSection = document.getElementById('filter-section');
-
-  if (filterToggle && filterSection) {
-    filterSection.style.display = 'none';
-
-    filterToggle.addEventListener('click', e => {
-      e.stopPropagation();
-      const open = filterSection.style.display === 'block';
-      filterSection.style.display = open ? 'none' : 'block';
-      filterToggle.textContent = open ? 'Show Filter' : 'Hide Filter';
-    });
-
-    document.addEventListener('click', e => {
-      if (!filterSection.contains(e.target) && e.target !== filterToggle) {
-        filterSection.style.display = 'none';
-        filterToggle.textContent = 'Show Filter';
-      }
-    });
-  }
-
-});
-
 // =======================form styles stop=======================
 
 
@@ -573,16 +546,6 @@ document.getElementById('closeViewModal')
 
 /* ============DOM=========== */
 const listEl = document.getElementById("transactions-list");
-const toggleBtns = document.querySelectorAll(".toggle-btn");
-const addTransactionSection = document.querySelector(".add-transection-content");
-const getTransactionSection = document.querySelector(".get-transection-content");
-
-/* ==========INIT============ */
-document.addEventListener("DOMContentLoaded", () => {
-  loadRecentTransactions();
-  setupViewToggle();
-  setupFilterToggle();
-});
 
 /* ========VIEW TOGGLE======= */
 function setupViewToggle() {
@@ -605,57 +568,6 @@ function setupViewToggle() {
       }
     });
   });
-}
-
-/* =======FILTER FUNCTIONALITY=============== */
-function setupFilterToggle() {
-  const filterToggle = document.getElementById('filter-toggle');
-  const filterSection = document.getElementById('filter-section');
-  const applyFilterBtn = document.getElementById('apply-filter');
-  const resetFilterBtn = document.getElementById('reset-filter');
-filterSection.style.display = 'none';
-filterToggle.textContent = 'Show Filter'
-  // Toggle filter section visibility
-  filterToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const isHidden = filterSection.style.display === 'none';
-    filterSection.style.display = isHidden ? 'block' : 'none';
-    filterToggle.textContent = isHidden ? 'Hide Filter' : 'Show Filter';
-  });
-
-  // Close filter when clicking outside
-document.addEventListener('click', (e) => {
-  if (!filterSection.contains(e.target) && e.target !== filterToggle) {
-    filterSection.style.display = 'none';
-    filterToggle.textContent = 'Show Filter';
-  }
-});
-
-  // Apply filter
-  applyFilterBtn.addEventListener('click', () => {
-    const type = document.getElementById('filter-type').value;
-    const category = document.getElementById('filter-category').value;
-    const dateRange = document.getElementById('filter-date').value;
-    
-    // Filter logic will be implemented here
-    const filteredTransactions = filterTransactions(type, category, dateRange);
-    renderFilteredTransactions(filteredTransactions);
-    
-    // Close the filter section after applying
-    filterSection.style.display = 'none';
-  });
-
-  // Reset filter
-  resetFilterBtn.addEventListener('click', () => {
-    document.getElementById('filter-type').value = 'all';
-    document.getElementById('filter-category').value = 'all';
-    document.getElementById('filter-date').value = 'all';
-    renderTransactions(); // Reset to show all transactions
-    filterSection.style.display = 'none';
-  });
-
-  // Populate categories
-  updateCategoryFilter();
 }
 
 function filterTransactions(type, category, dateRange) {
@@ -786,6 +698,62 @@ function formatDate(dateStr) {
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+/* ===============================
+   FILTER – DESKTOP INLINE / MOBILE MODAL
+================================ */
+
+  // ===== INIT =====
+loadRecentTransactions();
+setupViewToggle();
+
+// ===== FILTER ELEMENTS =====
+const filterBtn = document.getElementById("filter-toggle");
+const inlineFilter = document.getElementById("filter-section");
+const mobileModal = document.getElementById("mobileFilterModal");
+const closeBtn = document.getElementById("closeFilterModal");
+
+// Safety check (do NOT return early)
+if (filterBtn && inlineFilter) {
+
+  // ===== FILTER BUTTON CLICK =====
+  filterBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    if (window.innerWidth <= 768) {
+      // ✅ MOBILE → open modal
+      mobileModal?.classList.add("show");
+    } else {
+      // ✅ DESKTOP → toggle inline filter
+      inlineFilter.classList.toggle("open");
+      filterBtn.textContent = inlineFilter.classList.contains("open")
+        ? "Hide Filter"
+        : "Show Filter";
+    }
+  });
+
+  // ===== DESKTOP → CLICK OUTSIDE TO CLOSE =====
+  document.addEventListener("click", (e) => {
+    if (window.innerWidth <= 768) return;
+
+    const clickedInsideFilter = inlineFilter.contains(e.target);
+    const clickedFilterBtn = filterBtn.contains(e.target);
+
+    if (!clickedInsideFilter && !clickedFilterBtn) {
+      inlineFilter.classList.remove("open");
+      filterBtn.textContent = "Show Filter";
+    }
+  });
+}
+
+// ===== MOBILE MODAL CLOSE =====
+closeBtn?.addEventListener("click", () => {
+  mobileModal?.classList.remove("show");
+});
+
+});
+
+
 
 // ========================================================================
 //      <--------------     GET TRANSECTION Styles stop 

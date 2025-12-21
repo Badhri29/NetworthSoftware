@@ -547,10 +547,10 @@ Confirmation Style Start
 }
 
 .modal h3 {
-  margin-top: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
   color: var(--text-primary);
   font-size: 1.25rem;
-  margin-bottom: 1rem;
 }
 
 #transactionDetails {
@@ -1205,5 +1205,180 @@ td[data-label="Type"] {
     min-width: 0;
   }
 }
+
+/* ===============================
+   FILTER SLIDE ANIMATION
+================================ */
+
+.filter-section {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  will-change: max-height;
+}
+
+.filter-section.open {
+  max-height: 1500px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.filter-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 160px;
+  flex: 1;
+}
+
+.filter-group label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.filter-group select,
+.filter-group input {
+  height: 32px;
+  padding: 0 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-primary);
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+@media (min-width: 769px) {
+
+  .filter-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    align-items: end;
+  }
+
+  .filter-row {
+    display: contents;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .amount-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+}
+
+
+/* ===============================
+   MOBILE FIX
+================================ */
+@media (max-width: 768px) {
+
+  .filter-row {
+    flex-direction: column;
+  }
+}
+/* ===============================
+   MOBILE FILTER MODAL
+================================ */
+
+.filter-modal {
+  width: 95%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.filter-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #111827;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+/* Hover feedback */
+.filter-close-btn:hover {
+  background: #f3f4f6;
+  color: #000;
+}
+
+/* Dark mode support */
+html[data-theme="dark"] .filter-close-btn {
+  color: #f9fafb;
+}
+
+html[data-theme="dark"] .filter-close-btn:hover {
+  background: #1f2933;
+}
+.filter-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.amount-range {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-modal-footer {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+/* DESKTOP: hide modal */
+@media (min-width: 769px) {
+  #mobileFilterModal {
+    display: none !important;
+  }
+}
+
+
 
 /* ------------------------------------get transaction toggle content style stop----------------------- */

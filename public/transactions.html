@@ -173,36 +173,98 @@
               <h4>Transactions</h4>
               <button class="get-section-filter" id="filter-toggle">Filter</button>
             </div>
-            <div class="filter-section" id="filter-section" style="display: none;">
+            <div class="filter-section" id="filter-section">
+
               <div class="filter-row">
+
                 <div class="filter-group">
-                  <label for="filter-type">Type</label>
-                  <select id="filter-type">
-                    <option value="all">All Types</option>
+                  <label>Transaction Type</label>
+                  <select>
+                    <option value="">All</option>
                     <option value="income">Income</option>
                     <option value="expense">Expense</option>
+                    <option value="savings">Savings</option>
                   </select>
                 </div>
+
                 <div class="filter-group">
-                  <label for="filter-category">Category</label>
-                  <select id="filter-category">
-                    <option value="all">All Categories</option>
+                  <label>Category</label>
+                  <select>
+                    <option value="">All</option>
+                    <option value="food">Food</option>
+                    <option value="travel">Travel</option>
+                    <option value="rent">Rent</option>
                   </select>
                 </div>
+
                 <div class="filter-group">
-                  <label for="filter-date">Date Range</label>
-                  <select id="filter-date">
-                    <option value="all">All Time</option>
+                  <label>Sub-Category</label>
+                  <select>
+                    <option value="">All</option>
+                    <option value="bus">Bus</option>
+                    <option value="fuel">Fuel</option>
+                    <option value="groceries">Groceries</option>
+                  </select>
+                </div>
+
+              </div>
+
+              <div class="filter-row">
+
+                <div class="filter-group">
+                  <label>Date Range</label>
+                  <select>
+                    <option value="">All Time</option>
                     <option value="today">Today</option>
                     <option value="week">This Week</option>
                     <option value="month">This Month</option>
+                    <option value="custom">Custom</option>
                   </select>
                 </div>
+
+                <div class="filter-group">
+                  <label>Amount Min (₹)</label>
+                  <input type="number" placeholder="0">
+                </div>
+
+                <div class="filter-group">
+                  <label>Amount Max (₹)</label>
+                  <input type="number" placeholder="10000">
+                </div>
+
               </div>
+
+              <div class="filter-row">
+
+                <div class="filter-group">
+                  <label>Payment Mode</label>
+                  <select>
+                    <option value="">All</option>
+                    <option value="cash">Cash</option>
+                    <option value="upi">UPI</option>
+                    <option value="debit">Debit</option>
+                    <option value="credit">Credit</option>
+                    <option value="netbanking">Net Banking</option>
+                  </select>
+                </div>
+
+                <div class="filter-group">
+                  <label>Card Type</label>
+                  <select>
+                    <option value="">All</option>
+                    <option value="hdfc">HDFC</option>
+                    <option value="axis">Axis</option>
+                    <option value="icici">ICICI</option>
+                  </select>
+                </div>
+
+              </div>
+
               <div class="filter-actions">
-                <button id="apply-filter" class="btn btn-primary">Apply Filters</button>
-                <button id="reset-filter" class="btn btn-secondary">Reset</button>
+                <button class="btn btn-secondary">Reset</button>
+                <button class="btn btn-primary">Apply Filters</button>
               </div>
+
             </div>
             <div class="get-section-content">
               <div class="table-responsive">
@@ -258,6 +320,92 @@
       </div>
     </div>
   
+    <!-- ================= MOBILE FILTER MODAL ================= -->
+    <div class="modal" id="mobileFilterModal">
+      <div class="modal-content filter-modal">
+
+        <div class="filter-modal-header">
+          <h3>Filter Transactions</h3>
+          <button class="filter-close-btn" id="closeFilterModal">✕</button>
+        </div>
+
+        <div class="filter-modal-body">
+
+          <div class="filter-group">
+            <label>Transaction Type</label>
+            <select>
+              <option value="">All</option>
+              <option>Income</option>
+              <option>Expense</option>
+              <option>Savings</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Category</label>
+            <select>
+              <option value="">All</option>
+              <option>Food</option>
+              <option>Travel</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Sub Category</label>
+            <select>
+              <option value="">All</option>
+              <option>Bus</option>
+              <option>Fuel</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Date Range</label>
+            <select>
+              <option>All Time</option>
+              <option>Today</option>
+              <option>This Week</option>
+              <option>This Month</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Amount Range</label>
+            <div class="amount-range">
+              <input type="number" placeholder="Min ₹">
+              <input type="number" placeholder="Max ₹">
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <label>Payment Mode</label>
+            <select>
+              <option>All</option>
+              <option>Cash</option>
+              <option>UPI</option>
+              <option>Credit</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Card Type</label>
+            <select>
+              <option>All</option>
+              <option>HDFC</option>
+              <option>Axis</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="filter-modal-footer">
+          <button class="btn btn-secondary">Reset</button>
+          <button class="btn btn-primary">Apply</button>
+        </div>
+
+      </div>
+    </div>
+
     <script src="/js/api.js"></script>
     <script src="/js/theme.js"></script>
     <script src="/js/ui.js"></script>

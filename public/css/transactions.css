@@ -170,22 +170,6 @@ body[data-theme="dark"] .toggle-btn.active {
   scrollbar-width: none;
 }
 
-@media (min-width: 768px) {
-  .add-transection-content {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-  
-  .add-section:first-child {
-    width: 40%;
-  }
-  
-  .add-section:last-child {
-    width: 60%;
-  }
-}
-
 .add-section h4 {
   margin: 0 0 0.75rem 0;
   color: var(--text-primary);
@@ -226,12 +210,34 @@ body[data-theme="dark"] .toggle-btn.active {
   padding-left: 1rem;
   padding-top: 0.25rem;
   padding-right: 1rem;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.5rem;
   /* border-top:1px solid var(--border-color); */
   min-height: 5px;
   align-content: center;
   }
-
+@media (min-width: 768px) {
+  .add-transection-content {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  
+  .add-section:first-child {
+    width: 40%;
+  }
+  
+  .add-section:last-child {
+    width: 60%;
+  }
+}
+@media (max-width: 768px){
+  .add-section{
+    max-height: 550px;
+  }
+  .add-section-bottom{
+    margin-bottom: 1rem;
+  }
+}
 /* 
 =============================================
 Fill Details Style Start

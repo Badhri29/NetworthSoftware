@@ -319,24 +319,24 @@ document.addEventListener('DOMContentLoaded', () => {
   ===================================================== */
 
   const toggleBtns = document.querySelectorAll('.toggle-btn');
-  const addTransactionContent = document.querySelector('.add-transection-content');
-  const getTransactionContent = document.querySelector('.get-transection-content');
+  const addTransactionSection = document.querySelector('.add-transection-content');
+  const getTransactionSection = document.querySelector('.get-transection-content');
 
-  if (toggleBtns.length && addTransactionContent && getTransactionContent) {
-    addTransactionContent.style.display = 'flex';
-    getTransactionContent.style.display = 'none';
+  if (toggleBtns.length && addTransactionSection && getTransactionSection) {
+    addTransactionSection.style.display = 'flex';
+    getTransactionSection.style.display = 'none';
 
     toggleBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         toggleBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
-        if (btn.dataset.view === 'transactions') {
-          addTransactionContent.style.display = 'flex';
-          getTransactionContent.style.display = 'none';
+        if (btn.dataset.view === 'add-transaction') {
+          addTransactionSection.style.display = 'flex';
+          getTransactionSection.style.display = 'none';
         } else {
-          addTransactionContent.style.display = 'none';
-          getTransactionContent.style.display = 'block';
+          addTransactionSection.style.display = 'none';
+          getTransactionSection.style.display = 'block';
         }
       });
     });
@@ -574,8 +574,8 @@ document.getElementById('closeViewModal')
 /* ============DOM=========== */
 const listEl = document.getElementById("transactions-list");
 const toggleBtns = document.querySelectorAll(".toggle-btn");
-const addTransactionContent = document.querySelector(".add-transection-content");
-const getTransactionContent = document.querySelector(".get-transection-content");
+const addTransactionSection = document.querySelector(".add-transection-content");
+const getTransactionSection = document.querySelector(".get-transection-content");
 
 /* ==========INIT============ */
 document.addEventListener("DOMContentLoaded", () => {
@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ========VIEW TOGGLE======= */
 function setupViewToggle() {
   // Initially hide get transaction content
-  getTransactionContent.style.display = 'none';
+  getTransactionSection.style.display = 'none';
   
   toggleBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -595,13 +595,13 @@ function setupViewToggle() {
       btn.classList.add("active");
 
       const view = btn.dataset.view;
-      if (view === 'transactions') {
-        addTransactionContent.style.display = 'flex';
-        getTransactionContent.style.display = 'none';
-      } else if (view === 'categories') {
+      if (view === 'add-transaction') {
+        addTransactionSection.style.display = 'flex';
+        getTransactionSection.style.display = 'none';
+      } else if (view === 'get-transaction') {
         loadAllTransactions();
-        addTransactionContent.style.display = 'none';
-        getTransactionContent.style.display = 'block';
+        addTransactionSection.style.display = 'none';
+        getTransactionSection.style.display = 'block';
       }
     });
   });

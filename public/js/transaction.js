@@ -8,6 +8,9 @@
 // =====================form styles start=========================
 
 document.addEventListener('DOMContentLoaded', () => {
+  
+/* ===========STATE===========*/
+let allTransactions  = [];
   const form = document.getElementById('transaction-form');
   if (!form) return;
 
@@ -540,10 +543,29 @@ document.getElementById('closeViewModal')
 // ========================================================================
 //                          GET TRANSECTION Styles start ----------->
 // ========================================================================
+// =====================
+// FILTER BUTTON EVENTS
+// =====================
+document.getElementById('applyFilterBtn')?.addEventListener('click', () => {
+  applyTransactionFilters();
+});
 
-/* ===========STATE===========*/
-// let transactions = [];
+document.getElementById('resetFilterBtn')?.addEventListener('click', () => {
+  document.querySelectorAll('#filter-section select, #filter-section input')
+    .forEach(el => el.value = '');
 
+  renderTransactionsTable(allTransactions);
+});
+
+const dateFilter = document.getElementById("filter-date");
+  if (dateFilter) {
+    dateFilter.value = "month";
+  }
+
+  // 🔹 Apply default filter on load
+  if (typeof applyTransactionFilters === "function") {
+    applyTransactionFilters();
+  }
 /* ============DOM=========== */
 const listEl = document.getElementById("transactions-list");
 
@@ -644,11 +666,18 @@ async function loadAllTransactions() {
     const result = await res.json();
     if (!res.ok) throw new Error(result.message);
 
-    renderTransactionsTable(result.data);
+    // 🔑 THIS LINE IS REQUIRED
+    allTransactions = result.data;
+
+    // 🔑 INITIAL RENDER
+    renderTransactionsTable(allTransactions);
+
   } catch (err) {
     console.error('Failed to load transactions:', err);
   }
 }
+
+
 function renderTransactionsTable(transactions) {
   const tbody = document.getElementById('transactions-table-body');
   if (!tbody) return;
@@ -692,6 +721,65 @@ function renderTransactionsTable(transactions) {
     tbody.appendChild(tr);
   });
 }
+
+function applyTransactionFilters() {
+  const type = document.getElementById('filter-type')?.value || 'all';
+  const category = document.getElementById('filter-category')?.value || 'all';
+  const subCategory = document.getElementById('filter-subcategory')?.value || 'all';
+  const dateRange = document.getElementById('filter-date')?.value || 'all';
+  const minAmount = parseFloat(document.getElementById('filter-amount-min')?.value) || 0;
+  const maxAmount = parseFloat(document.getElementById('filter-amount-max')?.value) || Infinity;
+  const paymentMode = document.getElementById('filter-payment')?.value || 'all';
+  const cardType = document.getElementById('filter-card')?.value || 'all';
+
+  const today = new Date();
+
+  const filtered = allTransactions.filter(tx => {
+
+    // TYPE
+    if (type !== 'all' && tx.type !== type) return false;
+
+    // CATEGORY
+    if (category !== 'all' && tx.category !== category) return false;
+
+    // SUB CATEGORY
+    if (subCategory !== 'all' && tx.subcategory !== subCategory) return false;
+
+    // PAYMENT MODE
+    if (paymentMode !== 'all' && tx.paymentMode !== paymentMode) return false;
+
+    // CARD TYPE
+    if (cardType !== 'all' && tx.card !== cardType) return false;
+
+    // AMOUNT RANGE
+    if (tx.amount < minAmount || tx.amount > maxAmount) return false;
+
+    // DATE RANGE
+    if (dateRange !== 'all') {
+      const txDate = new Date(tx.date);
+
+      if (dateRange === 'today') {
+        if (txDate.toDateString() !== today.toDateString()) return false;
+      }
+
+      if (dateRange === 'week') {
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - 7);
+        if (txDate < weekStart) return false;
+      }
+
+      if (dateRange === 'month') {
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        if (txDate < monthStart) return false;
+      }
+    }
+
+    return true;
+  });
+
+  renderTransactionsTable(filtered);
+}
+
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-IN');
 }

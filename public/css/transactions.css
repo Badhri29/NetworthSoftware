@@ -237,6 +237,17 @@ body[data-theme="dark"] .toggle-btn.active {
   .add-section-bottom{
     margin-bottom: 1rem;
   }
+  /* Only Recent Transactions section */
+  .add-transection-content .add-section:last-child {
+    height: auto !important;        /* ✅ remove forced height */
+    max-height: none !important;
+    min-height: unset !important;
+  }
+
+  /* Allow content to size naturally */
+  .add-transection-content .add-section:last-child .add-section-content {
+    overflow: visible;
+  }
 }
 /* 
 =============================================

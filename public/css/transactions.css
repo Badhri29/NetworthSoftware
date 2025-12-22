@@ -855,6 +855,25 @@ Recent transaction Style Start
   min-height: 60px;
   font-size: 13px;
 }
+/* =========================================
+   GET TRANSACTIONS – MOBILE CARD VIEW
+========================================= */
+
+.mobile-cards-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Hide table completely */
+  .table-responsive {
+    display: none;
+  }
+
+  /* Show card list */
+  .mobile-cards-only {
+    display: block;
+  }
+}
 
 /* =================Stop================== */
 

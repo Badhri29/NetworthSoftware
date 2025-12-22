@@ -184,9 +184,12 @@ function applyTransactionFilters() {
     }
 
     return true;
+    
+
   });
 
   renderTransactionsTable(filtered);
+  renderGetTransactionsAsCards(filtered);
 }
 function closeFilterUI() {
   document.getElementById('filter-section')?.classList.remove('open');
@@ -231,6 +234,152 @@ async function loadAllTransactions() {
     console.error('Failed to load transactions:', err);
   }
 }
+function renderRecentTransactions(transactions) {
+  const container = document.getElementById('recent-transactions-list');
+  if (!container) return;
+
+  if (!Array.isArray(transactions)) {
+    console.warn('renderRecentTransactions expected array, got:', transactions);
+    transactions = [];
+  }
+
+  container.innerHTML = '';
+
+  if (transactions.length === 0) {
+    container.innerHTML =
+      '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
+    return;
+  }
+  transactions.forEach(tx => {
+    // Date shown = transaction date (what user selected)
+    const txDate = formatDateTime(tx.date).date;
+
+    // Time shown = system time (when added / updated)
+    const txTime = formatDateTime(tx.updatedAt).time;
+
+    const dateTime = `${txDate} • ${txTime}`;
+
+
+    const card = document.createElement('div');
+    card.className = `recent-card ${tx.type}`;
+
+    card.innerHTML = `
+      <!-- ROW 1 -->
+      <div class="recent-row">
+        <div class="recent-box">
+          <div class="recent-label">Last Modified</div>
+          <div class="recent-value">${dateTime}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Category</div>
+          <div class="recent-value">${tx.category || '-'}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Payment Type</div>
+          <div class="recent-value ${tx.type}">${tx.type}</div>
+        </div>
+      </div>
+
+      <!-- ROW 2 -->
+      <div class="recent-row second">
+        <div class="recent-box">
+          <div class="recent-label">Payment Mode</div>
+          <div class="recent-value">
+            ${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}
+          </div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Sub Category</div>
+          <div class="recent-value">${tx.subcategory || '-'}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Amount</div>
+          <div class="recent-value recent-amount">₹${tx.amount}</div>
+        </div>
+      </div>
+
+      <!-- DETAILS -->
+      <div class="recent-details">
+        <div class="recent-label">Details</div>
+        ${tx.description || '-'}
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+function renderGetTransactionsAsCards(transactions) {
+  const container = document.getElementById('mobile-transactions-list');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  if (!transactions.length) {
+    container.innerHTML =
+      '<p style="padding:12px;color:#6b7280">No transactions found</p>';
+    return;
+  }
+
+  transactions.forEach(tx => {
+
+    const txDate = formatDateTime(tx.date).date;
+    const txTime = formatDateTime(tx.updatedAt).time;
+    const dateTime = `${txDate} • ${txTime}`;
+
+    const card = document.createElement('div');
+    card.className = `recent-card ${tx.type}`;
+
+    card.innerHTML = `
+      <div class="recent-row">
+        <div class="recent-box">
+          <div class="recent-label">Last Modified</div>
+          <div class="recent-value">${dateTime}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Category</div>
+          <div class="recent-value">${tx.category || '-'}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Payment Type</div>
+          <div class="recent-value ${tx.type}">${tx.type}</div>
+        </div>
+      </div>
+
+      <div class="recent-row second">
+        <div class="recent-box">
+          <div class="recent-label">Payment Mode</div>
+          <div class="recent-value">
+            ${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}
+          </div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Sub Category</div>
+          <div class="recent-value">${tx.subcategory || '-'}</div>
+        </div>
+
+        <div class="recent-box">
+          <div class="recent-label">Amount</div>
+          <div class="recent-value recent-amount">₹${tx.amount}</div>
+        </div>
+      </div>
+
+      <div class="recent-details">
+        <div class="recent-label">Details</div>
+        ${tx.description || '-'}
+      </div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
   const form = document.getElementById('transaction-form');
@@ -700,84 +849,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function renderRecentTransactions(transactions) {
-    const container = document.getElementById('recent-transactions-list');
-    if (!container) return;
 
-    if (!Array.isArray(transactions)) {
-      console.warn('renderRecentTransactions expected array, got:', transactions);
-      transactions = [];
-    }
-
-    container.innerHTML = '';
-
-    if (transactions.length === 0) {
-      container.innerHTML =
-        '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
-      return;
-    }
-    transactions.forEach(tx => {
-      // Date shown = transaction date (what user selected)
-      const txDate = formatDateTime(tx.date).date;
-
-      // Time shown = system time (when added / updated)
-      const txTime = formatDateTime(tx.updatedAt).time;
-
-      const dateTime = `${txDate} • ${txTime}`;
-
-
-      const card = document.createElement('div');
-      card.className = `recent-card ${tx.type}`;
-
-      card.innerHTML = `
-      <!-- ROW 1 -->
-      <div class="recent-row">
-        <div class="recent-box">
-          <div class="recent-label">Last Modified</div>
-          <div class="recent-value">${dateTime}</div>
-        </div>
-
-        <div class="recent-box">
-          <div class="recent-label">Category</div>
-          <div class="recent-value">${tx.category || '-'}</div>
-        </div>
-
-        <div class="recent-box">
-          <div class="recent-label">Payment Type</div>
-          <div class="recent-value ${tx.type}">${tx.type}</div>
-        </div>
-      </div>
-
-      <!-- ROW 2 -->
-      <div class="recent-row second">
-        <div class="recent-box">
-          <div class="recent-label">Payment Mode</div>
-          <div class="recent-value">
-            ${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}
-          </div>
-        </div>
-
-        <div class="recent-box">
-          <div class="recent-label">Sub Category</div>
-          <div class="recent-value">${tx.subcategory || '-'}</div>
-        </div>
-
-        <div class="recent-box">
-          <div class="recent-label">Amount</div>
-          <div class="recent-value recent-amount">₹${tx.amount}</div>
-        </div>
-      </div>
-
-      <!-- DETAILS -->
-      <div class="recent-details">
-        <div class="recent-label">Details</div>
-        ${tx.description || '-'}
-      </div>
-    `;
-
-      container.appendChild(card);
-    });
-  }
 
 
 

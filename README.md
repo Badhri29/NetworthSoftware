@@ -1,52 +1,111 @@
-## Personal Net-Worth Web Application
+# Personal Finance Management System
 
-Production-ready personal net-worth tracker built with **Node.js + Express**, **SQLite + Prisma**, and a responsive **HTML/CSS/JS** frontend using **Chart.js** for charts.
+A comprehensive personal finance management application built with a modern tech stack, featuring transaction tracking, asset/liability management, and insightful financial analytics.
 
-### Tech Stack
+## 🚀 Features
 
-- **Backend**: Node.js, Express, JWT auth, Prisma ORM (SQLite)
-- **Database**: SQLite (single file `dev.db` in project root by default)
-- **Frontend**: Vanilla HTML, CSS (mobile-first, responsive), JavaScript
-- **Charts**: Chart.js via CDN
+### Authentication & User Management
+- Secure email/password authentication with JWT
+- User registration and profile management
+- Password change and reset functionality
 
-### Features
+### Transaction Management
+- Track income and expenses with categories
+- Categorize transactions with custom categories and subcategories
+- Advanced search and filtering capabilities
+- Transaction history with detailed views
 
-- Email + password authentication (register, login, logout, change password)
-- Transactions: income/expense, categories + subcategories, search & filters
-- Assets & liabilities with live **net-worth = assets – liabilities**
-- Dashboards:
-  - Overall net worth cards and recent transactions
-  - Net worth time-series
-  - Income vs expense overview
-  - Monthly analysis (income, expenses, savings)
-  - Top spending categories
-- Fully responsive:
-  - **Mobile (≤ 480px)**: bottom navigation, vertical layout
-  - **Tablet (481–1024px)**: wider content, stacked cards
-  - **Desktop (≥ 1025px)**: sidebar navigation + wide charts
+### Asset & Liability Tracking
+- Monitor all financial assets (savings, investments, property)
+- Track liabilities (loans, credit cards, mortgages)
+- Real-time net worth calculation
 
----
+### Financial Analytics
+- Interactive dashboards with Chart.js visualizations
+- Income vs. expense analysis
+- Monthly and yearly financial summaries
+- Spending patterns and category-wise breakdowns
+- Custom date range reporting
 
-## Getting Started
+### Responsive Design
+- Mobile-first approach for all devices
+- Adaptive layouts for different screen sizes
+- Intuitive navigation and user experience
 
-### 1. Install dependencies
+## 🛠️ Tech Stack
 
-From the project root (`finance software`):
+### Backend
+- **Runtime**: Node.js with Express.js
+- **Authentication**: JWT (JSON Web Tokens)
+- **ORM**: Prisma
+- **API**: RESTful API design
+- **Security**: Helmet, CORS, rate limiting
 
-```bash
-npm install
-```
+### Database
+- **Primary Database**: SQLite (file-based for easy setup)
+- **Migrations**: Prisma Migrate
+- **Data Modeling**: Type-safe with Prisma schema
 
-### 2. Configure database
+### Frontend
+- **Core**: Vanilla JavaScript (ES6+)
+- **Styling**: Custom CSS with responsive design
+- **Charts**: Chart.js for data visualization
+- **UI/UX**: Mobile-first, accessible components
 
-The Prisma schema is configured for SQLite and expects `DATABASE_URL` to be set. For local development you can rely on the default:
+### Development Tools
+- **Package Manager**: npm
+- **Environment Management**: dotenv
+- **API Testing**: Included test scripts
+- **Code Quality**: ESLint, Prettier (recommended)
 
-- Prisma will read `DATABASE_URL` from your environment (e.g. a local `.env` file).
-- Recommended value:
+## 🚀 Getting Started
 
-```bash
-DATABASE_URL="file:./dev.db"
-```
+### Prerequisites
+
+- Node.js (v16 or later)
+- npm (v7 or later)
+- SQLite (included with Node.js)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/personal-finance-app.git
+   cd personal-finance-app
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env` file in the root directory with the following variables:
+   ```env
+   PORT=3000
+   JWT_SECRET=your_jwt_secret_key
+   DATABASE_URL="file:./dev.db"
+   NODE_ENV=development
+   ```
+
+4. **Initialize the database**
+   ```bash
+   npx prisma generate
+   npx prisma migrate dev --name init
+   ```
+
+5. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   The application will be available at `http://localhost:3000`
+
+### Development
+
+- **Run in development mode**: `npm run dev`
+- **Build for production**: `npm run build`
+- **Start production server**: `npm start`
+- **Run database migrations**: `npm run prisma:migrate:deploy`
 
 Create a `.env` file in the project root and add that line, or export it in your shell before running Prisma commands.
 
@@ -118,43 +177,6 @@ Shared styles and scripts:
 
 ---
 
-## API Overview
-
-All endpoints return JSON. Authenticated routes require the auth cookie set by login/register.
-
-- `POST /api/auth/register` – `{ email, password }`
-- `POST /api/auth/login` – `{ email, password }`
-- `POST /api/auth/logout`
-- `GET /api/auth/me`
-- `POST /api/auth/change-password` – `{ currentPassword, newPassword }`
-
-- `GET /api/categories`
-- `POST /api/categories`
-- `PUT /api/categories/:id`
-- `DELETE /api/categories/:id`
-
-- `GET /api/subcategories?categoryId=...`
-- `POST /api/subcategories`
-- `PUT /api/subcategories/:id`
-- `DELETE /api/subcategories/:id`
-
-- `GET /api/transactions?startDate&endDate&type&categoryId&search&page&pageSize`
-- `POST /api/transactions`
-- `PUT /api/transactions/:id`
-- `DELETE /api/transactions/:id`
-
-- `GET /api/assets`
-- `POST /api/assets`
-- `PUT /api/assets/:id`
-- `DELETE /api/assets/:id`
-
-- `GET /api/liabilities`
-- `POST /api/liabilities`
-- `PUT /api/liabilities/:id`
-- `DELETE /api/liabilities/:id`
-
-- `GET /api/dashboard/summary` – net worth, totals, recent transactions
-- `GET /api/dashboard/net-worth-series` – 12‑month net-worth series (for chart)
 - `GET /api/dashboard/monthly?year=YYYY` – monthly income/expenses/savings
 - `GET /api/dashboard/top-categories?startDate&endDate&limit` – top expense categories
 

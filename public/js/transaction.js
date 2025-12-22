@@ -67,6 +67,15 @@ function handleReset() {
   if (mobileDate) mobileDate.value = 'month';
   applyTransactionFilters();
 }
+function setDefaultDateFilters() {
+  // Desktop
+  const desktopDate = document.getElementById('filter-date');
+  if (desktopDate) desktopDate.value = 'month';
+
+  // Mobile
+  const mobileDate = document.getElementById('mobile-filter-date');
+  if (mobileDate) mobileDate.value = 'month';
+}
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-IN');
 }
@@ -204,9 +213,9 @@ function setupViewToggle() {
       if (view === 'get-transaction') {
         addTransactionSection.style.display = 'none';
         getTransactionSection.style.display = 'block';
-
+        setDefaultDateFilters();
         await loadAllTransactions();
-        renderTransactionsTable(allTransactions);
+        applyTransactionFilters();
       }
     });
   });
@@ -729,6 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
   dateFilter = document.getElementById('filter-date');
 
   document.getElementById('filter-date').value = 'month';
+  setDefaultDateFilters();
   setupViewToggle();
   loadRecentTransactions();
   // filterBtn?.addEventListener('click', (e) => {

@@ -480,6 +480,73 @@ html[data-theme="dark"] .btn-secondary {
 html[data-theme="dark"] .btn-secondary:hover {
   background-color: #334155;
 }
+/* ===============================
+   DISABLED DROPDOWN – CORRECT 🚫 CURSOR
+================================ */
+
+/* Disabled select */
+.form-group select:disabled {
+  background-color: var(--card-bg);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+  cursor: not-allowed;        /* 🚫 SHOW BLOCK SYMBOL */
+  opacity: 0.85;
+}
+
+/* Disable hover visuals (but allow cursor) */
+.form-group select:disabled:hover {
+  background-color: var(--card-bg);
+  box-shadow: none;
+}
+
+/* Disable focus visuals */
+.form-group select:disabled:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ===============================
+   ENABLED STATE
+================================ */
+.form-group select:not(:disabled) {
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.form-group select:not(:disabled):hover {
+  border-color: var(--primary-color);
+}
+
+.form-group select:not(:disabled):focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+}
+
+/* ===============================
+   DARK MODE
+================================ */
+html[data-theme="dark"] .form-group select:disabled {
+  background-color: #1e293b;
+  color: #64748b;
+  border-color: #334155;
+  opacity: 0.75;
+}
+
+/* ===============================
+   DARK MODE SUPPORT
+================================ */
+/* html[data-theme="dark"] .form-group select:disabled {
+  background-color: #1e293b;
+  color: #64748b;
+  border-color: #334155;
+  opacity: 0.7;
+}
+
+html[data-theme="dark"] .form-group select:not(:disabled) {
+  background-color: #1e293b;
+  color: #f8fafc;
+} */
 
 
 

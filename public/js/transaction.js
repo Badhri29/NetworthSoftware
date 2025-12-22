@@ -61,7 +61,10 @@ function handleReset() {
       '#mobileFilterModal select, #mobileFilterModal input')
     .forEach(el => el.value = '');
 
-  document.getElementById('filter-date').value = 'month';
+  const desktopDate = document.getElementById('filter-date');
+  if (desktopDate) desktopDate.value = 'month';
+  const mobileDate = document.getElementById('mobile-filter-date');
+  if (mobileDate) mobileDate.value = 'month';
   applyTransactionFilters();
 }
 function formatDate(dateStr) {

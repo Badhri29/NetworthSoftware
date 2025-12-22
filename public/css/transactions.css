@@ -524,19 +524,9 @@ html[data-theme="dark"] .btn-secondary:hover {
 }
 
 /* ===============================
-   DARK MODE
-================================ */
-html[data-theme="dark"] .form-group select:disabled {
-  background-color: #1e293b;
-  color: #64748b;
-  border-color: #334155;
-  opacity: 0.75;
-}
-
-/* ===============================
    DARK MODE SUPPORT
 ================================ */
-/* html[data-theme="dark"] .form-group select:disabled {
+html[data-theme="dark"] .form-group select:disabled {
   background-color: #1e293b;
   color: #64748b;
   border-color: #334155;
@@ -546,7 +536,7 @@ html[data-theme="dark"] .form-group select:disabled {
 html[data-theme="dark"] .form-group select:not(:disabled) {
   background-color: #1e293b;
   color: #f8fafc;
-} */
+}
 
 
 

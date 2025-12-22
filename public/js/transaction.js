@@ -582,18 +582,15 @@ document.addEventListener('DOMContentLoaded', () => {
         '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
       return;
     }
-
-    // 🔥 DO NOT slice, DO NOT sort
     transactions.forEach(tx => {
-      const d = new Date(tx.updatedAt);
-      const dateTime = `${d.toLocaleDateString('en-IN')} • ${d.toLocaleTimeString(
-        'en-IN',
-        {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
-        }
-      )}`;
+      // Date shown = transaction date (what user selected)
+      const txDate = formatDateTime(tx.date).date;
+
+      // Time shown = system time (when added / updated)
+      const txTime = formatDateTime(tx.updatedAt).time;
+
+      const dateTime = `${txDate} • ${txTime}`;
+
 
       const card = document.createElement('div');
       card.className = `recent-card ${tx.type}`;

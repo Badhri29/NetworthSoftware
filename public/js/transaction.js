@@ -275,38 +275,174 @@ document.addEventListener('DOMContentLoaded', () => {
   paymentMode.addEventListener('change', () => clearFieldError(paymentMode, 'payment-mode-error'));
   dateInput.max = today;
 
-  // ===== Subcategory Map =====
-  const subcategories = {
-    food: ['Groceries', 'Dining Out', 'Snacks'],
-    travel: ['Fuel', 'Bus', 'Train', 'Flight'],
-    rent: ['House Rent'],
-    utilities: ['Electricity', 'Water', 'Internet'],
-    salary: ['Monthly Salary'],
-    investment: ['Stocks', 'Mutual Funds']
+
+  /* Type, Categories, Subcategories */
+  categorySelect.disabled = true;
+  subcategorySelect.disabled = true;
+  const subCategories = {
+    income: {
+      "Salary / Wages": [
+        "Basic Salary", "Bonus", "Overtime Pay", "Commission", "Allowances", "Incentives"
+      ],
+      "Freelance / Self-Employed": [
+        "Freelance Projects", "Consulting Fees", "Contract Work", "Gig Work", "Online Services"
+      ],
+      "Business Income": [
+        "Product Sales", "Service Charges", "Profit Share", "Partnership Income", "Franchise Income"
+      ],
+      "Investment Income": [
+        "Bank Interest", "FD Interest", "RD Interest", "Dividend Income",
+        "Mutual Fund Returns", "Stock Market Gains", "Bond Interest"
+      ],
+      "Rental Income": [
+        "House Rent", "Shop Rent", "Land Rent", "Parking Rent"
+      ],
+      "Government / Benefits": [
+        "Pension", "Scholarship", "Subsidy", "Government Allowance", "Insurance Claim"
+      ],
+      "Lending Recovery": [
+        "Friend Loan Amount Received", "Family Loan Amount Received",
+        "Relative Loan Amount Received", "Personal Loan Amount Received",
+        "Business Loan Amount Received", "Emergency Loan Amount Received",
+        "Advance Amount Received", "Interest Amount Received"
+      ],
+      "Gifts / Other Income": [
+        "Gift Received", "Refund", "Cashback", "Reimbursement", "Prize / Lottery", "Other Income"
+      ]
+    },
+
+    savings: {
+      "Bank Savings": [
+        "Savings Account Deposit", "Emergency Fund", "Surplus Cash Saved"
+      ],
+      "Fixed Income Savings": [
+        "Fixed Deposit (FD)", "Recurring Deposit (RD)",
+        "Post Office Deposit", "Senior Citizen Deposit"
+      ],
+      "Investment Savings": [
+        "Mutual Fund Investment", "SIP Investment",
+        "Stock Investment", "ETF Investment", "Bond Investment"
+      ],
+      "Retirement Savings": [
+        "EPF Contribution", "PPF Contribution", "NPS Contribution", "Pension Fund"
+      ],
+      "Gold & Physical Assets": [
+        "Gold Savings Scheme", "Gold Coin / Bar",
+        "Jewellery Investment", "Silver Investment"
+      ],
+      "Insurance Savings": [
+        "Life Insurance Premium", "Term Insurance Savings", "ULIP Investment"
+      ],
+      "Goal-Based Savings": [
+        "House Fund", "Education Fund", "Marriage Fund", "Travel Fund", "Vehicle Fund"
+      ],
+      "Digital & Alternate Savings": [
+        "Wallet Balance Saved", "Crypto Investment", "Other Digital Assets"
+      ]
+    },
+
+    expense: {
+      "Food & Dining": [
+        "Groceries", "Vegetables & Fruits", "Milk & Essentials",
+        "Restaurant / Hotel", "Snacks & Beverages", "Online Food Orders"
+      ],
+      "Housing & Utilities": [
+        "House Rent", "Electricity Bill", "Water Bill",
+        "Gas", "Internet Bill", "Mobile Recharge", "Maintenance"
+      ],
+      "Transportation": [
+        "Fuel", "Public Transport", "Cab / Auto",
+        "Vehicle Service", "Parking", "Toll"
+      ],
+      "Personal & Lifestyle": [
+        "Clothing", "Footwear", "Grooming / Salon",
+        "Cosmetics", "Gym / Fitness", "Entertainment"
+      ],
+      "Health & Medical": [
+        "Doctor Fees", "Medicines", "Hospital Charges",
+        "Medical Tests", "Health Insurance Premium"
+      ],
+      "Education": [
+        "School Fees", "College Fees", "Tuition Fees",
+        "Online Courses", "Books & Stationery"
+      ],
+      "Loan & Credit Payments": [
+        "Personal Loan EMI Paid", "Home Loan EMI Paid",
+        "Vehicle Loan EMI Paid", "Education Loan EMI Paid",
+        "Credit Card Bill Paid", "Credit Card Interest Paid"
+      ],
+      "Lending / Loan Given": [
+        "Friend Loan Given", "Family Loan Given",
+        "Relative Loan Given", "Emergency Loan Given", "Advance Given"
+      ],
+      "Insurance (Expense)": [
+        "Vehicle Insurance", "Home Insurance"
+      ],
+      "Subscriptions & Bills": [
+        "OTT Subscription", "Software Subscription",
+        "Cloud / Hosting", "Newspaper"
+      ],
+      "Travel & Vacation": [
+        "Flight Tickets", "Train / Bus Tickets",
+        "Hotel", "Local Travel", "Travel Food"
+      ],
+      "Taxes & Government": [
+        "Income Tax", "Property Tax", "Road Tax", "Fines / Penalties"
+      ],
+      "Gifts & Donations": [
+        "Gift Given", "Charity / Donation", "Festival Expenses"
+      ],
+      "Miscellaneous": [
+        "Bank Charges", "Service Charges", "Late Fees", "Other Expenses"
+      ]
+    }
   };
+  categorySelect.addEventListener("change", () => {
+    const type = transactionType.value;
+    const category = categorySelect.value;
+
+    subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+    subcategorySelect.disabled = true;
+
+    if (!type || !category) return;
+
+    const subs = subCategories[type][category] || [];
+    subs.forEach(sub => {
+      const opt = document.createElement("option");
+      opt.value = sub;
+      opt.textContent = sub;
+      subcategorySelect.appendChild(opt);
+    });
+
+    if (subs.length) subcategorySelect.disabled = false;
+  });
+  transactionType.addEventListener("change", () => {
+    const type = transactionType.value;
+
+    categorySelect.innerHTML = `<option value="">Select Category</option>`;
+    subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+    subcategorySelect.disabled = true;
+
+    if (!type || !subCategories[type]) {
+      categorySelect.disabled = true;
+      return;
+    }
+
+    categorySelect.disabled = false;
+
+    Object.keys(subCategories[type]).forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+  });
+
 
   // ===== Character Counter =====
   detailsTextarea.addEventListener('input', () => {
     charCount.textContent = detailsTextarea.value.length;
   });
-
-  // ===== Category Change =====
-  categorySelect.addEventListener('change', () => {
-    const value = categorySelect.value;
-    subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
-    subcategorySelect.disabled = true;
-
-    if (subcategories[value]) {
-      subcategories[value].forEach(sub => {
-        const opt = document.createElement('option');
-        opt.value = sub.toLowerCase().replace(/\s+/g, '-');
-        opt.textContent = sub;
-        subcategorySelect.appendChild(opt);
-      });
-      subcategorySelect.disabled = false;
-    }
-  });
-
   // ===== Payment Mode =====
   paymentMode.addEventListener('change', () => {
     cardGroup.style.display = paymentMode.value === 'credit' ? 'block' : 'none';
@@ -332,10 +468,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Listen for transaction type changes
-  transactionType.addEventListener('change', (e) => {
-    updateTransactionTypeClass(e.target.value);
-  });
+
+
 
   // ===== Form Submit =====
   document.querySelector('.btn-primary').addEventListener('click', e => {
@@ -736,29 +870,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('filter-date').value = 'month';
   setDefaultDateFilters();
-  setupViewToggle();
   loadRecentTransactions();
-  // filterBtn?.addEventListener('click', (e) => {
-  //   e.stopPropagation();
-
-  //   if (window.innerWidth <= 768) {
-  //     mobileModal?.classList.add('show');
-  //   } else {
-  //     inlineFilter?.classList.toggle('open');
-  //     filterBtn.textContent = inlineFilter?.classList.contains('open')
-  //       ? 'Hide Filter'
-  //       : 'Show Filter';
-  //   }
-  // });
-  // document.addEventListener('click', e => {
-  //   if (
-  //     inlineFilter?.classList.contains('open') &&
-  //     !inlineFilter.contains(e.target) &&
-  //     !filterBtn.contains(e.target)
-  //   ) {
-  //     inlineFilter.classList.remove('open');
-  //   }
-  // });
+  setupViewToggle();
   closeMobileBtn?.addEventListener('click', () => {
     mobileModal?.classList.remove('show');
   });

@@ -1,432 +1,423 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>NetWorth | Transactions</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/css/base.css" />
-    <link rel="stylesheet" href="/css/layout.css" />
-    <link rel="stylesheet" href="/css/components.css" />
-    <link rel="stylesheet" href="/css/transactions.css" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <!-- Sidebar (collapsed by default on mobile) -->
-      <aside class="desktop-sidebar">
-        <div class="sidebar-header">
-          <div class="sidebar-menu-text">Menu</div>
-          <button class="sidebar-toggle-btn" id="sidebar-toggle">☰</button>
+
+<head>
+  <meta charset="utf-8" />
+  <title>NetWorth | Transactions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/transactions.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <!-- Sidebar (collapsed by default on mobile) -->
+    <aside class="desktop-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-menu-text">Menu</div>
+        <button class="sidebar-toggle-btn" id="sidebar-toggle">☰</button>
+      </div>
+      <nav class="desktop-sidebar-nav">
+        <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span><span class="nav-text">Dashboard</span></a>
+        <a href="/transactions.html" data-nav-link class="active"><span class="icon">📄</span><span
+            class="nav-text">Transactions</span></a>
+        <a href="/assets.html" data-nav-link><span class="icon">💼</span><span class="nav-text">Assets</span></a>
+        <a href="/analysis.html" data-nav-link><span class="icon">📊</span><span class="nav-text">Analysis</span></a>
+        <a href="/settings.html" data-nav-link><span class="icon">⚙️</span><span class="nav-text">Settings</span></a>
+        <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">⏻</span><span
+            class="nav-text">Logout</span></a>
+      </nav>
+    </aside>
+
+    <main class="app-main">
+      <!-- Header (keep as is) -->
+      <header class="app-header">
+        <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
+        <div>
+          <div class="app-title">Transactions</div>
+          <div class="app-subtitle">Search, filter and manage your cashflow</div>
         </div>
-        <nav class="desktop-sidebar-nav">
-          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span><span class="nav-text">Dashboard</span></a>
-          <a href="/transactions.html" data-nav-link class="active"><span class="icon">📄</span><span class="nav-text">Transactions</span></a>
-          <a href="/assets.html" data-nav-link><span class="icon">💼</span><span class="nav-text">Assets</span></a>
-          <a href="/analysis.html" data-nav-link><span class="icon">📊</span><span class="nav-text">Analysis</span></a>
-          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span><span class="nav-text">Settings</span></a>
-          <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">⏻</span><span class="nav-text">Logout</span></a>
-        </nav>
-      </aside>
-
-      <main class="app-main">
-        <!-- Header (keep as is) -->
-        <header class="app-header">
-          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
-          <div>
-            <div class="app-title">Transactions</div>
-            <div class="app-subtitle">Search, filter and manage your cashflow</div>
-          </div>
-          <div style="margin-left:auto; display:flex; align-items:center; gap:0.6rem;">
-            <img id="header-avatar" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:none" />
-            <span id="header-username" style="font-weight:600; color:var(--muted); display:none"></span>
-          </div>
-        </header>
-
-        <!-- Toggle Buttons -->
-        <div class="view-toggle">
-          <button class="toggle-btn active" data-view="add-transaction">
-            Add Transactions
-          </button>
-          <button class="toggle-btn" data-view="get-transaction">
-            Get Transactions
-          </button>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:0.6rem;">
+          <img id="header-avatar" alt="Profile"
+            style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:none" />
+          <span id="header-username" style="font-weight:600; color:var(--muted); display:none"></span>
         </div>
+      </header>
 
-        <!-- add transection content -->
-        <div class="add-transection-content">
-          <div class="add-section">
-            <div class="add-section-heading">
-              <h4>Fill Details</h4>
-            </div>
-            <div class="add-section-content">
-              <form id="transaction-form" class="transaction-form">
-                <!-- Date and Transaction Type in one row -->
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="transaction-date">Date <span class="required">*</span></label>
-                    <input type="date" id="transaction-date" name="date" required>
-                    <div class="error-message" id="date-error"></div>
-                  </div>
+      <!-- Toggle Buttons -->
+      <div class="view-toggle">
+        <button class="toggle-btn active" data-view="add-transaction">
+          Add Transactions
+        </button>
+        <button class="toggle-btn" data-view="get-transaction">
+          Get Transactions
+        </button>
+      </div>
 
-                  <div class="form-group">
-                    <label for="transaction-type">Transaction Type <span class="required">*</span></label>
-                    <select id="transaction-type" name="type" required>
-                      <option value="">Select Type</option>
-                      <option value="income">Income</option>
-                      <option value="expense">Expense</option>
-                      <option value="savings">Savings</option>
-                    </select>
-                    <div class="error-message" id="type-error"></div>
-                  </div>
-                </div>
-
-                <!-- Category and Sub-Category in one row -->
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="transaction-category">Category</label>
-                    <select id="transaction-category" name="category">
-                      <option value="">Select Category</option>
-                      <option value="food">Food</option>
-                      <option value="travel">Travel</option>
-                      <option value="rent">Rent</option>
-                      <option value="utilities">Utilities</option>
-                      <option value="salary">Salary</option>
-                      <option value="investment">Investment</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="transaction-subcategory">Sub-Category</label>
-                    <select id="transaction-subcategory" name="subcategory" disabled>
-                      <option value="">Select Sub-Category</option>
-                    </select>
-                  </div>
-                </div>
-
-                <!-- Details (full width) -->
+      <!-- add transection content -->
+      <div class="add-transection-content">
+        <div class="add-section">
+          <div class="add-section-heading">
+            <h4>Fill Details</h4>
+          </div>
+          <div class="add-section-content">
+            <form id="transaction-form" class="transaction-form">
+              <!-- Date and Transaction Type in one row -->
+              <div class="form-row">
                 <div class="form-group">
-                  <label for="transaction-details">Details</label>
-                  <textarea id="transaction-details" name="details" maxlength="200" rows="3" placeholder="Enter transaction details (max 200 characters)"></textarea>
-                  <div class="char-count"><span id="char-count">0</span>/200</div>
+                  <label for="transaction-date">Date <span class="required">*</span></label>
+                  <input type="date" id="transaction-date" name="date" required>
+                  <div class="error-message" id="date-error"></div>
                 </div>
 
-                <!-- Amount and Payment Mode in one row -->
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="transaction-amount">Amount (₹) <span class="required">*</span></label>
-                    <div class="amount-input">
-                      <span class="currency-symbol">₹</span>
-                      <input type="number" id="transaction-amount" name="amount" min="0" step="0.01" placeholder="0.00" required>
-                    </div>
-                    <div class="error-message" id="amount-error"></div>
-                  </div>
-
-                  <div class="form-group">
-                    <label for="payment-mode">Payment Mode <span class="required">*</span></label>
-                    <select id="payment-mode" name="paymentMode" required>
-                      <option value="">Select Payment Mode</option>
-                      <option value="cash">Cash</option>
-                      <option value="upi">UPI</option>
-                      <option value="debit">Debit Card</option>
-                      <option value="credit">Credit Card</option>
-                      <option value="netbanking">Net Banking</option>
-                    </select>
-                    <div class="error-message" id="payment-mode-error"></div>
-                  </div>
+                <div class="form-group">
+                  <label for="transaction-type">Transaction Type <span class="required">*</span></label>
+                  <select id="transaction-type" name="type" required>
+                    <option value="">Select Type</option>
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                    <option value="savings">Savings</option>
+                  </select>
+                  <div class="error-message" id="type-error"></div>
                 </div>
+              </div>
 
-                <div class="form-group" id="card-selection-group" style="display: none;">
-                  <label for="card-selection">Select Card</label>
-                  <select id="card-selection" name="card">
-                    <option value="">Select Card</option>
-                    <option value="axis">Axis Card</option>
-                    <option value="hdfc">HDFC Card</option>
-                    <option value="icici">ICICI Card</option>
+              <!-- Category and Sub-Category in one row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="transaction-category">Category</label>
+                  <select id="transaction-category" name="category">
+                    <option value="">Select Category</option>
+                    <option value="food">Food</option>
+                    <option value="travel">Travel</option>
+                    <option value="rent">Rent</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="salary">Salary</option>
+                    <option value="investment">Investment</option>
                   </select>
                 </div>
 
-                
-              </form>
-            </div>
-            <div class="add-section-bottom">
-              <div class="form-actions">
-                  <button type="button" id="clear-form" class="btn-secondary">Clear</button>
-                  <button type="submit" class="btn-primary">Submit</button>
+                <div class="form-group">
+                  <label for="transaction-subcategory">Sub-Category</label>
+                  <select id="transaction-subcategory" name="subcategory" disabled>
+                    <option value="">Select Sub-Category</option>
+                  </select>
                 </div>
-            </div>
-          </div>
-          
-          <div class="add-section">
-            <div class="add-section-heading">
-              <h4>Recent Transections</h4>
-            </div>
-            <div class="add-section-content">
-              <div id="recent-transactions-list"></div>
-            </div>
-            <div class="add-section-bottom"></div>
-          </div>
-        </div>
-        
-        <!-- get transection content -->
-        <div class="get-transection-content">
-          <div class="get-section">
-            <div class="get-section-heading">
-              <h4>Transactions</h4>
-              <button class="get-section-filter" id="filter-toggle">Filter</button>
-            </div>
-            <div class="filter-section" id="filter-section">
-
-  <!-- ROW 1 -->
-  <div class="filter-row">
-
-    <div class="filter-group">
-      <label>Transaction Type</label>
-      <select id="filter-type">
-        <option value="all">All</option>
-        <option value="income">Income</option>
-        <option value="expense">Expense</option>
-        <option value="saving">Savings</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label>Category</label>
-      <select id="filter-category">
-        <option value="all">All</option>
-        <option value="food">Food</option>
-        <option value="travel">Travel</option>
-        <option value="rent">Rent</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label>Sub-Category</label>
-      <select id="filter-subcategory">
-        <option value="all">All</option>
-        <option value="bus">Bus</option>
-        <option value="fuel">Fuel</option>
-        <option value="groceries">Groceries</option>
-      </select>
-    </div>
-
-  </div>
-
-  <!-- ROW 2 -->
-  <div class="filter-row">
-
-    <div class="filter-group">
-      <label>Date Range</label>
-      <select id="filter-date">
-        <option value="all">All Time</option>
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label>Amount Min (₹)</label>
-      <input
-        id="filter-amount-min"
-        type="number"
-        placeholder="0"
-        min="0"
-      >
-    </div>
-
-    <div class="filter-group">
-      <label>Amount Max (₹)</label>
-      <input
-        id="filter-amount-max"
-        type="number"
-        placeholder="10000"
-        min="0"
-      >
-    </div>
-
-  </div>
-
-  <!-- ROW 3 -->
-  <div class="filter-row">
-
-    <div class="filter-group">
-      <label>Payment Mode</label>
-      <select id="filter-payment">
-        <option value="all">All</option>
-        <option value="cash">Cash</option>
-        <option value="upi">UPI</option>
-        <option value="debit">Debit</option>
-        <option value="credit">Credit</option>
-        <option value="netbanking">Net Banking</option>
-      </select>
-    </div>
-
-    <div class="filter-group">
-      <label>Card Type</label>
-      <select id="filter-card">
-        <option value="all">All</option>
-        <option value="hdfc">HDFC</option>
-        <option value="axis">Axis</option>
-        <option value="icici">ICICI</option>
-      </select>
-    </div>
-
-  </div>
-
-  <!-- ACTIONS -->
-  <div class="filter-actions">
-    <button id="resetFilterBtn" class="btn btn-secondary">
-      Reset
-    </button>
-    <button id="applyFilterBtn" class="btn btn-primary">
-      Apply Filters
-    </button>
-  </div>
-
-</div>
-
-            <div class="get-section-content">
-              <div class="table-responsive">
-                <table class="transactions-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Date</th>
-                      <th>Transaction Type</th>
-                      <th>Category</th>
-                      <th>Sub-category</th>
-                      <th>Details</th>
-                      <th>Amount</th>
-                      <th>Payment Mode</th>
-                      <th>Credit Card Type</th>
-                    </tr>
-                  </thead>
-                  <tbody id="transactions-table-body">
-                    <!-- Rows will be injected from database -->
-                  </tbody>
-                </table>
               </div>
-            </div>
-            <div class="get-section-bottom"></div>
+
+              <!-- Details (full width) -->
+              <div class="form-group">
+                <label for="transaction-details">Details</label>
+                <textarea id="transaction-details" name="details" maxlength="200" rows="3"
+                  placeholder="Enter transaction details (max 200 characters)"></textarea>
+                <div class="char-count"><span id="char-count">0</span>/200</div>
+              </div>
+
+              <!-- Amount and Payment Mode in one row -->
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="transaction-amount">Amount (₹) <span class="required">*</span></label>
+                  <div class="amount-input">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" id="transaction-amount" name="amount" min="0" step="0.01" placeholder="0.00"
+                      required>
+                  </div>
+                  <div class="error-message" id="amount-error"></div>
+                </div>
+
+                <div class="form-group">
+                  <label for="payment-mode">Payment Mode <span class="required">*</span></label>
+                  <select id="payment-mode" name="paymentMode" required>
+                    <option value="">Select Payment Mode</option>
+                    <option value="cash">Cash</option>
+                    <option value="upi">UPI</option>
+                    <option value="debit">Debit Card</option>
+                    <option value="credit">Credit Card</option>
+                    <option value="netbanking">Net Banking</option>
+                  </select>
+                  <div class="error-message" id="payment-mode-error"></div>
+                </div>
+              </div>
+
+              <div class="form-group" id="card-selection-group" style="display: none;">
+                <label for="card-selection">Select Card</label>
+                <select id="card-selection" name="card">
+                  <option value="">Select Card</option>
+                  <option value="axis">Axis Card</option>
+                  <option value="hdfc">HDFC Card</option>
+                  <option value="icici">ICICI Card</option>
+                </select>
+              </div>
+
+
+            </form>
           </div>
-        </div>
-      </main>
-    </div>
-
-
-    <!-- Confirmation Modal -->
-    <div id="confirmationModal" class="modal">
-      <div class="modal-content">
-        <h3>Confirm Transaction</h3>
-        <div id="transactionDetails"></div>
-        <div class="modal-buttons">
-          <button id="confirmSubmit" class="btn btn-primary">Confirm</button>
-          <button id="cancelSubmit" class="btn btn-secondary">Cancel</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Transaction View Modal -->
-    <div class="modal" id="transactionViewModal">
-      <div class="modal-content">
-        <h3>Transaction Details</h3>
-
-        <div id="transactionViewBody"></div>
-
-        <div class="modal-buttons">
-          <button class="btn btn-secondary" id="closeViewModal">Close</button>
-        </div>
-      </div>
-    </div>
-  
-    <!-- ================= MOBILE FILTER MODAL ================= -->
-    <div class="modal" id="mobileFilterModal">
-      <div class="modal-content filter-modal">
-
-        <div class="filter-modal-header">
-          <h3>Filter Transactions</h3>
-          <button class="filter-close-btn" id="closeFilterModal">✕</button>
-        </div>
-
-        <div class="filter-modal-body">
-
-          <div class="filter-group">
-            <label>Transaction Type</label>
-            <select>
-              <option value="">All</option>
-              <option>Income</option>
-              <option>Expense</option>
-              <option>Savings</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Category</label>
-            <select>
-              <option value="">All</option>
-              <option>Food</option>
-              <option>Travel</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Sub Category</label>
-            <select>
-              <option value="">All</option>
-              <option>Bus</option>
-              <option>Fuel</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Date Range</label>
-            <select>
-              <option>All Time</option>
-              <option>Today</option>
-              <option>This Week</option>
-              <option>This Month</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Amount Range</label>
-            <div class="amount-range">
-              <input type="number" placeholder="Min ₹">
-              <input type="number" placeholder="Max ₹">
+          <div class="add-section-bottom">
+            <div class="form-actions">
+              <button type="button" id="clear-form" class="btn-secondary">Clear</button>
+              <button type="submit" class="btn-primary">Submit</button>
             </div>
           </div>
-
-          <div class="filter-group">
-            <label>Payment Mode</label>
-            <select>
-              <option>All</option>
-              <option>Cash</option>
-              <option>UPI</option>
-              <option>Credit</option>
-            </select>
-          </div>
-
-          <div class="filter-group">
-            <label>Card Type</label>
-            <select>
-              <option>All</option>
-              <option>HDFC</option>
-              <option>Axis</option>
-            </select>
-          </div>
-
         </div>
 
-        <div class="filter-modal-footer">
-          <button class="btn btn-secondary">Reset</button>
-          <button class="btn btn-primary">Apply</button>
+        <div class="add-section">
+          <div class="add-section-heading">
+            <h4>Recent Transections</h4>
+          </div>
+          <div class="add-section-content">
+            <div id="recent-transactions-list"></div>
+          </div>
+          <div class="add-section-bottom"></div>
+        </div>
+      </div>
+
+      <!-- get transection content -->
+      <div class="get-transection-content">
+        <div class="get-section">
+          <div class="get-section-heading">
+            <h4>Transactions</h4>
+            <button class="get-section-filter" id="filter-toggle">Filter</button>
+          </div>
+
+          <div class="filter-section" id="filter-section">
+
+            <!-- ROW 1 -->
+            <div class="filter-row">
+
+              <div class="filter-group">
+                <label>Transaction Type</label>
+                <select id="filter-type">
+                  <option value="">All</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                  <option value="savings">Savings</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Category</label>
+                <select id="filter-category">
+                  <option value="">All</option>
+                  <option value="food">Food</option>
+                  <option value="travel">Travel</option>
+                  <option value="rent">Rent</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Sub Category</label>
+                <select id="filter-subcategory">
+                  <option value="">All</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- ROW 2 -->
+            <div class="filter-row">
+
+              <div class="filter-group">
+                <label>Date Range</label>
+                <select id="filter-date">
+                  <option value="">All Time</option>
+                  <option value="today">Today</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Amount Min (₹)</label>
+                <input type="number" id="filter-amount-min" placeholder="0">
+              </div>
+
+              <div class="filter-group">
+                <label>Amount Max (₹)</label>
+                <input type="number" id="filter-amount-max" placeholder="10000">
+              </div>
+
+            </div>
+
+            <!-- ROW 3 -->
+            <div class="filter-row">
+
+              <div class="filter-group">
+                <label>Payment Mode</label>
+                <select id="filter-payment">
+                  <option value="">All</option>
+                  <option value="cash">Cash</option>
+                  <option value="upi">UPI</option>
+                  <option value="debit">Debit</option>
+                  <option value="credit">Credit</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label>Card Type</label>
+                <select id="filter-card">
+                  <option value="">All</option>
+                  <option value="hdfc">HDFC</option>
+                  <option value="axis">Axis</option>
+                  <option value="icici">ICICI</option>
+                </select>
+              </div>
+
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="filter-actions">
+              <button id="resetFilterBtn" class="btn btn-secondary">Reset</button>
+              <button id="applyFilterBtn" class="btn btn-primary">Apply Filters</button>
+            </div>
+
+          </div>
+
+          <div class="get-section-content">
+            <div class="table-responsive">
+              <table class="transactions-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Transaction Type</th>
+                    <th>Category</th>
+                    <th>Sub-category</th>
+                    <th>Details</th>
+                    <th>Amount</th>
+                    <th>Payment Mode</th>
+                    <th>Credit Card Type</th>
+                  </tr>
+                </thead>
+                <tbody id="transactions-table-body">
+                  <!-- Rows will be injected from database -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="get-section-bottom"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+
+  <!-- Confirmation Modal -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h3>Confirm Transaction</h3>
+      <div id="transactionDetails"></div>
+      <div class="modal-buttons">
+        <button id="confirmSubmit" class="btn btn-primary">Confirm</button>
+        <button id="cancelSubmit" class="btn btn-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction View Modal -->
+  <div class="modal" id="transactionViewModal">
+    <div class="modal-content">
+      <h3>Transaction Details</h3>
+
+      <div id="transactionViewBody"></div>
+
+      <div class="modal-buttons">
+        <button class="btn btn-secondary" id="closeViewModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE FILTER MODAL -->
+  <div class="modal" id="mobileFilterModal">
+    <div class="modal-content filter-modal">
+
+      <div class="filter-modal-header">
+        <h3>Filter Transactions</h3>
+        <button class="filter-close-btn" id="closeFilterModal">✕</button>
+      </div>
+
+      <div class="filter-modal-body">
+
+        <div class="filter-group">
+          <label>Transaction Type</label>
+          <select id="mobile-filter-type" data-sync="filter-type">
+            <option value="">All</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="savings">Savings</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Category</label>
+          <select id="mobile-filter-category" data-sync="filter-category">
+            <option value="">All</option>
+            <option value="food">Food</option>
+            <option value="travel">Travel</option>
+            <option value="rent">Rent</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Sub Category</label>
+          <select id="mobile-filter-subcategory" data-sync="filter-subcategory">
+            <option value="">All</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Date Range</label>
+          <select id="mobile-filter-date" data-sync="filter-date">
+            <option value="">All Time</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Amount Range</label>
+          <div class="amount-range">
+            <input type="number" id="mobile-filter-amount-min" data-sync="filter-amount-min" placeholder="Min ₹">
+            <input type="number" id="mobile-filter-amount-max" data-sync="filter-amount-max" placeholder="Max ₹">
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label>Payment Mode</label>
+          <select id="mobile-filter-payment" data-sync="filter-payment">
+            <option value="">All</option>
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+            <option value="credit">Credit</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Card Type</label>
+          <select id="mobile-filter-card" data-sync="filter-card">
+            <option value="">All</option>
+            <option value="hdfc">HDFC</option>
+            <option value="axis">Axis</option>
+          </select>
         </div>
 
       </div>
-    </div>
 
-    <script src="/js/api.js"></script>
-    <script src="/js/theme.js"></script>
-    <script src="/js/ui.js"></script>
-    <script src="/js/transaction.js"></script>
-  </body>
+      <div class="filter-modal-footer">
+        <button id="resetFilterBtnMobile" class="btn btn-secondary">Reset</button>
+        <button id="applyFilterBtnMobile" class="btn btn-primary">Apply</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script src="/js/api.js"></script>
+  <script src="/js/theme.js"></script>
+  <script src="/js/ui.js"></script>
+  <script src="/js/transaction.js"></script>
+</body>
+
 </html>

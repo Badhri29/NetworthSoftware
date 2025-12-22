@@ -1,39 +1,247 @@
-// ========================================================================
-//                          ADD TRANSECTION Styles start ----------->
-// ========================================================================
+/* =================ALL variables===================== */
+let allTransactions = [];
+let dateInput;
+let transactionType;
+let categorySelect;
+let subcategorySelect;
+let detailsTextarea;
+let charCount;
+let amountInput;
+let paymentMode;
+let cardGroup;
+let cardSelect;
+let clearBtn;
+let modal;
+let modalDetails;
+let confirmBtn;
+let cancelBtn;
+let formData;
+let toggleBtns;
+let addTransactionSection;
+let getTransactionSection;
+let filterBtn;
+let inlineFilter;
+let mobileModal;
+let closeMobileBtn;
+let applyBtn;
+let resetBtn;
+let applyBtnMobile;
+let resetBtnMobile;
+let dateFilter;
 
+/* =================ALL CORE LOGIC===================== */
+function resetAllFilters() {
 
+  document
+    .querySelectorAll(
+      '#filter-section select, #filter-section input,' +
+      '#mobileFilterModal select, #mobileFilterModal input'
+    )
+    .forEach(el => el.value = '');
 
+  const dateFilter = document.getElementById('filter-date');
+  if (dateFilter) dateFilter.value = 'month';
+}
+function syncMobileToDesktop() {
+  document
+    .querySelectorAll('#mobileFilterModal [data-sync]')
+    .forEach(mobileEl => {
+      const target = document.getElementById(mobileEl.dataset.sync);
+      if (target) target.value = mobileEl.value;
+    });
+}
+function handleApply(isMobile) {
+  if (isMobile) syncMobileToDesktop();
+  applyTransactionFilters();
+  closeFilterUI();
+}
+function handleReset() {
+  document
+    .querySelectorAll('#filter-section select, #filter-section input,' +
+      '#mobileFilterModal select, #mobileFilterModal input')
+    .forEach(el => el.value = '');
 
-// =====================form styles start=========================
+  document.getElementById('filter-date').value = 'month';
+  applyTransactionFilters();
+}
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-IN');
+}
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+function formatDateTime(dateStr) {
+  const d = new Date(dateStr);
 
+  return {
+    date: d.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    }),
+    time: d.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    })
+  };
+}
+function renderTransactionsTable(transactions) {
+  const tbody = document.getElementById('transactions-table-body');
+  if (!tbody) return;
+
+  tbody.innerHTML = '';
+
+  if (!transactions.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="9" style="text-align:center;color:#6b7280;padding:12px">
+          No transactions found
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  transactions.forEach(tx => {
+    const tr = document.createElement('tr');
+
+    // Row color by type
+    tr.className =
+      tx.type === 'income'
+        ? 'transaction-income'
+        : tx.type === 'expense'
+          ? 'transaction-expense'
+          : 'transaction-saving';
+
+    tr.innerHTML = `
+      <td data-label="ID">${tx.id}</td>
+      <td data-label="Date">${formatDate(tx.date)}</td>
+      <td data-label="Type"><span>${capitalize(tx.type)}</span></td>
+      <td data-label="Category">${tx.category || '-'}</td>
+      <td data-label="Sub-category">${tx.subcategory || '-'}</td>
+      <td data-label="Details">${tx.description || '-'}</td>
+      <td data-label="Amount" class="amount">₹${tx.amount}</td>
+      <td data-label="Payment Mode">${tx.paymentMode}</td>
+      <td data-label="Card Type">${tx.card || '-'}</td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+}
+function applyTransactionFilters() {
+
+  const type = document.getElementById('filter-type')?.value || '';
+  const category = document.getElementById('filter-category')?.value || '';
+  const subcategory = document.getElementById('filter-subcategory')?.value || '';
+  const dateRange = document.getElementById('filter-date')?.value || '';
+  const minAmount = parseFloat(document.getElementById('filter-amount-min')?.value) || 0;
+  const maxAmount = parseFloat(document.getElementById('filter-amount-max')?.value) || Infinity;
+  const payment = document.getElementById('filter-payment')?.value || '';
+  const card = document.getElementById('filter-card')?.value || '';
+
+  const today = new Date();
+
+  const filtered = allTransactions.filter(tx => {
+
+    if (type && tx.type !== type) return false;
+    if (category && tx.category !== category) return false;
+    if (subcategory && tx.subcategory !== subcategory) return false;
+    if (payment && tx.paymentMode !== payment) return false;
+    if (card && tx.card !== card) return false;
+
+    if (tx.amount < minAmount || tx.amount > maxAmount) return false;
+
+    if (dateRange) {
+      const txDate = new Date(tx.date);
+
+      if (dateRange === 'today') {
+        if (txDate.toDateString() !== today.toDateString()) return false;
+      }
+
+      if (dateRange === 'week') {
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - 7);
+        if (txDate < weekStart) return false;
+      }
+
+      if (dateRange === 'month') {
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        if (txDate < monthStart) return false;
+      }
+    }
+
+    return true;
+  });
+
+  renderTransactionsTable(filtered);
+}
+function closeFilterUI() {
+  document.getElementById('filter-section')?.classList.remove('open');
+  document.getElementById('mobileFilterModal')?.classList.remove('show');
+}
+function setupViewToggle() {
+  // Default view
+  addTransactionSection.style.display = 'flex';
+  getTransactionSection.style.display = 'none';
+
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      // Toggle active button
+      toggleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const view = btn.dataset.view;
+
+      if (view === 'add-transaction') {
+        addTransactionSection.style.display = 'flex';
+        getTransactionSection.style.display = 'none';
+      }
+
+      if (view === 'get-transaction') {
+        addTransactionSection.style.display = 'none';
+        getTransactionSection.style.display = 'block';
+
+        await loadAllTransactions();
+        renderTransactionsTable(allTransactions);
+      }
+    });
+  });
+}
+async function loadAllTransactions() {
+  try {
+    const res = await fetch('/api/transactions', { credentials: 'include' });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.message);
+
+    allTransactions = result.data || [];
+  } catch (err) {
+    console.error('Failed to load transactions:', err);
+  }
+}
 document.addEventListener('DOMContentLoaded', () => {
-  
-/* ===========STATE===========*/
-let allTransactions  = [];
+
   const form = document.getElementById('transaction-form');
   if (!form) return;
 
   // ===== Elements =====
-  const dateInput = document.getElementById('transaction-date');
-  const transactionType = document.getElementById('transaction-type');
-  const categorySelect = document.getElementById('transaction-category');
-  const subcategorySelect = document.getElementById('transaction-subcategory');
-  const detailsTextarea = document.getElementById('transaction-details');
-  const charCount = document.getElementById('char-count');
-  const amountInput = document.getElementById('transaction-amount');
-  const paymentMode = document.getElementById('payment-mode');
-  const cardGroup = document.getElementById('card-selection-group');
-  const cardSelect = document.getElementById('card-selection');
-  const clearBtn = document.getElementById('clear-form');
+  dateInput = document.getElementById('transaction-date');
+  transactionType = document.getElementById('transaction-type');
+  categorySelect = document.getElementById('transaction-category');
+  subcategorySelect = document.getElementById('transaction-subcategory');
+  detailsTextarea = document.getElementById('transaction-details');
+  charCount = document.getElementById('char-count');
+  amountInput = document.getElementById('transaction-amount');
+  paymentMode = document.getElementById('payment-mode');
+  cardGroup = document.getElementById('card-selection-group');
+  cardSelect = document.getElementById('card-selection');
+  clearBtn = document.getElementById('clear-form');
+  modal = document.getElementById('confirmationModal');
+  modalDetails = document.getElementById('transactionDetails');
+  confirmBtn = document.getElementById('confirmSubmit');
+  cancelBtn = document.getElementById('cancelSubmit');
 
-  // ===== Modal =====
-  const modal = document.getElementById('confirmationModal');
-  const modalDetails = document.getElementById('transactionDetails');
-  const confirmBtn = document.getElementById('confirmSubmit');
-  const cancelBtn = document.getElementById('cancelSubmit');
-
-  let formData = null;
+  formData = null;
 
   // ===== Default Date =====
   const today = new Date().toISOString().split('T')[0];
@@ -105,7 +313,7 @@ let allTransactions  = [];
     const modalContent = document.querySelector('.modal-content');
     // Remove all transaction type classes
     modalContent.classList.remove('transaction-type-income', 'transaction-type-expense', 'transaction-type-savings');
-    
+
     // Add the appropriate class based on the selected type
     if (type) {
       modalContent.classList.add(`transaction-type-${type}`);
@@ -145,43 +353,43 @@ let allTransactions  = [];
   // ===== Form validation =====
   function validateForm() {
     let isValid = true;
-    
+
     // Reset error messages
     document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
     document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-    
+
     // Validate date
     if (!dateInput.value) {
       document.getElementById('date-error').textContent = 'Date is required';
       dateInput.classList.add('error');
       isValid = false;
     }
-    
+
     // Validate transaction type
     if (!transactionType.value) {
       document.getElementById('type-error').textContent = 'Transaction type is required';
       transactionType.classList.add('error');
       isValid = false;
     }
-    
+
     // Validate amount
     if (!amountInput.value || amountInput.value <= 0) {
       document.getElementById('amount-error').textContent = 'Please enter a valid amount';
       amountInput.classList.add('error');
       isValid = false;
     }
-    
+
     // Validate payment mode
     if (!paymentMode.value) {
       document.getElementById('payment-mode-error').textContent = 'Payment mode is required';
       paymentMode.classList.add('error');
       isValid = false;
     }
-    
+
     return isValid;
   }
 
-//   ===== Confirmation screen display function =====
+  //   ===== Confirmation screen display function =====
   function showModal(data) {
     modalDetails.innerHTML = `
       <p><strong>Date:</strong> ${data.date}</p>
@@ -202,112 +410,112 @@ let allTransactions  = [];
 
 
   async function submitToServer() {
-  if (!formData) {
-    console.error('No form data available');
-    return;
-  }
-
-  const confirmBtn = document.getElementById('confirmSubmit');
-  if (!confirmBtn) {
-    console.error('Confirm button not found');
-    return;
-  }
-
-  // Save original button state
-  const originalText = confirmBtn.textContent;
-  confirmBtn.disabled = true;
-  confirmBtn.textContent = 'Saving...';
-
-  try {
-    console.log('Submitting transaction:', formData);
-    
-    const response = await fetch('/api/transactions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify(formData)
-    });
-
-    console.log('Response status:', response.status);
-    
-    // Handle 401 Unauthorized
-    if (response.status === 401) {
-      const error = await response.json().catch(() => ({}));
-      console.error('Authentication error:', error);
-      alert('Your session has expired. Please log in again.');
-      window.location.href = '/login';
+    if (!formData) {
+      console.error('No form data available');
       return;
     }
 
-    const data = await response.json().catch(err => {
-      console.error('Failed to parse JSON response:', err);
-      throw new Error('Invalid server response');
-    });
+    const confirmBtn = document.getElementById('confirmSubmit');
+    if (!confirmBtn) {
+      console.error('Confirm button not found');
+      return;
+    }
 
-    // Handle non-2xx responses
-    if (!response.ok) {
-      console.error('Server error response:', {
-        status: response.status,
-        statusText: response.statusText,
-        data
+    // Save original button state
+    const originalText = confirmBtn.textContent;
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Saving...';
+
+    try {
+      console.log('Submitting transaction:', formData);
+
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData)
       });
-      throw new Error(data.message || `Server error: ${response.statusText}`);
-    }
 
-    console.log('Transaction saved successfully:', data);
-    
-    // Show success message
-    const successMessage = document.createElement('div');
-    successMessage.className = 'alert alert-success';
-    successMessage.textContent = 'Transaction saved successfully!';
-    document.body.appendChild(successMessage);
-    
-    // Remove message after 3 seconds
-    setTimeout(() => {
-      successMessage.remove();
-    }, 3000);
+      console.log('Response status:', response.status);
 
-    // Close modal and reset form
-    closeModal();
-    resetForm();
-    await loadRecentTransactions();
+      // Handle 401 Unauthorized
+      if (response.status === 401) {
+        const error = await response.json().catch(() => ({}));
+        console.error('Authentication error:', error);
+        alert('Your session has expired. Please log in again.');
+        window.location.href = '/login';
+        return;
+      }
 
-    // Optional: Refresh transactions list if needed
-    if (typeof loadTransactions === 'function') {
-      loadTransactions();
-    }
+      const data = await response.json().catch(err => {
+        console.error('Failed to parse JSON response:', err);
+        throw new Error('Invalid server response');
+      });
 
-  } catch (error) {
-    console.error('Transaction save failed:', {
-      error: error.message,
-      stack: error.stack
-    });
-    
-    // Show error message
-    const errorMessage = document.createElement('div');
-    errorMessage.className = 'alert alert-error';
-    errorMessage.textContent = `Error: ${error.message || 'Failed to save transaction'}`;
-    document.body.appendChild(errorMessage);
-    
-    // Remove message after 5 seconds
-    setTimeout(() => {
-      errorMessage.remove();
-    }, 5000);
+      // Handle non-2xx responses
+      if (!response.ok) {
+        console.error('Server error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          data
+        });
+        throw new Error(data.message || `Server error: ${response.statusText}`);
+      }
 
-  } finally {
-    // Restore button state
-    if (confirmBtn) {
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = originalText;
+      console.log('Transaction saved successfully:', data);
+
+      // Show success message
+      const successMessage = document.createElement('div');
+      successMessage.className = 'alert alert-success';
+      successMessage.textContent = 'Transaction saved successfully!';
+      document.body.appendChild(successMessage);
+
+      // Remove message after 3 seconds
+      setTimeout(() => {
+        successMessage.remove();
+      }, 3000);
+
+      // Close modal and reset form
+      closeModal();
+      resetForm();
+      await loadRecentTransactions();
+
+      // Optional: Refresh transactions list if needed
+      if (typeof loadTransactions === 'function') {
+        loadTransactions();
+      }
+
+    } catch (error) {
+      console.error('Transaction save failed:', {
+        error: error.message,
+        stack: error.stack
+      });
+
+      // Show error message
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'alert alert-error';
+      errorMessage.textContent = `Error: ${error.message || 'Failed to save transaction'}`;
+      document.body.appendChild(errorMessage);
+
+      // Remove message after 5 seconds
+      setTimeout(() => {
+        errorMessage.remove();
+      }, 5000);
+
+    } finally {
+      // Restore button state
+      if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = originalText;
+      }
     }
   }
-}
 
 
-//   ===== form reset function =====
+  //   ===== form reset function =====
   function resetForm() {
     form.reset();
     dateInput.value = today;
@@ -317,89 +525,68 @@ let allTransactions  = [];
     charCount.textContent = '0';
   }
 
-/* =====================================================
-     GET TRANSACTION TOGGLE LOGIC (FIXED FOR PRODUCTION)
-  ===================================================== */
+  /* =====================================================
+       GET TRANSACTION TOGGLE LOGIC (FIXED FOR PRODUCTION)
+    ===================================================== */
 
-  const toggleBtns = document.querySelectorAll('.toggle-btn');
-  const addTransactionSection = document.querySelector('.add-transection-content');
-  const getTransactionSection = document.querySelector('.get-transection-content');
+  toggleBtns = document.querySelectorAll('.toggle-btn');
+  addTransactionSection = document.querySelector('.add-transection-content');
+  getTransactionSection = document.querySelector('.get-transection-content');
 
-  if (toggleBtns.length && addTransactionSection && getTransactionSection) {
-    addTransactionSection.style.display = 'flex';
-    getTransactionSection.style.display = 'none';
+  // =======================form styles stop=======================
 
-    toggleBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        toggleBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
 
-        if (btn.dataset.view === 'add-transaction') {
-          addTransactionSection.style.display = 'flex';
-          getTransactionSection.style.display = 'none';
-        } else {
-          addTransactionSection.style.display = 'none';
-          getTransactionSection.style.display = 'block';
-        }
+  // =========== recent transaction style start =====================
+
+  async function loadRecentTransactions() {
+    console.log('Loading recent transactions...');
+    try {
+      const res = await fetch('/api/transactions?limit=5', {
+        credentials: 'include'
       });
-    });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message);
+      renderRecentTransactions(result.data || []);
+      console.log('Transaction fetched ✅');
+    } catch (err) {
+      console.error('Failed to load recent transactions', err);
+    }
   }
 
-// =======================form styles stop=======================
+  function renderRecentTransactions(transactions) {
+    const container = document.getElementById('recent-transactions-list');
+    if (!container) return;
 
+    if (!Array.isArray(transactions)) {
+      console.warn('renderRecentTransactions expected array, got:', transactions);
+      transactions = [];
+    }
 
-// =========== recent transaction style start =====================
+    container.innerHTML = '';
 
-async function loadRecentTransactions() {
-  console.log('Loading recent transactions...');
-  try {
-    const res = await fetch('/api/transactions?limit=5', {
-      credentials: 'include'
-    });
+    if (transactions.length === 0) {
+      container.innerHTML =
+        '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
+      return;
+    }
 
-    const result = await res.json();
+    // 🔥 DO NOT slice, DO NOT sort
+    transactions.forEach(tx => {
+      const d = new Date(tx.updatedAt);
+      const dateTime = `${d.toLocaleDateString('en-IN')} • ${d.toLocaleTimeString(
+        'en-IN',
+        {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }
+      )}`;
 
-    if (!res.ok) throw new Error(result.message);
+      const card = document.createElement('div');
+      card.className = `recent-card ${tx.type}`;
 
-    renderRecentTransactions(result.data);
-  } catch (err) {
-    console.error('Failed to load recent transactions', err);
-  }
-}
-
-function renderRecentTransactions(transactions) {
-  const container = document.getElementById('recent-transactions-list');
-  if (!container) return;
-
-  if (!Array.isArray(transactions)) {
-    console.warn('renderRecentTransactions expected array, got:', transactions);
-    transactions = [];
-  }
-
-  container.innerHTML = '';
-
-  if (transactions.length === 0) {
-    container.innerHTML =
-      '<p style="padding:12px;color:#6b7280">No recent transactions</p>';
-    return;
-  }
-
-  // 🔥 DO NOT slice, DO NOT sort
-  transactions.forEach(tx => {
-    const d = new Date(tx.updatedAt);
-    const dateTime = `${d.toLocaleDateString('en-IN')} • ${d.toLocaleTimeString(
-      'en-IN',
-      {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      }
-    )}`;
-
-    const card = document.createElement('div');
-    card.className = `recent-card ${tx.type}`;
-
-    card.innerHTML = `
+      card.innerHTML = `
       <!-- ROW 1 -->
       <div class="recent-row">
         <div class="recent-box">
@@ -445,40 +632,25 @@ function renderRecentTransactions(transactions) {
       </div>
     `;
 
-    container.appendChild(card);
-  });
-}
+      container.appendChild(card);
+    });
+  }
 
-function formatDateTime(dateStr) {
-  const d = new Date(dateStr);
 
-  return {
-    date: d.toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric"
-    }),
-    time: d.toLocaleTimeString("en-IN", {
+
+  function openTransactionView(tx) {
+    const modal = document.getElementById('transactionViewModal');
+    const body = document.getElementById('transactionViewBody');
+
+    const d = new Date(tx.updatedAt);
+    const date = d.toLocaleDateString("en-IN");
+    const time = d.toLocaleTimeString("en-IN", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: true
-    })
-  };
-}
+    });
 
-function openTransactionView(tx) {
-  const modal = document.getElementById('transactionViewModal');
-  const body = document.getElementById('transactionViewBody');
-
-  const d = new Date(tx.updatedAt);
-  const date = d.toLocaleDateString("en-IN");
-  const time = d.toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  });
-
-  body.innerHTML = `
+    body.innerHTML = `
     <div class="view-grid">
       <div class="view-box">
         <div class="view-label">Last Modified</div>
@@ -518,346 +690,106 @@ function openTransactionView(tx) {
     </div>
   `;
 
-  modal.classList.add('show');
-}
+    modal.classList.add('show');
+  }
 
-document.getElementById('closeViewModal')
-  .addEventListener('click', () => {
-    document.getElementById('transactionViewModal')
-      .classList.remove('show');
+  document.getElementById('closeViewModal')
+    .addEventListener('click', () => {
+      document.getElementById('transactionViewModal')
+        .classList.remove('show');
+    });
+
+  // =========== recent transaction style stop ======================
+
+
+  // ========================================================================
+  //      <--------------     ADD TRANSECTION Styles stop 
+  // ========================================================================
+
+
+
+
+
+
+
+  // ========================================================================
+  //                          GET TRANSECTION Styles start ----------->
+  // ========================================================================
+  filterBtn = document.getElementById('filter-toggle');
+  inlineFilter = document.getElementById('filter-section');
+  mobileModal = document.getElementById('mobileFilterModal');
+  closeMobileBtn = document.getElementById('closeFilterModal');
+  applyBtn = document.getElementById('applyFilterBtn');
+  resetBtn = document.getElementById('resetFilterBtn');
+  applyBtnMobile = document.getElementById('applyFilterBtnMobile');
+  resetBtnMobile = document.getElementById('resetFilterBtnMobile');
+  dateFilter = document.getElementById('filter-date');
+
+  document.getElementById('filter-date').value = 'month';
+  setupViewToggle();
+  loadRecentTransactions();
+  // filterBtn?.addEventListener('click', (e) => {
+  //   e.stopPropagation();
+
+  //   if (window.innerWidth <= 768) {
+  //     mobileModal?.classList.add('show');
+  //   } else {
+  //     inlineFilter?.classList.toggle('open');
+  //     filterBtn.textContent = inlineFilter?.classList.contains('open')
+  //       ? 'Hide Filter'
+  //       : 'Show Filter';
+  //   }
+  // });
+  // document.addEventListener('click', e => {
+  //   if (
+  //     inlineFilter?.classList.contains('open') &&
+  //     !inlineFilter.contains(e.target) &&
+  //     !filterBtn.contains(e.target)
+  //   ) {
+  //     inlineFilter.classList.remove('open');
+  //   }
+  // });
+  closeMobileBtn?.addEventListener('click', () => {
+    mobileModal?.classList.remove('show');
   });
-
-// =========== recent transaction style stop ======================
-
-
-// ========================================================================
-//      <--------------     ADD TRANSECTION Styles stop 
-// ========================================================================
-
-
-
-
-
-
-
-// ========================================================================
-//                          GET TRANSECTION Styles start ----------->
-// ========================================================================
-// =====================
-// FILTER BUTTON EVENTS
-// =====================
-document.getElementById('applyFilterBtn')?.addEventListener('click', () => {
-  applyTransactionFilters();
-  // 2️⃣ Close filter UI automatically
-  const inlineFilter = document.getElementById('filter-section');
-  const mobileModal = document.getElementById('mobileFilterModal');
-  const filterBtn = document.getElementById('filter-toggle');
-
-  // Desktop: close inline filter
-  if (window.innerWidth > 768 && inlineFilter) {
-    inlineFilter.classList.remove('open');
-    if (filterBtn) filterBtn.textContent = 'Filter';
-  }
-
-  // Mobile: close modal
-  if (window.innerWidth <= 768 && mobileModal) {
-    mobileModal.classList.remove('show');
-  }
-});
-
-document.getElementById('resetFilterBtn')?.addEventListener('click', () => {
-  document.querySelectorAll('#filter-section select, #filter-section input')
-    .forEach(el => el.value = '');
-
-  renderTransactionsTable(allTransactions);
-});
-
-const dateFilter = document.getElementById("filter-date");
-  if (dateFilter) {
-    dateFilter.value = "month";
-  }
-
-  // 🔹 Apply default filter on load
+  applyBtn?.addEventListener('click', () => handleApply(false));
+  applyBtnMobile?.addEventListener('click', () => handleApply(true));
+  resetBtn?.addEventListener('click', handleReset);
+  resetBtnMobile?.addEventListener('click', handleReset);
+  document.getElementById('closeFilterModal')?.addEventListener('click', closeFilterUI);
+  if (dateFilter) dateFilter.value = "month";
   if (typeof applyTransactionFilters === "function") {
     applyTransactionFilters();
   }
-/* ============DOM=========== */
-const listEl = document.getElementById("transactions-list");
+  if (filterBtn && inlineFilter) {
 
-/* ========VIEW TOGGLE======= */
-function setupViewToggle() {
-  // Initially hide get transaction content
-  getTransactionSection.style.display = 'none';
-  
-  toggleBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      toggleBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+    // ===== FILTER BUTTON CLICK =====
+    filterBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
 
-      const view = btn.dataset.view;
-      if (view === 'add-transaction') {
-        addTransactionSection.style.display = 'flex';
-        getTransactionSection.style.display = 'none';
-      } else if (view === 'get-transaction') {
-        loadAllTransactions();
-        addTransactionSection.style.display = 'none';
-        getTransactionSection.style.display = 'block';
+      if (window.innerWidth <= 768) {
+        // ✅ MOBILE → open modal
+        mobileModal?.classList.add("show");
+      } else {
+        // ✅ DESKTOP → toggle inline filter
+        inlineFilter.classList.toggle("open");
+        filterBtn.textContent = inlineFilter.classList.contains("open")
+          ? "Hide Filter"
+          : "Show Filter";
       }
     });
-  });
-}
 
-function filterTransactions(type, category, dateRange) {
-  return transactions.filter(tx => {
-    // Filter by type
-    if (type !== 'all' && tx.type !== type) return false;
-    
-    // Filter by category
-    if (category !== 'all' && tx.category !== category) return false;
-    
-    // Filter by date range
-    if (dateRange !== 'all') {
-      const txDate = new Date(tx.date);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      if (dateRange === 'today') {
-        const txDateOnly = new Date(tx.date);
-        txDateOnly.setHours(0, 0, 0, 0);
-        if (txDateOnly.getTime() !== today.getTime()) return false;
-      } else if (dateRange === 'week') {
-        const weekStart = new Date(today);
-        weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
-        if (txDate < weekStart) return false;
-      } else if (dateRange === 'month') {
-        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-        if (txDate < monthStart) return false;
+    // ===== DESKTOP → CLICK OUTSIDE TO CLOSE =====
+    document.addEventListener("click", (e) => {
+      if (window.innerWidth <= 768) return;
+
+      const clickedInsideFilter = inlineFilter.contains(e.target);
+      const clickedFilterBtn = filterBtn.contains(e.target);
+
+      if (!clickedInsideFilter && !clickedFilterBtn) {
+        inlineFilter.classList.remove("open");
+        filterBtn.textContent = "Show Filter";
       }
-    }
-    
-    return true;
-  });
-}
-
-function updateCategoryFilter() {
-  const categorySelect = document.getElementById('filter-category');
-  // Clear existing options except the first one
-  while (categorySelect.options.length > 1) {
-    categorySelect.remove(1);
-  }
-  
-  // Get unique categories from transactions
-  const categories = [...new Set(transactions.map(tx => tx.category))];
-  
-  // Add categories to the select
-  categories.forEach(category => {
-    const option = document.createElement('option');
-    option.value = category;
-    option.textContent = category;
-    categorySelect.appendChild(option);
-  });
-}
-
-function renderFilteredTransactions(filteredTransactions) {
-  const listEl = document.querySelector('.get-section-content');
-  listEl.innerHTML = '';
-  
-  if (!filteredTransactions.length) {
-    listEl.innerHTML = '<p>No transactions match the selected filters</p>';
-    return;
-  }
-  
-  filteredTransactions.forEach(tx => {
-    listEl.appendChild(createTransactionEl(tx));
-  });
-}
-
-async function loadAllTransactions() {
-  try {
-    const res = await fetch('/api/transactions', {
-      credentials: 'include'
     });
-
-    const result = await res.json();
-    if (!res.ok) throw new Error(result.message);
-
-    // 🔑 THIS LINE IS REQUIRED
-    allTransactions = result.data;
-
-    // 🔑 INITIAL RENDER
-    renderTransactionsTable(allTransactions);
-
-  } catch (err) {
-    console.error('Failed to load transactions:', err);
   }
-}
-
-
-function renderTransactionsTable(transactions) {
-  const tbody = document.getElementById('transactions-table-body');
-  if (!tbody) return;
-
-  tbody.innerHTML = '';
-
-  if (!transactions.length) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="9" style="text-align:center;color:#6b7280;padding:12px">
-          No transactions found
-        </td>
-      </tr>
-    `;
-    return;
-  }
-
-  transactions.forEach(tx => {
-    const tr = document.createElement('tr');
-
-    // Row color by type
-    tr.className =
-      tx.type === 'income'
-        ? 'transaction-income'
-        : tx.type === 'expense'
-        ? 'transaction-expense'
-        : 'transaction-saving';
-
-    tr.innerHTML = `
-      <td data-label="ID">${tx.id}</td>
-      <td data-label="Date">${formatDate(tx.date)}</td>
-      <td data-label="Type"><span>${capitalize(tx.type)}</span></td>
-      <td data-label="Category">${tx.category || '-'}</td>
-      <td data-label="Sub-category">${tx.subcategory || '-'}</td>
-      <td data-label="Details">${tx.description || '-'}</td>
-      <td data-label="Amount" class="amount">₹${tx.amount}</td>
-      <td data-label="Payment Mode">${tx.paymentMode}</td>
-      <td data-label="Card Type">${tx.card || '-'}</td>
-    `;
-
-    tbody.appendChild(tr);
-  });
-}
-
-function applyTransactionFilters() {
-  const type = document.getElementById('filter-type')?.value || 'all';
-  const category = document.getElementById('filter-category')?.value || 'all';
-  const subCategory = document.getElementById('filter-subcategory')?.value || 'all';
-  const dateRange = document.getElementById('filter-date')?.value || 'all';
-  const minAmount = parseFloat(document.getElementById('filter-amount-min')?.value) || 0;
-  const maxAmount = parseFloat(document.getElementById('filter-amount-max')?.value) || Infinity;
-  const paymentMode = document.getElementById('filter-payment')?.value || 'all';
-  const cardType = document.getElementById('filter-card')?.value || 'all';
-
-  const today = new Date();
-
-  const filtered = allTransactions.filter(tx => {
-
-    // TYPE
-    if (type !== 'all' && tx.type !== type) return false;
-
-    // CATEGORY
-    if (category !== 'all' && tx.category !== category) return false;
-
-    // SUB CATEGORY
-    if (subCategory !== 'all' && tx.subcategory !== subCategory) return false;
-
-    // PAYMENT MODE
-    if (paymentMode !== 'all' && tx.paymentMode !== paymentMode) return false;
-
-    // CARD TYPE
-    if (cardType !== 'all' && tx.card !== cardType) return false;
-
-    // AMOUNT RANGE
-    if (tx.amount < minAmount || tx.amount > maxAmount) return false;
-
-    // DATE RANGE
-    if (dateRange !== 'all') {
-      const txDate = new Date(tx.date);
-
-      if (dateRange === 'today') {
-        if (txDate.toDateString() !== today.toDateString()) return false;
-      }
-
-      if (dateRange === 'week') {
-        const weekStart = new Date(today);
-        weekStart.setDate(today.getDate() - 7);
-        if (txDate < weekStart) return false;
-      }
-
-      if (dateRange === 'month') {
-        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-        if (txDate < monthStart) return false;
-      }
-    }
-
-    return true;
-  });
-
-  renderTransactionsTable(filtered);
-}
-
-function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString('en-IN');
-}
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-/* ===============================
-   FILTER – DESKTOP INLINE / MOBILE MODAL
-================================ */
-
-  // ===== INIT =====
-loadRecentTransactions();
-setupViewToggle();
-
-// ===== FILTER ELEMENTS =====
-const filterBtn = document.getElementById("filter-toggle");
-const inlineFilter = document.getElementById("filter-section");
-const mobileModal = document.getElementById("mobileFilterModal");
-const closeBtn = document.getElementById("closeFilterModal");
-
-// Safety check (do NOT return early)
-if (filterBtn && inlineFilter) {
-
-  // ===== FILTER BUTTON CLICK =====
-  filterBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-
-    if (window.innerWidth <= 768) {
-      // ✅ MOBILE → open modal
-      mobileModal?.classList.add("show");
-    } else {
-      // ✅ DESKTOP → toggle inline filter
-      inlineFilter.classList.toggle("open");
-      filterBtn.textContent = inlineFilter.classList.contains("open")
-        ? "Hide Filter"
-        : "Show Filter";
-    }
-  });
-
-  // ===== DESKTOP → CLICK OUTSIDE TO CLOSE =====
-  document.addEventListener("click", (e) => {
-    if (window.innerWidth <= 768) return;
-
-    const clickedInsideFilter = inlineFilter.contains(e.target);
-    const clickedFilterBtn = filterBtn.contains(e.target);
-
-    if (!clickedInsideFilter && !clickedFilterBtn) {
-      inlineFilter.classList.remove("open");
-      filterBtn.textContent = "Show Filter";
-    }
-  });
-}
-
-// ===== MOBILE MODAL CLOSE =====
-closeBtn?.addEventListener("click", () => {
-  mobileModal?.classList.remove("show");
 });
-
-});
-
-
-
-// ========================================================================
-//      <--------------     GET TRANSECTION Styles stop 
-// ========================================================================

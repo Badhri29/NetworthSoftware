@@ -217,24 +217,47 @@ html[data-theme="dark"] {
   color: #0a8f3c;
 }
 
-/* CATEGORY ITEM */
+/* ===============================
+   CATEGORY & SUB-CATEGORY ITEM
+================================ */
+/* Base item */
 .cat-item {
-  padding: 0.35rem 0;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+.edit-categories-section .cat-item {
+  border: 1px solid transparent;
+}
+
+.edit-categories-section .cat-item:hover {
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.edit-categories-section .cat-item.active {
+  background-color: var(--cat-accent);
+  color: #ffffff;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+
 /* SUB CATEGORY LIST  */
 
 #subCategoryList {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 0.4rem;
 }
 
 #subCategoryList .cat-item {
   display: block;
   width: 100%;
-  white-space: normal;    
+  white-space: normal;
 }
 
 .cat-item.active {
@@ -259,6 +282,7 @@ html[data-theme="dark"] {
   .cat-box {
     height: 450px;
   }
+
   .edit-categories-section.income .cat-box {
     width: 340px;
   }
@@ -405,6 +429,12 @@ html[data-theme="dark"] .edit-cat-body,
 html[data-theme="dark"] .edit-cat-footer {
   border-color: #334155;
 }
+html[data-theme="dark"] .edit-categories-section .cat-item:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
+}
+
 /* ===============================
    REMOVE ALL SCROLLBARS
    (All Categories)

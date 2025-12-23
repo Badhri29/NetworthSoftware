@@ -19,6 +19,7 @@ let formData;
 let toggleBtns;
 let addTransactionSection;
 let getTransactionSection;
+let editCategoriesSection;
 let filterBtn;
 let inlineFilter;
 let mobileModal;
@@ -184,7 +185,7 @@ function applyTransactionFilters() {
     }
 
     return true;
-    
+
 
   });
 
@@ -199,6 +200,7 @@ function setupViewToggle() {
   // Default view
   addTransactionSection.style.display = 'flex';
   getTransactionSection.style.display = 'none';
+  editCategoriesSection.style.display = 'none';
 
   toggleBtns.forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -207,6 +209,9 @@ function setupViewToggle() {
       btn.classList.add('active');
 
       const view = btn.dataset.view;
+      addTransactionSection.style.display = 'none';
+      getTransactionSection.style.display = 'none';
+      if (editCategoriesSection) editCategoriesSection.style.display = 'none';
 
       if (view === 'add-transaction') {
         addTransactionSection.style.display = 'flex';
@@ -219,6 +224,10 @@ function setupViewToggle() {
         setDefaultDateFilters();
         await loadAllTransactions();
         applyTransactionFilters();
+      }
+
+      if (view === 'edit-categories' && editCategoriesSection) {
+        editCategoriesSection.style.display = 'block';
       }
     });
   });
@@ -827,6 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
   toggleBtns = document.querySelectorAll('.toggle-btn');
   addTransactionSection = document.querySelector('.add-transection-content');
   getTransactionSection = document.querySelector('.get-transection-content');
+  editCategoriesSection = document.getElementById('edit-categories-content');
 
   // =======================form styles stop=======================
 

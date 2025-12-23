@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/css/confirmation-screen.css" />
   <link rel="stylesheet" href="/css/recent-transaction.css" />
   <link rel="stylesheet" href="/css/get-transaction.css" />
+  <link rel="stylesheet" href="/css/edit-categories.css" />
 </head>
 
 <body>
@@ -58,6 +59,9 @@
         </button>
         <button class="toggle-btn" data-view="get-transaction">
           Get Transactions
+        </button>
+        <button class="toggle-btn" data-view="edit-categories">
+          All Categories
         </button>
       </div>
 
@@ -306,6 +310,75 @@
           <div class="get-section-bottom"></div>
         </div>
       </div>
+
+      <!-- edit categories content -->
+      <div class="edit-categories-content" id="edit-categories-content" style="display:none;">
+        <div class="add-section edit-categories-section">
+
+          <!-- HEADER -->
+          <!-- HEADER -->
+          <div class="edit-cat-header">
+            <!-- ROW 1 -->
+            <div class="edit-cat-title">
+              Manage Categories
+            </div>
+
+            <!-- ROW 2 -->
+            <div class="edit-cat-type-toggle">
+              <button class="cat-type-btn income active" data-type="income">Income</button>
+              <button class="cat-type-btn expense" data-type="expense">Expenses</button>
+              <button class="cat-type-btn savings" data-type="savings">Savings</button>
+            </div>
+
+          </div>
+
+
+          <!-- BODY -->
+          <div class="edit-cat-body">
+
+            <div class="cat-body-grid">
+
+              <!-- LEFT : CATEGORIES -->
+              <div class="cat-box">
+                <div class="cat-box-header">
+                  <span>Categories</span>
+                  <button class="cat-add-btn">+</button>
+                </div>
+
+                <input type="text" class="cat-input" placeholder="Enter category name" />
+
+                <div class="cat-list">
+                  <div class="cat-item active">1. Category 1</div>
+                </div>
+              </div>
+
+              <!-- RIGHT : SUB CATEGORIES -->
+              <div class="cat-box">
+                <div class="cat-box-header">
+                  <span>Sub Categories</span>
+                  <button class="cat-add-btn">+</button>
+                </div>
+
+                <input type="text" class="cat-input" placeholder="Enter sub-category name" disabled />
+
+                <div class="cat-list cat-empty">
+                  Select a category first
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+          <!-- FOOTER -->
+          <div class="edit-cat-footer">
+            <button class="btn-primary">Submit</button>
+          </div>
+
+        </div>
+      </div>
+
+
     </main>
   </div>
 
@@ -424,13 +497,7 @@
   <script src="/js/api.js"></script>
   <script src="/js/theme.js"></script>
   <script src="/js/ui.js"></script>
-  <script src="/js/layout-transaction.js" defer></script>
-  <script src="/js/toggle-transaction.js" defer></script>
-  <script src="/js/form-transaction.js" defer></script>
-  <script src="/js/recent-transaction.js" defer></script>
-  <script src="/js/get-filter-transaction.js" defer></script>
-  <script src="/js/get-transaction.js" defer></script>
-
+  <script src="/js/edit-categories.js"></script>
   <script src="/js/transaction.js"></script>
 </body>
 

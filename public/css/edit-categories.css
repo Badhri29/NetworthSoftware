@@ -233,8 +233,7 @@ html[data-theme="dark"] {
 }
 
 .edit-categories-section .cat-item:hover {
-  border: 1px solid #ffffff;
-  color: #ffffff;
+  border: 1px solid var(--cat-accent);
   background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -428,11 +427,6 @@ html[data-theme="dark"] .edit-cat-header,
 html[data-theme="dark"] .edit-cat-body,
 html[data-theme="dark"] .edit-cat-footer {
   border-color: #334155;
-}
-html[data-theme="dark"] .edit-categories-section .cat-item:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.6);
-  color: #ffffff;
 }
 
 /* ===============================

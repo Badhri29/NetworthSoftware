@@ -73,3 +73,8 @@ body[data-theme="dark"] .toggle-btn.active {
   color: #0b1120 !important;
   box-shadow: 0 6px 18px rgba(56, 189, 248, 0.45) !important;
 }
+@media(max-width:768px){
+  .toggle-btn{
+    padding: 0.5rem 1rem;
+  }
+}

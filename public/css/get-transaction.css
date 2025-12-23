@@ -38,14 +38,24 @@ html[data-theme="dark"] {
   flex-direction: column;
   min-height: 200px;
   max-height: 800px;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
 .get-section-heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.get-section-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+#mobile-transactions-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .get-section-filter {
@@ -78,8 +88,7 @@ html[data-theme="dark"] {
 
 /* Ensure table doesn't collapse on small screens */
 .transactions-table {
-  min-width: 100%;
-  width: max-content;
+  width: 100%;
   table-layout: auto;
 }
 
@@ -270,17 +279,24 @@ html[data-theme="dark"] {
 
 @media (max-width: 768px) {
 
-  /* MAIN GET TRANSACTION CONTAINER */
+
   .get-section {
-    max-height: calc(100vh - 220px);
-    /* adjusts for header + toggle */
-    overflow-y: auto;
-    /* ENABLE SCROLL */
-    overflow-x: hidden;
-    /* PREVENT SIDE OVERFLOW */
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px);
+    overflow: hidden;
   }
 
-  /* RESET TABLE */
+  .get-section-heading {
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg-color);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
   .transactions-table,
   .transactions-table tbody,
   .transactions-table tr,
@@ -290,9 +306,7 @@ html[data-theme="dark"] {
   }
 
   .table-responsive {
-    overflow-y: auto;
-    overflow-x: hidden;
-    border: none;
+    display: none;
   }
 
   .transactions-table thead {
@@ -455,6 +469,21 @@ html[data-theme="dark"] {
     flex: 1;
     min-width: 0;
   }
+
+  .get-section-bottom {
+    flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: var(--bg-color);
+  }
+
+  .transactions-table tbody tr {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
 }
 
 /* ===============================

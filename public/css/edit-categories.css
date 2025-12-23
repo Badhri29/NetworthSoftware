@@ -219,22 +219,35 @@ html[data-theme="dark"] {
 
 /* CATEGORY ITEM */
 .cat-item {
-  padding: 0.4rem 0;
+  padding: 0.35rem 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+/* SUB CATEGORY LIST  */
+
+#subCategoryList {
+  display: flex;
+  flex-direction: column; 
+  gap: 0.4rem;
+}
+
+#subCategoryList .cat-item {
+  display: block;
+  width: 100%;
+  white-space: normal;    
 }
 
 .cat-item.active {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* EMPTY STATE */
 .cat-empty {
   display: flex;
   align-items: center;
-  justify-content: center;
   color: #6b7280;
   font-size: 0.8rem;
   height: 100%;
-  text-align: center;
 }
 
 /* MOBILE */
@@ -391,4 +404,24 @@ html[data-theme="dark"] .edit-cat-header,
 html[data-theme="dark"] .edit-cat-body,
 html[data-theme="dark"] .edit-cat-footer {
   border-color: #334155;
+}
+/* ===============================
+   REMOVE ALL SCROLLBARS
+   (All Categories)
+================================ */
+
+/* Chrome, Edge, Safari */
+.edit-categories-section *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Firefox */
+.edit-categories-section * {
+  scrollbar-width: none;
+}
+
+/* IE / Old Edge */
+.edit-categories-section * {
+  -ms-overflow-style: none;
 }

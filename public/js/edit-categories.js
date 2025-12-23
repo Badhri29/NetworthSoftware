@@ -1,9 +1,17 @@
+/* =====================================================
+   GLOBAL STATE
+===================================================== */
+
 let categoryList;
 let subCategoryList;
 let subCategoryInput;
 let typeButtons;
 let section;
-let currentType;
+let currentType = "income";
+
+/* =====================================================
+   CATEGORY DATA (STATIC)
+===================================================== */
 
 const categories = {
   income: {
@@ -126,7 +134,11 @@ const categories = {
   }
 };
 
-function renderCategories(type, categoryList, subCategoryList, subCategoryInput) {
+/* =====================================================
+   RENDER FUNCTIONS (OUTSIDE DOM)
+===================================================== */
+
+function renderCategories(type) {
   categoryList.innerHTML = "";
   subCategoryList.innerHTML = "Select a category first";
   subCategoryInput.disabled = true;
@@ -141,60 +153,63 @@ function renderCategories(type, categoryList, subCategoryList, subCategoryInput)
         .forEach(i => i.classList.remove("active"));
 
       div.classList.add("active");
-      renderSubCategories(type, cat, subCategoryList, subCategoryInput);
+      renderSubCategories(type, cat);
     });
 
     categoryList.appendChild(div);
   });
 }
 
-function renderSubCategories(type, category, subCategoryList, subCategoryInput) {
+function renderSubCategories(type, category) {
   subCategoryList.innerHTML = "";
   subCategoryInput.disabled = false;
 
-  categories[type][category].forEach(sub => {
+  categories[type][category].forEach((sub, index) => {
     const div = document.createElement("div");
     div.className = "cat-item";
-    div.textContent = sub;
+    div.textContent = `${index + 1}. ${sub}`;
+
+    div.addEventListener("click", () => {
+      subCategoryList.querySelectorAll(".cat-item")
+        .forEach(i => i.classList.remove("active"));
+      div.classList.add("active");
+    });
+
     subCategoryList.appendChild(div);
   });
 }
 
-/* ===============================
-   DOM LOGIC (ONLY HERE)
-================================ */
+/* =====================================================
+   INITIALIZATION (DOM ONLY)
+===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const categoryList = document.getElementById("categoryList");
-  const subCategoryList = document.getElementById("subCategoryList");
-  const subCategoryInput = document.getElementById("subCategoryInput");
-  const typeButtons = document.querySelectorAll(".cat-type-btn");
-  const section = document.querySelector(".edit-categories-section");
+  categoryList = document.getElementById("categoryList");
+  subCategoryList = document.getElementById("subCategoryList");
+  subCategoryInput = document.getElementById("subCategoryInput");
+  typeButtons = document.querySelectorAll(".cat-type-btn");
+  section = document.querySelector(".edit-categories-section");
 
   if (!categoryList || !section) return;
 
-  let currentType = "income";
-
   /* DEFAULT STATE */
   section.classList.add("income");
-  renderCategories("income", categoryList, subCategoryList, subCategoryInput);
+  renderCategories("income");
 
   /* TYPE TOGGLE */
   typeButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
 
-      // buttons
       typeButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // section color
       section.classList.remove("income", "expense", "savings");
       section.classList.add(type);
 
       currentType = type;
-      renderCategories(type, categoryList, subCategoryList, subCategoryInput);
+      renderCategories(type);
     });
   });
 

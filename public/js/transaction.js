@@ -99,6 +99,23 @@ function formatDateTime(dateStr) {
     })
   };
 }
+function isMobileView() {
+  return window.innerWidth <= 768;
+}
+function hideDesktopTable() {
+  const table = document.querySelector('.table-responsive');
+  if (table) table.style.display = 'none';
+}
+
+function showDesktopTable() {
+  const table = document.querySelector('.table-responsive');
+  if (table) table.style.display = 'block';
+}
+
+function hideMobileCards() {
+  const mobileList = document.getElementById('mobile-transactions-list');
+  if (mobileList) mobileList.innerHTML = '';
+}
 function renderTransactionsTable(transactions) {
   const tbody = document.getElementById('transactions-table-body');
   if (!tbody) return;
@@ -189,8 +206,15 @@ function applyTransactionFilters() {
 
   });
 
-  renderTransactionsTable(filtered);
-  renderGetTransactionsAsCards(filtered);
+  if (isMobileView()) {
+    renderGetTransactionsAsCards(filtered);
+    hideDesktopTable();
+  } else {
+    renderTransactionsTable(filtered);
+    showDesktopTable();
+    hideMobileCards();
+  }
+
 }
 function closeFilterUI() {
   document.getElementById('filter-section')?.classList.remove('open');
@@ -388,7 +412,9 @@ function renderGetTransactionsAsCards(transactions) {
     container.appendChild(card);
   });
 }
-
+window.addEventListener('resize', () => {
+  applyTransactionFilters();
+});
 document.addEventListener('DOMContentLoaded', () => {
 
   const form = document.getElementById('transaction-form');

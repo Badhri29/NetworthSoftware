@@ -19,6 +19,7 @@ html[data-theme="dark"] {
   --bg-color: #020617;
   --card-bg: #020617;
 }
+
 .get-transection-content {
   margin: 1rem 0;
   width: 100%;
@@ -37,6 +38,8 @@ html[data-theme="dark"] {
   flex-direction: column;
   min-height: 200px;
   max-height: 800px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .get-section-heading {
@@ -58,7 +61,7 @@ html[data-theme="dark"] {
 .table-responsive {
   width: 100%;
   max-height: 400px;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
@@ -267,6 +270,16 @@ html[data-theme="dark"] {
 
 @media (max-width: 768px) {
 
+  /* MAIN GET TRANSACTION CONTAINER */
+  .get-section {
+    max-height: calc(100vh - 220px);
+    /* adjusts for header + toggle */
+    overflow-y: auto;
+    /* ENABLE SCROLL */
+    overflow-x: hidden;
+    /* PREVENT SIDE OVERFLOW */
+  }
+
   /* RESET TABLE */
   .transactions-table,
   .transactions-table tbody,
@@ -277,15 +290,15 @@ html[data-theme="dark"] {
   }
 
   .table-responsive {
+    overflow-y: auto;
+    overflow-x: hidden;
     border: none;
-    max-height: 600px;
   }
 
   .transactions-table thead {
     display: none;
   }
 
-  /* CARD */
   .transactions-table tbody tr {
     position: relative;
     background: var(--bg-color);
@@ -294,9 +307,11 @@ html[data-theme="dark"] {
     padding: 0.75rem;
     margin-bottom: 0.25rem;
     box-shadow: 0 4px 14px rgba(2, 6, 23, 0.06);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
-  /* RESET CELL */
   .transactions-table tbody td {
     padding: 0;
     border: none;
@@ -304,7 +319,16 @@ html[data-theme="dark"] {
     white-space: normal;
   }
 
-  /* ID + DATE + TIME */
+  .transactions-table tbody td.amount {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    max-width: 45%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   td[data-label="ID"],
   td[data-label="Date"] {
     display: inline-block;

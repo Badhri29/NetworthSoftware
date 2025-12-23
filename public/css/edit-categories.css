@@ -1,3 +1,25 @@
+:root {
+  --primary-color: #4a6cf7;
+  --primary-hover: #3a5ce4;
+  --text-primary: #1A1A1A;
+  --text-secondary: #666666;
+  --border-color: #E0E0E0;
+  --bg-color: white;
+  --card-bg: #ECECF0;
+  --radius-sm: 0.375rem;
+  --transition: all 0.2s ease-in-out;
+}
+
+html[data-theme="dark"] {
+  --primary-color: #5b7bf7;
+  --primary-hover: #6d8af8;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
+  --bg-color: #020617;
+  --card-bg: #020617;
+}
+
 /* ===============================
    EDIT CATEGORIES – MATCH GET TRANSACTION WIDTH
 ================================ */
@@ -239,6 +261,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top: 1px solid var(--border-color);
 }
 
 .edit-cat-footer .btn-primary {

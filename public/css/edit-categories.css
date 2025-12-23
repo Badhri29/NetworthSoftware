@@ -226,6 +226,33 @@ html[data-theme="dark"] {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cat-delete-btn {
+  background: rgba(239, 68, 68, 0.12);
+  border: none;
+  color: #ef4444;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* Show delete on hover */
+.cat-item:hover .cat-delete-btn {
+  display: flex;
+}
+
+/* Keep delete visible on active */
+.cat-item.active .cat-delete-btn {
+  display: flex;
 }
 
 .edit-categories-section .cat-item {
@@ -304,8 +331,8 @@ html[data-theme="dark"] {
 }
 
 .edit-cat-footer .btn-primary {
-  min-width: 220px;
-  padding: 0.6rem 2.5rem;
+  min-width: 140px;
+  padding: 0.5rem;
   border-radius: 12px;
   font-size: 0.9rem;
   font-weight: 500;

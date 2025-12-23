@@ -3,7 +3,7 @@
 ================================ */
 
 .edit-categories-content {
-  margin: 1rem 0;
+  margin-top: 10px;
   width: 100%;
   display: none;
 }
@@ -15,17 +15,14 @@
   width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
-  padding-top: 0.5rem;
   box-shadow: 2px 7px 8px 0px #66666678;
   display: flex;
   flex-direction: column;
   min-height: 200px;
   max-height: 800px;
-}
-
-.edit-categories-content .add-section {
   position: relative;
 }
+
 
 /* ===============================
    EDIT CATEGORIES – HEADER / BODY / FOOTER
@@ -42,11 +39,12 @@
 /* HEADER */
 
 .edit-cat-header {
-  flex: 0 0 15%;
-  min-height: 60px;
+  flex: 0 0 12%;
+  height: 60px;
   gap: 0.4rem;
   flex-direction: column;
   display: flex;
+  margin-top: 8px;
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
   align-items: center;
@@ -107,7 +105,15 @@
   box-shadow: 0 6px 14px rgba(59, 130, 246, 0.45);
 }
 
-
+@media(max-width:768px) {
+  .edit-cat-header {
+    padding-bottom: 0px;
+    padding-top: 0px;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    margin-top: 3px;
+  }
+}
 
 
 /* BODY */
@@ -214,6 +220,10 @@
   .cat-body-grid {
     grid-template-columns: 1fr;
   }
+
+  .cat-box {
+    height: 450px;
+  }
 }
 
 
@@ -222,10 +232,9 @@
    EDIT CATEGORIES – FOOTER
 ================================ */
 .edit-cat-footer {
-  flex: 0 0 10%;
-  min-height: 48px;
-  padding: 0.6rem 0.75rem;
-  /* border: 2px solid var(--border-color); */
+  height: 50px;
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
   border-radius: 8px;
   display: flex;
   justify-content: center;

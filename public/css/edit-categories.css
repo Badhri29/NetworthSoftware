@@ -211,7 +211,7 @@ html[data-theme="dark"] {
 
 /* LIST */
 .cat-list {
-  flex: 1;
+  height: 340px;
   overflow-y: auto;
   font-size: 0.85rem;
   color: #0a8f3c;

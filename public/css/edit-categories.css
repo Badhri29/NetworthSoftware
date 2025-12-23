@@ -127,7 +127,7 @@ html[data-theme="dark"] {
   box-shadow: 0 6px 14px rgba(59, 130, 246, 0.45);
 }
 
-@media(max-width:768px) {
+@media(max-width:450px) {
   .edit-cat-header {
     padding-bottom: 0px;
     padding-top: 0px;
@@ -238,13 +238,16 @@ html[data-theme="dark"] {
 }
 
 /* MOBILE */
-@media (max-width: 768px) {
+@media (max-width: 450px) {
   .cat-body-grid {
     grid-template-columns: 1fr;
   }
 
   .cat-box {
     height: 450px;
+  }
+  .edit-categories-section.income .cat-box {
+    width: 340px;
   }
 }
 

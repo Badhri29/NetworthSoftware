@@ -1,5 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// This is your Prisma schema file
 
 generator client {
   provider = "prisma-client-js"
@@ -10,7 +9,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// prisma/schema.prisma
+model User {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  password      String
+  name          String?
+  transactions  Transaction[]
+  categories    Category[]
+  subCategories SubCategory[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("users")
+}
+
 model Transaction {
   id          Int      @id @default(autoincrement())
   date        DateTime @db.Date
@@ -24,19 +36,56 @@ model Transaction {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
+
   user        User     @relation(fields: [userId], references: [id])
 
   @@map("transactions")
 }
 
-model User {
-  id            Int           @id @default(autoincrement())
-  email         String        @unique
-  password      String
-  name          String?
-  transactions  Transaction[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+model Category {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  type      String
+  name      String
+  createdAt DateTime @default(now())
 
-  @@map("users")
+  user      User        @relation(fields: [userId], references: [id])
+  subs      SubCategory[]
+
+  @@map("categories")
+}
+
+model SubCategory {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @map("user_id")
+  categoryId Int      @map("category_id")
+  name       String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@map("sub_categories")
+}
+
+model Default_Categories {
+  id        Int      @id @default(autoincrement())
+  type      String
+  name      String
+  createdAt DateTime @default(now())
+
+  subs      Default_SubCategories[]
+
+  @@map("Default_Categories")
+}
+
+model Default_SubCategories {
+  id          Int      @id @default(autoincrement())
+  category_id Int
+  name        String
+  createdAt   DateTime @default(now())
+
+  category    Default_Categories @relation(fields: [category_id], references: [id])
+
+  @@map("Default_SubCategories")
 }

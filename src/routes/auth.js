@@ -1,3 +1,5 @@
+console.log("AUTH ROUTES FILE LOADED");
+
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("@prisma/client");
@@ -11,9 +13,38 @@ const {
 const router = express.Router();
 const prisma = new PrismaClient();
 
-/* =========================
-   REGISTER
-========================= */
+// SEED DEFAULT CATEGORIES FOR NEW USER
+async function seedUserCategories(userId) {
+  const defaultCategories = await prisma.default_Categories.findMany();
+
+  for (const defCat of defaultCategories) {
+    const userCategory = await prisma.category.create({
+      data: {
+        userId: userId,
+        type: defCat.type,
+        name: defCat.name,
+      },
+    });
+
+    const defaultSubCategories = await prisma.default_SubCategories.findMany({
+      where: {
+        category_id: defCat.id,
+      },
+    });
+
+    for (const defSub of defaultSubCategories) {
+      await prisma.subCategory.create({
+        data: {
+          userId: userId,
+          categoryId: userCategory.id,
+          name: defSub.name,
+        },
+      });
+    }
+  }
+}
+
+// REGISTER
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -22,7 +53,6 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
-    // Check if user exists in DB
     const existing = await prisma.user.findUnique({
       where: { email },
     });
@@ -31,23 +61,30 @@ router.post("/register", async (req, res) => {
       return res.status(409).json({ error: "Email already registered" });
     }
 
-    // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Create user in DB
     const user = await prisma.user.create({
       data: {
         email,
         password: passwordHash,
       },
+      message: 'User registered: ${user.email}',
     });
 
-    // Create JWT
+    await seedUserCategories(user.id);
+    console.log("Default categories seeded:", user.email);
+
     const token = createToken({ id: user.id, email: user.email });
     setAuthCookie(res, token);
 
+    console.log("User auto logged in:", user.email);
+
     return res.status(201).json({
-      user: { id: user.id, email: user.email, createdAt: user.createdAt },
+      user: {
+        id: user.id,
+        email: user.email,
+        createdAt: user.createdAt,
+      },
     });
   } catch (err) {
     console.error("Register error:", err);
@@ -55,9 +92,8 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/* =========================
-   LOGIN
-========================= */
+
+// LOGIN
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -66,7 +102,6 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
-    // Find user in DB
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -75,18 +110,20 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Verify password
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Create JWT
     const token = createToken({ id: user.id, email: user.email });
     setAuthCookie(res, token);
-
+    console.log("User logged in:", user.email);
     return res.json({
-      user: { id: user.id, email: user.email, createdAt: user.createdAt },
+      user: {
+        id: user.id,
+        email: user.email,
+        createdAt: user.createdAt,
+      },
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -94,17 +131,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* =========================
-   LOGOUT
-========================= */
+// LOGOUT
 router.post("/logout", (req, res) => {
   clearAuthCookie(res);
   return res.json({ success: true });
 });
 
-/* =========================
-   CHANGE PASSWORD
-========================= */
+// CHANGE PASSWORD
 router.post("/change-password", requireAuth, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -142,9 +175,7 @@ router.post("/change-password", requireAuth, async (req, res) => {
   }
 });
 
-/* =========================
-   CURRENT USER
-========================= */
+// CURRENT USER
 router.get("/me", requireAuth, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({

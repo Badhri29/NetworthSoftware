@@ -8,20 +8,26 @@ async function apiRequest(path, options = {}) {
     ...options,
   });
 
+  // Handle auth failure
   if (res.status === 401) {
-    // Not authenticated, go to login
     if (!location.pathname.endsWith("/index.html")) {
       window.location.href = "/index.html";
     }
     throw new Error("Unauthorized");
   }
 
-  const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data = null;
+
+  try {
+    data = await res.json();
+  } catch (e) {
+    // 🔥 IMPORTANT: backend succeeded but returned no JSON
+    if (res.ok) return null;
+    throw new Error("Invalid server response");
+  }
 
   if (!res.ok) {
-    const message = data && data.error ? data.error : "Request failed";
-    throw new Error(message);
+    throw new Error(data?.error || data?.message || "Request failed");
   }
 
   return data;
@@ -32,4 +38,4 @@ async function getCurrentUser() {
   return data.user;
 }
 
-
+window.apiRequest = apiRequest;

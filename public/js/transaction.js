@@ -29,8 +29,25 @@ let resetBtn;
 let applyBtnMobile;
 let resetBtnMobile;
 let dateFilter;
+let categoryCache = {
+  income: {},
+  expense: {},
+  savings: {}
+};
 
 /* =================ALL CORE LOGIC===================== */
+
+async function loadCategoryCache() {
+  try {
+    const res = await fetch("/api/categories", {
+      credentials: "include"
+    });
+    const data = await res.json();
+    if (res.ok) categoryCache = data.data;
+  } catch (err) {
+    console.error("Failed to load category cache", err);
+  }
+}
 function resetAllFilters() {
 
   document
@@ -415,8 +432,8 @@ function renderGetTransactionsAsCards(transactions) {
 window.addEventListener('resize', () => {
   applyTransactionFilters();
 });
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadCategoryCache();
   const form = document.getElementById('transaction-form');
   if (!form) return;
 
@@ -454,7 +471,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add input event listeners to clear errors when user types
   dateInput.addEventListener('input', () => clearFieldError(dateInput, 'date-error'));
-  transactionType.addEventListener('change', () => clearFieldError(transactionType, 'type-error'));
+  transactionType.addEventListener("change", () => {
+  const type = transactionType.value;
+
+  categorySelect.innerHTML = `<option value="">Select Category</option>`;
+  subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+  subcategorySelect.disabled = true;
+
+  if (!categoryCache[type]) {
+    categorySelect.disabled = true;
+    return;
+  }
+
+  categorySelect.disabled = false;
+
+  Object.keys(categoryCache[type]).forEach(cat => {
+    const opt = document.createElement("option");
+    opt.value = cat;
+    opt.textContent = cat;
+    categorySelect.appendChild(opt);
+  });
+});
   amountInput.addEventListener('input', () => clearFieldError(amountInput, 'amount-error'));
   paymentMode.addEventListener('change', () => clearFieldError(paymentMode, 'payment-mode-error'));
   dateInput.max = today;
@@ -463,143 +500,27 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Type, Categories, Subcategories */
   categorySelect.disabled = true;
   subcategorySelect.disabled = true;
-  const subCategories = {
-    income: {
-      "Salary / Wages": [
-        "Basic Salary", "Bonus", "Overtime Pay", "Commission", "Allowances", "Incentives"
-      ],
-      "Freelance / Self-Employed": [
-        "Freelance Projects", "Consulting Fees", "Contract Work", "Gig Work", "Online Services"
-      ],
-      "Business Income": [
-        "Product Sales", "Service Charges", "Profit Share", "Partnership Income", "Franchise Income"
-      ],
-      "Investment Income": [
-        "Bank Interest", "FD Interest", "RD Interest", "Dividend Income",
-        "Mutual Fund Returns", "Stock Market Gains", "Bond Interest"
-      ],
-      "Rental Income": [
-        "House Rent", "Shop Rent", "Land Rent", "Parking Rent"
-      ],
-      "Government / Benefits": [
-        "Pension", "Scholarship", "Subsidy", "Government Allowance", "Insurance Claim"
-      ],
-      "Lending Recovery": [
-        "Friend Loan Amount Received", "Family Loan Amount Received",
-        "Relative Loan Amount Received", "Personal Loan Amount Received",
-        "Business Loan Amount Received", "Emergency Loan Amount Received",
-        "Advance Amount Received", "Interest Amount Received"
-      ],
-      "Gifts / Other Income": [
-        "Gift Received", "Refund", "Cashback", "Reimbursement", "Prize / Lottery", "Other Income"
-      ]
-    },
-
-    savings: {
-      "Bank Savings": [
-        "Savings Account Deposit", "Emergency Fund", "Surplus Cash Saved"
-      ],
-      "Fixed Income Savings": [
-        "Fixed Deposit (FD)", "Recurring Deposit (RD)",
-        "Post Office Deposit", "Senior Citizen Deposit"
-      ],
-      "Investment Savings": [
-        "Mutual Fund Investment", "SIP Investment",
-        "Stock Investment", "ETF Investment", "Bond Investment"
-      ],
-      "Retirement Savings": [
-        "EPF Contribution", "PPF Contribution", "NPS Contribution", "Pension Fund"
-      ],
-      "Gold & Physical Assets": [
-        "Gold Savings Scheme", "Gold Coin / Bar",
-        "Jewellery Investment", "Silver Investment"
-      ],
-      "Insurance Savings": [
-        "Life Insurance Premium", "Term Insurance Savings", "ULIP Investment"
-      ],
-      "Goal-Based Savings": [
-        "House Fund", "Education Fund", "Marriage Fund", "Travel Fund", "Vehicle Fund"
-      ],
-      "Digital & Alternate Savings": [
-        "Wallet Balance Saved", "Crypto Investment", "Other Digital Assets"
-      ]
-    },
-
-    expense: {
-      "Food & Dining": [
-        "Groceries", "Vegetables & Fruits", "Milk & Essentials",
-        "Restaurant / Hotel", "Snacks & Beverages", "Online Food Orders"
-      ],
-      "Housing & Utilities": [
-        "House Rent", "Electricity Bill", "Water Bill",
-        "Gas", "Internet Bill", "Mobile Recharge", "Maintenance"
-      ],
-      "Transportation": [
-        "Fuel", "Public Transport", "Cab / Auto",
-        "Vehicle Service", "Parking", "Toll"
-      ],
-      "Personal & Lifestyle": [
-        "Clothing", "Footwear", "Grooming / Salon",
-        "Cosmetics", "Gym / Fitness", "Entertainment"
-      ],
-      "Health & Medical": [
-        "Doctor Fees", "Medicines", "Hospital Charges",
-        "Medical Tests", "Health Insurance Premium"
-      ],
-      "Education": [
-        "School Fees", "College Fees", "Tuition Fees",
-        "Online Courses", "Books & Stationery"
-      ],
-      "Loan & Credit Payments": [
-        "Personal Loan EMI Paid", "Home Loan EMI Paid",
-        "Vehicle Loan EMI Paid", "Education Loan EMI Paid",
-        "Credit Card Bill Paid", "Credit Card Interest Paid"
-      ],
-      "Lending / Loan Given": [
-        "Friend Loan Given", "Family Loan Given",
-        "Relative Loan Given", "Emergency Loan Given", "Advance Given"
-      ],
-      "Insurance (Expense)": [
-        "Vehicle Insurance", "Home Insurance"
-      ],
-      "Subscriptions & Bills": [
-        "OTT Subscription", "Software Subscription",
-        "Cloud / Hosting", "Newspaper"
-      ],
-      "Travel & Vacation": [
-        "Flight Tickets", "Train / Bus Tickets",
-        "Hotel", "Local Travel", "Travel Food"
-      ],
-      "Taxes & Government": [
-        "Income Tax", "Property Tax", "Road Tax", "Fines / Penalties"
-      ],
-      "Gifts & Donations": [
-        "Gift Given", "Charity / Donation", "Festival Expenses"
-      ],
-      "Miscellaneous": [
-        "Bank Charges", "Service Charges", "Late Fees", "Other Expenses"
-      ]
-    }
-  };
+  
   categorySelect.addEventListener("change", () => {
-    const type = transactionType.value;
-    const category = categorySelect.value;
+  const type = transactionType.value;
+  const category = categorySelect.value;
 
-    subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
-    subcategorySelect.disabled = true;
+  subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+  subcategorySelect.disabled = true;
 
-    if (!type || !category) return;
+  if (!type || !category) return;
 
-    const subs = subCategories[type][category] || [];
-    subs.forEach(sub => {
-      const opt = document.createElement("option");
-      opt.value = sub;
-      opt.textContent = sub;
-      subcategorySelect.appendChild(opt);
-    });
-
-    if (subs.length) subcategorySelect.disabled = false;
+  const subs = categoryCache[type][category] || [];
+  subs.forEach(sub => {
+    const opt = document.createElement("option");
+    opt.value = sub;
+    opt.textContent = sub;
+    subcategorySelect.appendChild(opt);
   });
+
+  if (subs.length) subcategorySelect.disabled = false;
+});
+
   transactionType.addEventListener("change", () => {
     const type = transactionType.value;
 

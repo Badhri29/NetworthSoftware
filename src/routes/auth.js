@@ -13,46 +13,51 @@ const {
 const router = express.Router();
 const prisma = new PrismaClient();
 
-// SEED DEFAULT CATEGORIES FOR NEW USER
+/* ======================================
+   SEED DEFAULT CATEGORIES (SAFE & FAST)
+====================================== */
 async function seedUserCategories(userId) {
   const defaultCategories = await prisma.default_Categories.findMany();
 
   for (const defCat of defaultCategories) {
     const userCategory = await prisma.category.create({
       data: {
-        userId: userId,
+        userId,                 // ✅ Prisma field
         type: defCat.type,
         name: defCat.name,
       },
     });
 
-    const defaultSubCategories = await prisma.default_SubCategories.findMany({
+    const defaultSubs = await prisma.default_SubCategories.findMany({
       where: {
-        category_id: defCat.id,
+        category_id: defCat.id, // ✅ DB column
       },
     });
 
-    for (const defSub of defaultSubCategories) {
+    for (const sub of defaultSubs) {
       await prisma.subCategory.create({
         data: {
-          userId: userId,
+          userId,
           categoryId: userCategory.id,
-          name: defSub.name,
+          name: sub.name,
         },
       });
     }
   }
 }
 
-// REGISTER
+/* ======================================
+   REGISTER
+====================================== */
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
+      return res.status(400).json({ error: "Email and password required" });
     }
 
+    // ✅ CORRECT MODEL NAME
     const existing = await prisma.user.findUnique({
       where: { email },
     });
@@ -61,121 +66,71 @@ router.post("/register", async (req, res) => {
       return res.status(409).json({ error: "Email already registered" });
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    // ✅ CREATE USER
     const user = await prisma.user.create({
       data: {
         email,
-        password: passwordHash,
+        password: hashedPassword,
+        name: email.split("@")[0],
       },
-      message: 'User registered: ${user.email}',
     });
 
+    // ✅ SEED DEFAULT DATA
     await seedUserCategories(user.id);
-    console.log("Default categories seeded:", user.email);
 
+    // ✅ LOGIN SESSION
     const token = createToken({ id: user.id, email: user.email });
     setAuthCookie(res, token);
 
-    console.log("User auto logged in:", user.email);
-
-    return res.status(201).json({
-      user: {
-        id: user.id,
-        email: user.email,
-        createdAt: user.createdAt,
-      },
+    return res.json({
+      success: true,
+      user: { id: user.id, email: user.email },
     });
   } catch (err) {
-    console.error("Register error:", err);
-    return res.status(500).json({ error: "Internal server error" });
+    console.error("REGISTER ERROR:", err);
+    return res.status(500).json({ error: err.message });
   }
 });
 
-
-// LOGIN
+/* ======================================
+   LOGIN
+====================================== */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
+    if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
     const token = createToken({ id: user.id, email: user.email });
     setAuthCookie(res, token);
-    console.log("User logged in:", user.email);
+
     return res.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        createdAt: user.createdAt,
-      },
+      success: true,
+      user: { id: user.id, email: user.email },
     });
   } catch (err) {
-    console.error("Login error:", err);
+    console.error("LOGIN ERROR:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-// LOGOUT
+/* ======================================
+   LOGOUT
+====================================== */
 router.post("/logout", (req, res) => {
   clearAuthCookie(res);
   return res.json({ success: true });
 });
 
-// CHANGE PASSWORD
-router.post("/change-password", requireAuth, async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-
-    if (!currentPassword || !newPassword) {
-      return res
-        .status(400)
-        .json({ error: "Current and new passwords are required" });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
-    });
-
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    const valid = await bcrypt.compare(currentPassword, user.password);
-    if (!valid) {
-      return res.status(401).json({ error: "Current password is incorrect" });
-    }
-
-    const newHash = await bcrypt.hash(newPassword, 10);
-
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password: newHash },
-    });
-
-    return res.json({ success: true });
-  } catch (err) {
-    console.error("Change password error:", err);
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// CURRENT USER
+/* ======================================
+   CURRENT USER
+====================================== */
 router.get("/me", requireAuth, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -187,13 +142,9 @@ router.get("/me", requireAuth, async (req, res) => {
       },
     });
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
     return res.json({ user });
   } catch (err) {
-    console.error("Me error:", err);
+    console.error("ME ERROR:", err);
     return res.status(500).json({ error: "Internal server error" });
   }
 });

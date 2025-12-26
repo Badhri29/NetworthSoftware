@@ -308,6 +308,12 @@ html[data-theme="dark"] {
   height: 100%;
 }
 
+/* PC */
+@media(min-width:500px){
+  .cat-box{
+    height: 340px;
+  }
+}
 /* MOBILE */
 @media (max-width: 450px) {
   .cat-body-grid {

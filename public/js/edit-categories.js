@@ -177,4 +177,23 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSubCategories(currentType, activeCategory);
   });
 
+  /* Reset button */
+  const resetBtn = document.getElementById("resetCategoriesBtn");
+
+  resetBtn.addEventListener("click", () => {
+    // 1️⃣ Clear ONLY UI-added categories
+    uiCategories.income = {};
+    uiCategories.expense = {};
+    uiCategories.savings = {};
+
+    // 2️⃣ Reset sub-category UI
+    activeCategory = null;
+    subCategoryInput.value = "";
+    subCategoryInput.disabled = true;
+    subCategoryList.innerHTML = "Select a category first";
+
+    // 3️⃣ Re-render categories (DB only)
+    renderCategories(currentType);
+  });
+
 });

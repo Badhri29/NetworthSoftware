@@ -259,16 +259,36 @@ function setupViewToggle() {
         getTransactionSection.style.display = 'none';
       }
 
-      if (view === 'get-transaction') {
-        addTransactionSection.style.display = 'none';
-        getTransactionSection.style.display = 'block';
-        setDefaultDateFilters();
-        await loadAllTransactions();
-        const filterCategoryMap = buildFilterCategoryMap(allTransactions, categoryCache);
+      if (view === "get-transaction") {
+        addTransactionSection.style.display = "none";
+        getTransactionSection.style.display = "block";
 
-        populateFilterCategories(filterCategoryMap);
+        setDefaultDateFilters();
+
+        await loadAllTransactions();
+
+        const filterCategoryMap =
+          buildFilterCategoryMap(allTransactions, categoryCache);
+
+        // PC filter
+        setupCategoryFilterLogic({
+          typeSelectId: "filter-type",
+          categorySelectId: "filter-category",
+          subCategorySelectId: "filter-subcategory",
+          filterMap: filterCategoryMap
+        });
+
+        // Mobile filter modal
+        setupCategoryFilterLogic({
+          typeSelectId: "mobile-filter-type",
+          categorySelectId: "mobile-filter-category",
+          subCategorySelectId: "mobile-filter-subcategory",
+          filterMap: filterCategoryMap
+        });
+
         applyTransactionFilters();
       }
+
 
       if (view === 'edit-categories' && editCategoriesSection) {
         editCategoriesSection.style.display = 'block';
@@ -514,6 +534,57 @@ function populateFilterCategories(filterMap) {
     });
   };
 }
+function setupCategoryFilterLogic({
+  typeSelectId,
+  categorySelectId,
+  subCategorySelectId,
+  filterMap
+}) {
+  const typeSelect = document.getElementById(typeSelectId);
+  const categorySelect = document.getElementById(categorySelectId);
+  const subCategorySelect = document.getElementById(subCategorySelectId);
+
+  if (!typeSelect || !categorySelect || !subCategorySelect) return;
+
+  // Reset
+  categorySelect.innerHTML = `<option value="">All</option>`;
+  subCategorySelect.innerHTML = `<option value="">All</option>`;
+
+  // TYPE → CATEGORY
+  typeSelect.onchange = () => {
+    const type = typeSelect.value;
+
+    categorySelect.innerHTML = `<option value="">All</option>`;
+    subCategorySelect.innerHTML = `<option value="">All</option>`;
+
+    if (!type || !filterMap[type]) return;
+
+    Object.keys(filterMap[type]).forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+  };
+
+  // CATEGORY → SUBCATEGORY
+  categorySelect.onchange = () => {
+    const type = typeSelect.value;
+    const category = categorySelect.value;
+
+    subCategorySelect.innerHTML = `<option value="">All</option>`;
+
+    if (!type || !category || !filterMap[type]?.[category]) return;
+
+    filterMap[type][category].forEach(sub => {
+      const opt = document.createElement("option");
+      opt.value = sub;
+      opt.textContent = sub;
+      subCategorySelect.appendChild(opt);
+    });
+  };
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   await loadCategoryCache();
 

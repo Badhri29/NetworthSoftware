@@ -471,27 +471,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Add input event listeners to clear errors when user types
   dateInput.addEventListener('input', () => clearFieldError(dateInput, 'date-error'));
-  transactionType.addEventListener("change", () => {
-  const type = transactionType.value;
-
-  categorySelect.innerHTML = `<option value="">Select Category</option>`;
-  subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
-  subcategorySelect.disabled = true;
-
-  if (!categoryCache[type]) {
-    categorySelect.disabled = true;
-    return;
-  }
-
-  categorySelect.disabled = false;
-
-  Object.keys(categoryCache[type]).forEach(cat => {
-    const opt = document.createElement("option");
-    opt.value = cat;
-    opt.textContent = cat;
-    categorySelect.appendChild(opt);
-  });
-});
+  
   amountInput.addEventListener('input', () => clearFieldError(amountInput, 'amount-error'));
   paymentMode.addEventListener('change', () => clearFieldError(paymentMode, 'payment-mode-error'));
   dateInput.max = today;
@@ -500,26 +480,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   /* Type, Categories, Subcategories */
   categorySelect.disabled = true;
   subcategorySelect.disabled = true;
-  
+
   categorySelect.addEventListener("change", () => {
-  const type = transactionType.value;
-  const category = categorySelect.value;
+    const type = transactionType.value;
+    const category = categorySelect.value;
 
-  subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
-  subcategorySelect.disabled = true;
+    subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
+    subcategorySelect.disabled = true;
 
-  if (!type || !category) return;
+    if (!type || !category) return;
 
-  const subs = categoryCache[type][category] || [];
-  subs.forEach(sub => {
-    const opt = document.createElement("option");
-    opt.value = sub;
-    opt.textContent = sub;
-    subcategorySelect.appendChild(opt);
+    const subs = categoryCache[type][category] || [];
+    subs.forEach(sub => {
+      const opt = document.createElement("option");
+      opt.value = sub;
+      opt.textContent = sub;
+      subcategorySelect.appendChild(opt);
+    });
+
+    if (subs.length) subcategorySelect.disabled = false;
   });
-
-  if (subs.length) subcategorySelect.disabled = false;
-});
 
   transactionType.addEventListener("change", () => {
     const type = transactionType.value;
@@ -528,19 +508,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
     subcategorySelect.disabled = true;
 
-    if (!type || !subCategories[type]) {
+    if (!type || !categoryCache[type]) {
       categorySelect.disabled = true;
       return;
     }
 
     categorySelect.disabled = false;
 
-    Object.keys(subCategories[type]).forEach(cat => {
+    Object.keys(categoryCache[type]).forEach(cat => {
       const opt = document.createElement("option");
       opt.value = cat;
       opt.textContent = cat;
       categorySelect.appendChild(opt);
     });
+
   });
 
 

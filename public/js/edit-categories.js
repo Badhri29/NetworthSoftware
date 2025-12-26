@@ -1,69 +1,78 @@
-/*GLOBAL STATE*/
+/* ======================================================
+   HYBRID CATEGORY MANAGEMENT
+   (DB DISPLAY + UI TEMP ADD)
+====================================================== */
 
 let categoryList;
 let subCategoryList;
 let subCategoryInput;
+let categoryInput;
+let categoryAddBtn;
+let subCategoryAddBtn;
 let typeButtons;
 let section;
+
 let currentType = "income";
+let activeCategory = null;
 
-/*CATEGORIES FROM DATABASE*/
-
-let categories = {
+/* ---------- DATABASE CATEGORIES ---------- */
+let dbCategories = {
   income: {},
   expense: {},
   savings: {}
 };
 
-/*FETCH CATEGORIES*/
+/* ---------- UI TEMP CATEGORIES ---------- */
+const uiCategories = {
+  income: {},
+  expense: {},
+  savings: {}
+};
 
+/* ---------- FETCH FROM DATABASE ---------- */
 async function loadCategoriesFromDB() {
   try {
     const res = await fetch("/api/categories", {
       credentials: "include"
     });
-
     const result = await res.json();
     if (!res.ok) throw new Error(result.message);
 
-    categories = result.data || {
-      income: {},
-      expense: {},
-      savings: {}
-    };
-
+    dbCategories = result.data || dbCategories;
     renderCategories(currentType);
   } catch (err) {
     console.error("Failed to load categories", err);
   }
 }
 
-/*RENDER FUNCTIONS*/
+/* ---------- MERGE DB + UI ---------- */
+function getMergedCategories(type) {
+  return {
+    ...dbCategories[type],
+    ...uiCategories[type]
+  };
+}
 
+/* ---------- RENDER CATEGORIES ---------- */
 function renderCategories(type) {
   categoryList.innerHTML = "";
   subCategoryList.innerHTML = "Select a category first";
   subCategoryInput.disabled = true;
+  activeCategory = null;
 
-  if (!categories[type]) return;
+  const merged = getMergedCategories(type);
+  const categoryNames = Object.keys(merged);
 
-  Object.keys(categories[type]).forEach((cat, index) => {
+  if (!categoryNames.length) {
+    categoryList.innerHTML =
+      `<div class="cat-empty">No categories</div>`;
+    return;
+  }
+
+  categoryNames.forEach((cat, index) => {
     const div = document.createElement("div");
     div.className = "cat-item";
-    div.innerHTML = `
-      <span>${index + 1}. ${cat}</span>
-      <button class="cat-delete-btn" title="Delete">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 6h18"></path>
-          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-          <line x1="10" y1="11" x2="10" y2="17"></line>
-          <line x1="14" y1="11" x2="14" y2="17"></line>
-        </svg>
-      </button>
-    `;
+    div.innerHTML = `<span>${index + 1}. ${cat}</span>`;
 
     div.addEventListener("click", () => {
       categoryList
@@ -71,6 +80,7 @@ function renderCategories(type) {
         .forEach(i => i.classList.remove("active"));
 
       div.classList.add("active");
+      activeCategory = cat;
       renderSubCategories(type, cat);
     });
 
@@ -78,60 +88,51 @@ function renderCategories(type) {
   });
 }
 
+/* ---------- RENDER SUB CATEGORIES ---------- */
 function renderSubCategories(type, category) {
   subCategoryList.innerHTML = "";
   subCategoryInput.disabled = false;
 
-  const subs = categories[type]?.[category] || [];
+  const dbSubs = dbCategories[type][category] || [];
+  const uiSubs = uiCategories[type][category] || [];
+  const subs = [...dbSubs, ...uiSubs];
+
+  if (!subs.length) {
+    subCategoryList.innerHTML =
+      `<div class="cat-empty">No sub-categories</div>`;
+    return;
+  }
 
   subs.forEach((sub, index) => {
     const div = document.createElement("div");
     div.className = "cat-item";
-    div.innerHTML = `
-      <span>${index + 1}. ${sub}</span>
-      <button class="cat-delete-btn" title="Delete">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-          viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 6h18"></path>
-          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-          <line x1="10" y1="11" x2="10" y2="17"></line>
-          <line x1="14" y1="11" x2="14" y2="17"></line>
-        </svg>
-      </button>
-    `;
-
-    div.addEventListener("click", () => {
-      subCategoryList
-        .querySelectorAll(".cat-item")
-        .forEach(i => i.classList.remove("active"));
-
-      div.classList.add("active");
-    });
-
+    div.innerHTML = `<span>${index + 1}. ${sub}</span>`;
     subCategoryList.appendChild(div);
   });
 }
 
-/*INITIALIZATION*/
-
+/* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", () => {
 
   categoryList = document.getElementById("categoryList");
   subCategoryList = document.getElementById("subCategoryList");
   subCategoryInput = document.getElementById("subCategoryInput");
+  categoryInput = document.querySelector(".cat-box input.cat-input");
   typeButtons = document.querySelectorAll(".cat-type-btn");
   section = document.querySelector(".edit-categories-section");
 
-  if (!categoryList || !section) return;
+  categoryAddBtn = document.querySelector(
+    ".cat-box:first-child .cat-add-btn"
+  );
+  subCategoryAddBtn = document.querySelector(
+    ".cat-box:last-child .cat-add-btn"
+  );
 
   section.classList.add("income");
 
   loadCategoriesFromDB();
 
-  /*TYPE TOGGLE*/
-
+  /* ---------- TYPE SWITCH ---------- */
   typeButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
@@ -145,6 +146,35 @@ document.addEventListener("DOMContentLoaded", () => {
       currentType = type;
       renderCategories(type);
     });
+  });
+
+  /* ---------- ADD CATEGORY (UI ONLY) ---------- */
+  categoryAddBtn.addEventListener("click", () => {
+    const name = categoryInput.value.trim();
+    if (!name) return;
+
+    if (!uiCategories[currentType][name]) {
+      uiCategories[currentType][name] = [];
+    }
+
+    categoryInput.value = "";
+    renderCategories(currentType);
+  });
+
+  /* ---------- ADD SUB CATEGORY (UI ONLY) ---------- */
+  subCategoryAddBtn.addEventListener("click", () => {
+    const name = subCategoryInput.value.trim();
+    if (!name || !activeCategory) return;
+
+    if (!uiCategories[currentType][activeCategory]) {
+      uiCategories[currentType][activeCategory] = [];
+    }
+
+    const subs = uiCategories[currentType][activeCategory];
+    if (!subs.includes(name)) subs.push(name);
+
+    subCategoryInput.value = "";
+    renderSubCategories(currentType, activeCategory);
   });
 
 });

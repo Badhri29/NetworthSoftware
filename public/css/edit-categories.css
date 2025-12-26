@@ -229,20 +229,23 @@ html[data-theme="dark"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  pointer-events: auto;
 }
-
+.cat-item span{
+  flex:1;
+  cursor: pointer;
+}
 .cat-delete-btn {
-  background: rgba(239, 68, 68, 0.12);
+  background: transparent;
   border: none;
-  color: #ef4444;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 600;
   cursor: pointer;
   display: none;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  pointer-events: auto;
 }
 
 /* Show delete on hover */
@@ -270,6 +273,10 @@ html[data-theme="dark"] {
   font-weight: 600;
   border: 1px solid transparent;
 }
+/* Keep delete icon color even when row is active */
+.edit-categories-section .cat-item.active .cat-delete-btn {
+  color: #ffffff;
+}
 
 
 /* SUB CATEGORY LIST  */
@@ -281,10 +288,12 @@ html[data-theme="dark"] {
 }
 
 #subCategoryList .cat-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  white-space: normal;
 }
+
 
 .cat-item.active {
   font-weight: 600;
@@ -312,6 +321,23 @@ html[data-theme="dark"] {
   .edit-categories-section.income .cat-box {
     width: 99%;
   }
+  .cat-delete-btn {
+    display: flex;
+  }
+}
+/* LIST DELETE ICON */
+.edit-categories-section.income .cat-delete-btn {
+  color: #22c55e;
+}
+.edit-categories-section.expense .cat-delete-btn {
+  color: #ef4444;
+}
+.edit-categories-section.savings .cat-delete-btn {
+  color: #3b82f6;
+}
+.cat-delete-btn:hover {
+  transform: scale(1.15);
+  opacity: 0.85;
 }
 
 

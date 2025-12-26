@@ -72,17 +72,28 @@ function renderCategories(type) {
   categoryNames.forEach((cat, index) => {
     const div = document.createElement("div");
     div.className = "cat-item";
-    div.innerHTML = `<span>${index + 1}. ${cat}</span>`;
 
-    div.addEventListener("click", () => {
-      categoryList
-        .querySelectorAll(".cat-item")
-        .forEach(i => i.classList.remove("active"));
+    div.innerHTML = `
+      <span>${index + 1}. ${cat}</span>
+      <button class="cat-delete-btn" title="Delete">✗</button>
+    `;
 
-      div.classList.add("active");
-      activeCategory = cat;
-      renderSubCategories(type, cat);
-    });
+    div.addEventListener("click", (e) => {
+  // If ✗ clicked, ignore selection
+  if (e.target.classList.contains("cat-delete-btn")) {
+    e.stopPropagation();
+    return;
+  }
+
+  categoryList
+    .querySelectorAll(".cat-item")
+    .forEach(i => i.classList.remove("active"));
+
+  div.classList.add("active");
+  activeCategory = cat;
+  renderSubCategories(type, cat);
+});
+
 
     categoryList.appendChild(div);
   });
@@ -106,7 +117,11 @@ function renderSubCategories(type, category) {
   subs.forEach((sub, index) => {
     const div = document.createElement("div");
     div.className = "cat-item";
-    div.innerHTML = `<span>${index + 1}. ${sub}</span>`;
+
+    div.innerHTML = `
+      <span>${index + 1}. ${sub}</span>
+      <button class="cat-delete-btn" title="Delete">✗</button>
+    `;
     subCategoryList.appendChild(div);
   });
 }

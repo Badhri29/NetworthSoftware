@@ -70,33 +70,50 @@ function renderCategories(type) {
   }
 
   categoryNames.forEach((cat, index) => {
-    const div = document.createElement("div");
-    div.className = "cat-item";
+  const div = document.createElement("div");
+  div.className = "cat-item";
 
-    div.innerHTML = `
-      <span>${index + 1}. ${cat}</span>
-      <button class="cat-delete-btn" title="Delete">✗</button>
-    `;
+  div.innerHTML = `
+    <span>${index + 1}. ${cat}</span>
+    <button class="cat-delete-btn" title="Delete">✗</button>
+  `;
 
-    div.addEventListener("click", (e) => {
-  // If ✗ clicked, ignore selection
-  if (e.target.classList.contains("cat-delete-btn")) {
+  // SELECT CATEGORY
+  div.addEventListener("click", (e) => {
+    if (e.target.classList.contains("cat-delete-btn")) return;
+
+    categoryList
+      .querySelectorAll(".cat-item")
+      .forEach(i => i.classList.remove("active"));
+
+    div.classList.add("active");
+    activeCategory = cat;
+    renderSubCategories(type, cat);
+  });
+
+  // DELETE CATEGORY (UI ONLY)
+  div.querySelector(".cat-delete-btn").addEventListener("click", (e) => {
     e.stopPropagation();
-    return;
-  }
 
-  categoryList
-    .querySelectorAll(".cat-item")
-    .forEach(i => i.classList.remove("active"));
+    // Remove from UI categories
+    delete uiCategories[type][cat];
 
-  div.classList.add("active");
-  activeCategory = cat;
-  renderSubCategories(type, cat);
+    // Remove from DB categories (UI only, no API)
+    delete dbCategories[type][cat];
+
+    // Reset selection if deleted one was active
+    if (activeCategory === cat) {
+      activeCategory = null;
+      subCategoryInput.disabled = true;
+      subCategoryList.innerHTML = "Select a category first";
+    }
+
+    renderCategories(type);
+  });
+
+  categoryList.appendChild(div);
 });
 
-
-    categoryList.appendChild(div);
-  });
 }
 
 /* ---------- RENDER SUB CATEGORIES ---------- */
@@ -115,15 +132,36 @@ function renderSubCategories(type, category) {
   }
 
   subs.forEach((sub, index) => {
-    const div = document.createElement("div");
-    div.className = "cat-item";
+  const div = document.createElement("div");
+  div.className = "cat-item";
 
-    div.innerHTML = `
-      <span>${index + 1}. ${sub}</span>
-      <button class="cat-delete-btn" title="Delete">✗</button>
-    `;
-    subCategoryList.appendChild(div);
+  div.innerHTML = `
+    <span>${index + 1}. ${sub}</span>
+    <button class="cat-delete-btn" title="Delete">✗</button>
+  `;
+
+  // DELETE SUB CATEGORY (UI ONLY)
+  div.querySelector(".cat-delete-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+
+    // Remove from UI sub-categories
+    if (uiCategories[type][category]) {
+      uiCategories[type][category] =
+        uiCategories[type][category].filter(s => s !== sub);
+    }
+
+    // Remove from DB sub-categories (UI only)
+    if (dbCategories[type][category]) {
+      dbCategories[type][category] =
+        dbCategories[type][category].filter(s => s !== sub);
+    }
+
+    renderSubCategories(type, category);
   });
+
+  subCategoryList.appendChild(div);
+});
+
 }
 
 /* ---------- INIT ---------- */

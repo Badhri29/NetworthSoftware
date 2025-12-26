@@ -264,6 +264,9 @@ function setupViewToggle() {
         getTransactionSection.style.display = 'block';
         setDefaultDateFilters();
         await loadAllTransactions();
+        const filterCategoryMap = buildFilterCategoryMap(allTransactions, categoryCache);
+
+        populateFilterCategories(filterCategoryMap);
         applyTransactionFilters();
       }
 
@@ -432,8 +435,88 @@ function renderGetTransactionsAsCards(transactions) {
 window.addEventListener('resize', () => {
   applyTransactionFilters();
 });
+function buildFilterCategoryMap(transactions, categoryCache) {
+  const result = {
+    income: {},
+    expense: {},
+    savings: {}
+  };
+
+  // 1. DB categories
+  Object.keys(categoryCache).forEach(type => {
+    Object.keys(categoryCache[type]).forEach(cat => {
+      result[type][cat] = new Set(categoryCache[type][cat]);
+    });
+  });
+
+  // 2. Historical transaction categories
+  transactions.forEach(tx => {
+    const { type, category, subcategory } = tx;
+    if (!type || !category) return;
+
+    if (!result[type]) result[type] = {};
+    if (!result[type][category]) result[type][category] = new Set();
+
+    if (subcategory) result[type][category].add(subcategory);
+  });
+
+  // 3. Convert Set → Array
+  Object.keys(result).forEach(type => {
+    Object.keys(result[type]).forEach(cat => {
+      result[type][cat] = Array.from(result[type][cat]);
+    });
+  });
+
+  return result;
+}
+function populateFilterCategories(filterMap) {
+  const typeSelect = document.getElementById("filter-type");
+  const categorySelect = document.getElementById("filter-category");
+  const subCategorySelect = document.getElementById("filter-subcategory");
+
+  if (!typeSelect || !categorySelect || !subCategorySelect) return;
+
+  // Reset initial state
+  categorySelect.innerHTML = `<option value="">All</option>`;
+  subCategorySelect.innerHTML = `<option value="">All</option>`;
+
+  // --- TYPE CHANGE ---
+  typeSelect.onchange = () => {
+    const type = typeSelect.value;
+
+    categorySelect.innerHTML = `<option value="">All</option>`;
+    subCategorySelect.innerHTML = `<option value="">All</option>`;
+
+    if (!type || !filterMap[type]) return;
+
+    Object.keys(filterMap[type]).forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      categorySelect.appendChild(opt);
+    });
+  };
+
+  // --- CATEGORY CHANGE ---
+  categorySelect.onchange = () => {
+    const type = typeSelect.value;
+    const category = categorySelect.value;
+
+    subCategorySelect.innerHTML = `<option value="">All</option>`;
+
+    if (!type || !category || !filterMap[type]?.[category]) return;
+
+    filterMap[type][category].forEach(sub => {
+      const opt = document.createElement("option");
+      opt.value = sub;
+      opt.textContent = sub;
+      subCategorySelect.appendChild(opt);
+    });
+  };
+}
 document.addEventListener('DOMContentLoaded', async () => {
   await loadCategoryCache();
+
   const form = document.getElementById('transaction-form');
   if (!form) return;
 
@@ -471,7 +554,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Add input event listeners to clear errors when user types
   dateInput.addEventListener('input', () => clearFieldError(dateInput, 'date-error'));
-  
+
   amountInput.addEventListener('input', () => clearFieldError(amountInput, 'amount-error'));
   paymentMode.addEventListener('change', () => clearFieldError(paymentMode, 'payment-mode-error'));
   dateInput.max = today;
@@ -880,8 +963,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   document.getElementById('filter-date').value = 'month';
   setDefaultDateFilters();
-  loadRecentTransactions();
   setupViewToggle();
+  loadRecentTransactions();
   closeMobileBtn?.addEventListener('click', () => {
     mobileModal?.classList.remove('show');
   });

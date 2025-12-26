@@ -1,5 +1,4 @@
 console.log("AUTH ROUTES FILE LOADED");
-
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("@prisma/client");
@@ -9,46 +8,12 @@ const {
   clearAuthCookie,
   requireAuth,
 } = require("../middleware/auth");
-
+const { seedUserCategories } = require("../utils/seedUserCategories");
 const router = express.Router();
 const prisma = new PrismaClient();
 
-/* ======================================
-   SEED DEFAULT CATEGORIES (SAFE & FAST)
-====================================== */
-async function seedUserCategories(userId) {
-  const defaultCategories = await prisma.default_Categories.findMany();
 
-  for (const defCat of defaultCategories) {
-    const userCategory = await prisma.category.create({
-      data: {
-        userId,                 // ✅ Prisma field
-        type: defCat.type,
-        name: defCat.name,
-      },
-    });
-
-    const defaultSubs = await prisma.default_SubCategories.findMany({
-      where: {
-        category_id: defCat.id, // ✅ DB column
-      },
-    });
-
-    for (const sub of defaultSubs) {
-      await prisma.subCategory.create({
-        data: {
-          userId,
-          categoryId: userCategory.id,
-          name: sub.name,
-        },
-      });
-    }
-  }
-}
-
-/* ======================================
-   REGISTER
-====================================== */
+/* REGISTER */
 router.post("/register", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -94,9 +59,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-/* ======================================
-   LOGIN
-====================================== */
+/* LOGIN */
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -120,17 +83,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
-/* ======================================
-   LOGOUT
-====================================== */
+/* LOGOUT */
 router.post("/logout", (req, res) => {
   clearAuthCookie(res);
   return res.json({ success: true });
 });
 
-/* ======================================
-   CURRENT USER
-====================================== */
+/* CURRENT USER */
 router.get("/me", requireAuth, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({

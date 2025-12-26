@@ -286,6 +286,22 @@ function setupViewToggle() {
           filterMap: filterCategoryMap
         });
 
+        // 🔁 INITIAL FILTER HYDRATION (FIRST LOAD FIX)
+
+        // ===== PC =====
+        const pcType = document.getElementById("filter-type");
+        const pcCategory = document.getElementById("filter-category");
+
+        if (pcType) pcType.dispatchEvent(new Event("change"));
+        if (pcCategory) pcCategory.dispatchEvent(new Event("change"));
+
+        // ===== MOBILE =====
+        const mobileType = document.getElementById("mobile-filter-type");
+        const mobileCategory = document.getElementById("mobile-filter-category");
+
+        if (mobileType) mobileType.dispatchEvent(new Event("change"));
+        if (mobileCategory) mobileCategory.dispatchEvent(new Event("change"));
+
         applyTransactionFilters();
       }
 
@@ -546,20 +562,56 @@ function setupCategoryFilterLogic({
 
   if (!typeSelect || !categorySelect || !subCategorySelect) return;
 
-  // Reset
-  categorySelect.innerHTML = `<option value="">All</option>`;
-  subCategorySelect.innerHTML = `<option value="">All</option>`;
+  /* ---------- HELPERS ---------- */
 
-  // TYPE → CATEGORY
+  function getAllCategories() {
+    const set = new Set();
+    Object.values(filterMap).forEach(typeObj => {
+      Object.keys(typeObj).forEach(cat => set.add(cat));
+    });
+    return Array.from(set);
+  }
+
+  function getAllSubCategories() {
+    const set = new Set();
+    Object.values(filterMap).forEach(typeObj => {
+      Object.values(typeObj).forEach(subs => {
+        subs.forEach(sub => set.add(sub));
+      });
+    });
+    return Array.from(set);
+  }
+
+  function resetCategory() {
+    categorySelect.innerHTML = `<option value="">All</option>`;
+  }
+
+  function resetSubCategory() {
+    subCategorySelect.innerHTML = `<option value="">All</option>`;
+  }
+
+  /* ---------- INIT ---------- */
+  resetCategory();
+  resetSubCategory();
+
+  /* ---------- TYPE CHANGE ---------- */
   typeSelect.onchange = () => {
     const type = typeSelect.value;
 
-    categorySelect.innerHTML = `<option value="">All</option>`;
-    subCategorySelect.innerHTML = `<option value="">All</option>`;
+    resetCategory();
+    resetSubCategory();
 
-    if (!type || !filterMap[type]) return;
+    let categories = [];
 
-    Object.keys(filterMap[type]).forEach(cat => {
+    if (!type) {
+      // ✅ TYPE = ALL
+      categories = getAllCategories();
+    } else if (filterMap[type]) {
+      // ✅ SPECIFIC TYPE
+      categories = Object.keys(filterMap[type]);
+    }
+
+    categories.forEach(cat => {
       const opt = document.createElement("option");
       opt.value = cat;
       opt.textContent = cat;
@@ -567,16 +619,31 @@ function setupCategoryFilterLogic({
     });
   };
 
-  // CATEGORY → SUBCATEGORY
+  /* ---------- CATEGORY CHANGE ---------- */
   categorySelect.onchange = () => {
     const type = typeSelect.value;
     const category = categorySelect.value;
 
-    subCategorySelect.innerHTML = `<option value="">All</option>`;
+    resetSubCategory();
 
-    if (!type || !category || !filterMap[type]?.[category]) return;
+    let subs = [];
 
-    filterMap[type][category].forEach(sub => {
+    if (!category) {
+      // ✅ CATEGORY = ALL
+      subs = getAllSubCategories();
+    } else if (!type) {
+      // ✅ TYPE = ALL + SPECIFIC CATEGORY
+      Object.values(filterMap).forEach(typeObj => {
+        if (typeObj[category]) {
+          subs.push(...typeObj[category]);
+        }
+      });
+    } else {
+      // ✅ TYPE + CATEGORY
+      subs = filterMap[type]?.[category] || [];
+    }
+
+    [...new Set(subs)].forEach(sub => {
       const opt = document.createElement("option");
       opt.value = sub;
       opt.textContent = sub;

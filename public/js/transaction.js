@@ -905,6 +905,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   function resetForm() {
     form.reset();
     dateInput.value = today;
+    categorySelect.disabled = true;
     subcategorySelect.innerHTML = `<option value="">Select Sub-Category</option>`;
     subcategorySelect.disabled = true;
     cardGroup.style.display = 'none';

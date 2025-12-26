@@ -195,5 +195,49 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3️⃣ Re-render categories (DB only)
     renderCategories(currentType);
   });
+  /* ---------- SUBMIT UI CATEGORIES TO DB ---------- */
+  const submitBtn = document.getElementById("submitCategoriesBtn");
+
+  submitBtn.addEventListener("click", async () => {
+    try {
+      console.log("Submitting UI categories:", uiCategories);
+
+      const res = await fetch("/api/categories/bulk", {
+        method: "POST",
+        credentials: "include", // 🔴 REQUIRED for auth cookie
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          categories: uiCategories
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Save failed");
+      }
+
+      // 1️⃣ Clear UI-only data
+      uiCategories.income = {};
+      uiCategories.expense = {};
+      uiCategories.savings = {};
+
+      // 2️⃣ Reload DB categories
+      await loadCategoriesFromDB();
+
+      // 3️⃣ Reset UI state
+      activeCategory = null;
+      subCategoryInput.value = "";
+      subCategoryInput.disabled = true;
+      subCategoryList.innerHTML = "Select a category first";
+
+      alert("Categories saved successfully ✅");
+
+    } catch (error) {
+      console.error("Submit categories error:", error);
+      alert("Failed to save categories ❌");
+    }
+  });
 
 });

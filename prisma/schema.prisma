@@ -49,10 +49,11 @@ model Category {
   name      String
   createdAt DateTime @default(now())
 
-  user      User        @relation(fields: [userId], references: [id])
-  subs      SubCategory[]
+  user User @relation(fields: [userId], references: [id])
+  subCategories SubCategory[]
 
   @@map("categories")
+  @@unique([userId, type, name], name: "userId_type_name")
 }
 
 model SubCategory {
@@ -62,10 +63,11 @@ model SubCategory {
   name       String
   createdAt  DateTime @default(now())
 
-  user       User     @relation(fields: [userId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
+  user     User     @relation(fields: [userId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
 
   @@map("sub_categories")
+  @@unique([userId, categoryId, name], name: "userId_categoryId_name")
 }
 
 model Default_Categories {

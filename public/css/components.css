@@ -187,6 +187,27 @@
   border: 1px solid rgba(74, 222, 128, 0.4);
 }
 
+/* Auth switch button */
+#auth-switch-btn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.3rem;
+  margin: 0;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+
+#auth-switch-btn:hover {
+  color: #7dd3fc;
+  text-decoration: none;
+}
+
 /* Sidebar / logout styling */
 .desktop-sidebar {
   display: flex;

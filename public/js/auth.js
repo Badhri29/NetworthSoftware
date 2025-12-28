@@ -6,15 +6,22 @@ function setAuthMode(mode) {
   authState.mode = mode;
 
   document.getElementById("auth-title").textContent =
-    mode === "login" ? "Welcome back" : "Create your account";
+    mode === "login" ? "Login Account" : "Create Account";
 
   document.getElementById("auth-submit").textContent =
     mode === "login" ? "Sign in" : "Sign up";
 
   const switchText = document.getElementById("auth-switch-text");
+  const switchBtn = document.getElementById("auth-switch-btn");
+  
   if (switchText) {
     switchText.textContent =
       mode === "login" ? "New here?" : "Already have an account?";
+  }
+  
+  if (switchBtn) {
+    switchBtn.textContent =
+      mode === "login" ? "Create an account" : "Sign in instead";
   }
 
   const errEl = document.getElementById("auth-error");
@@ -49,7 +56,6 @@ async function handleAuthSubmit(e) {
       body: JSON.stringify({ email, password }),
     });
 
-    // ✅ CORRECT PAGE
     window.location.href = "/transactions.html";
   } catch (err) {
     errorEl.textContent = err.message || "Authentication failed.";

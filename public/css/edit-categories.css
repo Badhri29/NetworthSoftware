@@ -147,10 +147,8 @@ html[data-theme="dark"] {
   padding: 0.75rem;
   /* border: 2px solid var(--border-color); */
   border-radius: 8px;
-  overflow-y: auto;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 0;
 }
 
 .cat-body-grid {
@@ -159,6 +157,7 @@ html[data-theme="dark"] {
   gap: 1rem;
   width: 100%;
   height: 100%;
+  min-height: 0;
 }
 
 /* CARD */
@@ -170,6 +169,7 @@ html[data-theme="dark"] {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
   margin: -1px;
 }
 
@@ -218,6 +218,7 @@ html[data-theme="dark"] {
   overflow-y: auto;
   font-size: 0.85rem;
   color: #0a8f3c;
+  min-height: 0;
 }
 
 /* ===============================
@@ -311,12 +312,6 @@ html[data-theme="dark"] {
   height: 100%;
 }
 
-/* PC */
-/* @media(min-width:500px){
-  .cat-box{
-    height: 340px;
-  }
-} */
 /* MOBILE */
 @media (max-width: 450px) {
   .cat-body-grid {
@@ -502,12 +497,13 @@ html[data-theme="dark"] .edit-cat-footer {
   height: 0;
 }
 
-/* Firefox */
 .edit-categories-section * {
   scrollbar-width: none;
-}
-
-/* IE / Old Edge */
-.edit-categories-section * {
   -ms-overflow-style: none;
+}
+.edit-categories-section {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 220px);
+  min-height: 0;
 }

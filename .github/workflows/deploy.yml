@@ -1,0 +1,28 @@
+name: Auto Deploy to Oracle VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Oracle VM via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_HOST }}
+          username: ${{ secrets.ORACLE_USER }}
+          key: ${{ secrets.ORACLE_SSH_KEY }}
+          script: |
+            cd ${{ secrets.APP_PATH }}
+            git pull origin main
+            npm install
+            npx prisma generate
+            npx prisma migrate deploy
+            pm2 restart all

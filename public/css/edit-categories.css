@@ -169,6 +169,8 @@ html[data-theme="dark"] {
   background: #f6fff9;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  margin: -1px;
 }
 
 /* HEADER */
@@ -211,7 +213,8 @@ html[data-theme="dark"] {
 
 /* LIST */
 .cat-list {
-  height: 340px;
+  /* height: 340px; */
+  flex: 1;
   overflow-y: auto;
   font-size: 0.85rem;
   color: #0a8f3c;
@@ -309,11 +312,11 @@ html[data-theme="dark"] {
 }
 
 /* PC */
-@media(min-width:500px){
+/* @media(min-width:500px){
   .cat-box{
     height: 340px;
   }
-}
+} */
 /* MOBILE */
 @media (max-width: 450px) {
   .cat-body-grid {

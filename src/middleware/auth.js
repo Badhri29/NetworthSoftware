@@ -66,12 +66,25 @@ function createToken(payload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "7d" });
 }
 
+/* this code http don't accept */
+// function setAuthCookie(res, token) {
+//   res.cookie(AUTH_COOKIE, token, {
+//     httpOnly: true,
+//     sameSite: "lax",
+//     secure: process.env.NODE_ENV === "production",
+//     maxAge: 7 * 24 * 60 * 60 * 1000
+//   });
+// }
+
+/* this code http will accept */
 function setAuthCookie(res, token) {
+  const isSecureCookie = process.env.COOKIE_SECURE === "true";
+
   res.cookie(AUTH_COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 7 * 24 * 60 * 60 * 1000
+    httpOnly: true,              // JS cannot access cookie
+    sameSite: "lax",             // Works on HTTP & HTTPS
+    secure: isSecureCookie,      // TRUE only when HTTPS is used
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
   });
 }
 

@@ -34,9 +34,6 @@ jobs:
             git clone https://github.com/Badhri29/NetworthSoftware.git .
             git checkout main
 
-            echo "📦 Installing dependencies"
-            npm install --omit=dev
-
             echo "⚙️ Prisma generate"
             npx prisma generate
 

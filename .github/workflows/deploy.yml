@@ -24,15 +24,11 @@ jobs:
           script: |
             set -e
 
-            TIMESTAMP=$(date +%Y%m%d%H%M%S)
-            RELEASE_DIR=/home/ubuntu/app/releases/$TIMESTAMP
+            cd /home/ubuntu/app/repo
 
-            mkdir -p $RELEASE_DIR
-            cd $RELEASE_DIR
+            git fetch origin main
+            git reset --hard origin/main
 
-            git clone https://github.com/Badhri29/NetworthSoftware.git .
-            git checkout main
-
-            ln -sfn $RELEASE_DIR /home/ubuntu/app/current
+            ln -sfn /home/ubuntu/app/repo /home/ubuntu/app/current
             pm2 restart networth
 

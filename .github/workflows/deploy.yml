@@ -26,4 +26,4 @@ jobs:
             npm install --production
             pm2 restart networth || pm2 start src/server.js --name networth
             pm2 save
-          
+        

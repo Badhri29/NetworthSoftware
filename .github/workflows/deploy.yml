@@ -27,18 +27,12 @@ jobs:
             TIMESTAMP=$(date +%Y%m%d%H%M%S)
             RELEASE_DIR=/home/ubuntu/app/releases/$TIMESTAMP
 
-            echo "📦 Creating release $RELEASE_DIR"
             mkdir -p $RELEASE_DIR
             cd $RELEASE_DIR
 
             git clone https://github.com/Badhri29/NetworthSoftware.git .
             git checkout main
 
-            echo "⚙️ Prisma generate"
-            npx prisma generate
-
-            echo "🔁 Switching to new release"
             ln -sfn $RELEASE_DIR /home/ubuntu/app/current
-
-            echo "🚀 Restarting app"
             pm2 restart networth
+

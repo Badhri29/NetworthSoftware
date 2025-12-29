@@ -31,7 +31,7 @@
   }
 
   function handleThemeToggle(e) {
-    const newTheme = e.target.checked ? LIGHT_THEME : DARK_THEME;
+    const newTheme = e.target.checked ? DARK_THEME : LIGHT_THEME;
     applyTheme(newTheme);
   }
 

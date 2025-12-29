@@ -19,6 +19,8 @@ jobs:
           host: ${{ secrets.ORACLE_HOST }}
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
+          timeout: 30m
+          command_timeout: 30m
           script: |
             set -e
 
@@ -33,7 +35,7 @@ jobs:
             git checkout main
 
             echo "📦 Installing dependencies"
-            npm install
+            npm install --omit=dev
 
             echo "⚙️ Prisma generate"
             npx prisma generate

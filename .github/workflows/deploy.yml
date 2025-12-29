@@ -19,16 +19,11 @@ jobs:
           host: ${{ secrets.ORACLE_HOST }}
           username: ${{ secrets.ORACLE_USER }}
           key: ${{ secrets.ORACLE_SSH_KEY }}
-          timeout: 30m
-          command_timeout: 30m
           script: |
             set -e
-
-            cd /home/ubuntu/app/repo
-
-            git fetch origin main
-            git reset --hard origin/main
-
-            ln -sfn /home/ubuntu/app/repo /home/ubuntu/app/current
-            pm2 restart networth
-
+            cd /home/ubuntu/NetworthSoftware
+            git pull origin main
+            npm install --production
+            pm2 restart networth || pm2 start src/server.js --name networth
+            pm2 save
+          

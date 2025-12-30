@@ -20,9 +20,7 @@ html[data-theme="dark"] {
   --card-bg: #020617;
 }
 
-/* ===============================
-   EDIT CATEGORIES – MATCH GET TRANSACTION WIDTH
-================================ */
+/* EDIT CATEGORIES – MATCH GET TRANSACTION WIDTH */
 
 .edit-categories-content {
   margin-top: 10px;
@@ -46,9 +44,7 @@ html[data-theme="dark"] {
 }
 
 
-/* ===============================
-   EDIT CATEGORIES – HEADER / BODY / FOOTER
-================================ */
+/* EDIT CATEGORIES – HEADER / BODY / FOOTER */
 
 .edit-categories-section {
   display: flex;
@@ -139,9 +135,7 @@ html[data-theme="dark"] {
 
 
 /* BODY */
-/* ===============================
-   EDIT CATEGORIES – BODY
-================================ */
+/* EDIT CATEGORIES – BODY */
 .edit-cat-body {
   flex: 1;
   padding: 0.75rem;
@@ -221,9 +215,7 @@ html[data-theme="dark"] {
   min-height: 0;
 }
 
-/* ===============================
-   CATEGORY & SUB-CATEGORY ITEM
-================================ */
+/* CATEGORY & SUB-CATEGORY ITEM */
 /* Base item */
 .cat-item {
   padding: 0.4rem 0.6rem;
@@ -312,9 +304,7 @@ html[data-theme="dark"] {
   height: 100%;
 }
 
-/* ===============================
-   MOBILE – AUTO HEIGHT (LIKE PC)
-================================ */
+/* MOBILE – AUTO HEIGHT (LIKE PC) */
 @media (max-width: 450px) {
 
   /* Outer wrapper */
@@ -411,9 +401,7 @@ html[data-theme="dark"] {
 
 
 /* FOOTER */
-/* ===============================
-   EDIT CATEGORIES – FOOTER
-================================ */
+/* EDIT CATEGORIES – FOOTER */
 .edit-cat-footer {
   height: 50px;
   padding-right: 0.75rem;
@@ -435,9 +423,7 @@ html[data-theme="dark"] {
 }
 
 
-/* ===============================
-   SUBMIT BUTTON – TYPE BASED SHADOW
-================================ */
+/* SUBMIT BUTTON – TYPE BASED SHADOW */
 
 .edit-categories-section .edit-cat-footer .btn-primary {
   transition: background 0.25s ease, box-shadow 0.25s ease;
@@ -506,9 +492,7 @@ html[data-theme="dark"] {
   --cat-accent: #3b82f6;
 }
 
-/* ===============================
-   APPLY ACCENT COLOR
-================================ */
+/* APPLY ACCENT COLOR */
 
 /* Headings */
 .edit-categories-section .cat-box-header span {
@@ -548,10 +532,7 @@ html[data-theme="dark"] {
 
 
 
-/* ===============================
-   REMOVE ALL SCROLLBARS
-   (All Categories)
-================================ */
+/* REMOVE ALL SCROLLBARS (All Categories) */
 
 /* Chrome, Edge, Safari */
 .edit-categories-section *::-webkit-scrollbar {
@@ -569,9 +550,7 @@ html[data-theme="dark"] {
   height: calc(100vh - 220px);
   min-height: 0;
 }
-/* =====================================================
-   DARK MODE – FONT + BORDER ONLY (NO BACKGROUND)
-===================================================== */
+/* DARK MODE – FONT + BORDER ONLY (NO BACKGROUND) */
 html[data-theme="dark"] .edit-cat-header,
 html[data-theme="dark"] .edit-cat-body,
 html[data-theme="dark"] .edit-cat-footer {
@@ -657,10 +636,7 @@ html[data-theme="dark"] .cat-add-btn {
     font-size: 0.9rem;
   }
 }
-/* =====================================================
-   DARK MODE ONLY – MANAGE CATEGORIES TOGGLE
-   (NO BACKGROUND, KEEP NORMAL MODE AS-IS)
-===================================================== */
+/* DARK MODE ONLY – MANAGE CATEGORIES TOGGLE (NO BACKGROUND, KEEP NORMAL MODE AS-IS) */
 
 html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn {
   background: transparent !important;

@@ -422,6 +422,7 @@ html[data-theme="dark"] {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
   border-top: 1px solid var(--border-color);
 }
 
@@ -545,11 +546,7 @@ html[data-theme="dark"] {
   background: #3b82f6;
 }
 
-html[data-theme="dark"] .edit-cat-header,
-html[data-theme="dark"] .edit-cat-body,
-html[data-theme="dark"] .edit-cat-footer {
-  border-color: #334155;
-}
+
 
 /* ===============================
    REMOVE ALL SCROLLBARS
@@ -571,4 +568,165 @@ html[data-theme="dark"] .edit-cat-footer {
   flex-direction: column;
   height: calc(100vh - 220px);
   min-height: 0;
+}
+/* =====================================================
+   DARK MODE – FONT + BORDER ONLY (NO BACKGROUND)
+===================================================== */
+html[data-theme="dark"] .edit-cat-header,
+html[data-theme="dark"] .edit-cat-body,
+html[data-theme="dark"] .edit-cat-footer {
+  border-color: #334155;
+}
+
+/* Card borders only */
+html[data-theme="dark"] .cat-box {
+  background: transparent !important;
+  border: 1.2px solid rgba(148, 163, 184, 0.28);
+}
+
+/* Header & footer – border only */
+html[data-theme="dark"] .edit-cat-header,
+html[data-theme="dark"] .edit-cat-footer {
+  background: transparent;
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+/* Card title */
+html[data-theme="dark"] .cat-box-header span {
+  color: var(--cat-accent);
+  font-weight: 600;
+}
+
+/* Inputs – underline only */
+html[data-theme="dark"] .cat-input {
+  background: transparent;
+  color: #e5e7eb;
+  border-bottom: 1.5px solid var(--cat-accent);
+  font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+}
+
+html[data-theme="dark"] .cat-input::placeholder {
+  color: #94a3b8;
+}
+
+/* List text */
+html[data-theme="dark"] .cat-item {
+  color: #cbd5f5;
+  font-size: clamp(0.78rem, 2.6vw, 0.9rem);
+}
+
+/* Hover – border only */
+html[data-theme="dark"] .cat-item:hover {
+  border: 1px solid var(--cat-accent);
+}
+
+/* Active item – border + font only */
+html[data-theme="dark"] .cat-item.active {
+  background: transparent !important;
+  border: 1.5px solid var(--cat-accent);
+  color: var(--cat-accent);
+  font-weight: 600;
+}
+
+/* Delete icon */
+html[data-theme="dark"] .cat-delete-btn {
+  color: var(--cat-accent);
+}
+
+/* Empty text */
+html[data-theme="dark"] .cat-empty {
+  color: #94a3b8;
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+}
+
+/* + button */
+html[data-theme="dark"] .cat-add-btn {
+  background: transparent;
+  border: 1.5px solid var(--cat-accent);
+  color: var(--cat-accent);
+}
+
+/* ---------------- MOBILE RESPONSIVE ---------------- */
+@media (max-width: 450px) {
+
+  html[data-theme="dark"] .cat-box {
+    border-width: 1px;
+  }
+
+  html[data-theme="dark"] .cat-box-header span {
+    font-size: 0.9rem;
+  }
+}
+/* =====================================================
+   DARK MODE ONLY – MANAGE CATEGORIES TOGGLE
+   (NO BACKGROUND, KEEP NORMAL MODE AS-IS)
+===================================================== */
+
+html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Active state – border + text only */
+html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn.active {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-width: 1.8px;
+}
+
+/* Keep accent color via border & text */
+html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn.active.income {
+  color: #22c55e;
+  border-color: #22c55e;
+}
+
+html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn.active.expense {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn.active.savings {
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+/* Responsive font (dark mode only) */
+html[data-theme="dark"] .edit-cat-type-toggle .cat-type-btn {
+  font-size: clamp(0.75rem, 2.4vw, 0.85rem);
+}
+
+html[data-theme="dark"] .edit-cat-footer .btn-primary {
+  box-shadow: none !important;
+}
+
+/* Also remove type-based shadows */
+html[data-theme="dark"] .edit-categories-section.income .edit-cat-footer .btn-primary,
+html[data-theme="dark"] .edit-categories-section.expense .edit-cat-footer .btn-primary,
+html[data-theme="dark"] .edit-categories-section.savings .edit-cat-footer .btn-primary {
+  box-shadow: none !important;
+  background: transparent !important;
+  border: 1px solid var(--cat-accent) !important;
+  color: var(--cat-accent) !important;
+  transition: all 0.2s ease;
+  
+}
+
+/* Hover state for dark mode buttons */
+html[data-theme="dark"] .edit-categories-section.income .edit-cat-footer .btn-primary:hover,
+html[data-theme="dark"] .edit-categories-section.expense .edit-cat-footer .btn-primary:hover,
+html[data-theme="dark"] .edit-categories-section.savings .edit-cat-footer .btn-primary:hover {
+  background: var(--cat-accent) !important;
+  color: #0f172a !important;
+  transform: translateY(-1px);
+}
+
+/* Focus state for dark mode buttons */
+html[data-theme="dark"] .edit-categories-section.income .edit-cat-footer .btn-primary:focus,
+html[data-theme="dark"] .edit-categories-section.expense .edit-cat-footer .btn-primary:focus,
+html[data-theme="dark"] .edit-categories-section.savings .edit-cat-footer .btn-primary:focus {
+  box-shadow: 0 0 0 3px #293043 !important;
+}
+
+.edit-categories-section .cat-item.active .cat-delete-btn {
+  color: red;
 }

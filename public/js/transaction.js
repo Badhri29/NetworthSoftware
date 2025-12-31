@@ -29,6 +29,7 @@ let resetBtn;
 let applyBtnMobile;
 let resetBtnMobile;
 let dateFilter;
+let deleteTxnId = null;
 let categoryCache = {
   income: {},
   expense: {},
@@ -123,12 +124,10 @@ function hideDesktopTable() {
   const table = document.querySelector('.table-responsive');
   if (table) table.style.display = 'none';
 }
-
 function showDesktopTable() {
   const table = document.querySelector('.table-responsive');
   if (table) table.style.display = 'block';
 }
-
 function hideMobileCards() {
   const mobileList = document.getElementById('mobile-transactions-list');
   if (mobileList) mobileList.innerHTML = '';
@@ -656,6 +655,47 @@ function setupCategoryFilterLogic({
     });
   };
 }
+function openDeleteModal(tx) {
+  deleteTxnId = tx.id;
+
+  document.getElementById("deleteDetails").innerHTML = `
+    <div><strong>Date:</strong> ${formatDate(tx.date)}</div>
+    <div><strong>Type:</strong> ${tx.type}</div>
+    <div><strong>Category:</strong> ${tx.category || '-'}</div>
+    <div><strong>Sub-category:</strong> ${tx.subcategory || '-'}</div>
+    <div><strong>Amount:</strong> ₹${tx.amount}</div>
+    <div><strong>Payment:</strong> ${tx.paymentMode}${tx.card ? ' • ' + tx.card : ''}</div>
+    <div><strong>Details:</strong> ${tx.description || '-'}</div>
+  `;
+
+  // 2️⃣ APPLY COLOR TO HEADER & FOOTER (PASTE HERE)
+  const header = document.querySelector(".delete-modal-header");
+  const footer = document.querySelector(".delete-modal-footer");
+
+  header.classList.remove("delete-income", "delete-expense", "delete-savings");
+  footer.classList.remove("delete-income", "delete-expense", "delete-savings");
+
+  header.classList.add("delete-" + tx.type);
+  footer.classList.add("delete-" + tx.type);
+
+  document.getElementById("deleteModal").style.display = "flex";
+}
+function closeDeleteModal() {
+  deleteTxnId = null;
+  document.getElementById("deleteModal").style.display = "none";
+}
+async function confirmDeleteTransaction() {
+  if (!deleteTxnId) return;
+
+  await fetch(`/api/transactions/${deleteTxnId}`, {
+    method: "DELETE",
+    credentials: "include"
+  });
+
+  allTransactions = allTransactions.filter(t => t.id != deleteTxnId);
+  closeDeleteModal();
+  applyTransactionFilters();
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
   await loadCategoryCache();
@@ -679,8 +719,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   modalDetails = document.getElementById('transactionDetails');
   confirmBtn = document.getElementById('confirmSubmit');
   cancelBtn = document.getElementById('cancelSubmit');
-
   formData = null;
+
+  // DELETE BUTTON CLICK (PC + MOBILE)
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest(".txn-delete-btn");
+    if (!btn) return;
+
+    const tx = allTransactions.find(t => t.id == btn.dataset.id);
+    if (!tx) return;
+
+    openDeleteModal(tx);
+  });
+
+  // MODAL BUTTONS
+  document.getElementById("cancelDeleteBtn")
+    .addEventListener("click", closeDeleteModal);
+
+  document.getElementById("closeDeleteModal")
+    .addEventListener("click", closeDeleteModal);
+
+  document.getElementById("confirmDeleteBtn")
+    .addEventListener("click", confirmDeleteTransaction);
 
   // ===== Default Date =====
   const today = new Date().toISOString().split('T')[0];

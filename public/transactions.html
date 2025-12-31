@@ -486,6 +486,29 @@
     </div>
   </div>
 
+<!-- DELETE CONFIRM MODAL -->
+<div class="delete-modal-backdrop" id="deleteModal">
+  <div class="delete-modal">
+
+    <!-- HEADER -->
+    <div class="delete-modal-header">
+      <span>Are you sure you want to delete this transaction?</span>
+      <button class="delete-close-btn" id="closeDeleteModal">✕</button>
+    </div>
+
+    <!-- DETAILS -->
+    <div class="delete-modal-body" id="deleteDetails">
+      <!-- transaction details injected by JS -->
+    </div>
+
+    <!-- FOOTER -->
+    <div class="delete-modal-footer" id="deleteFooterLine">
+      <button class="btn-primary" id="confirmDeleteBtn">Yes</button>
+      <button class="btn-secondary" id="cancelDeleteBtn">No</button>
+    </div>
+
+  </div>
+</div>
 
   <script src="/js/api.js"></script>
   <script src="/js/theme.js"></script>

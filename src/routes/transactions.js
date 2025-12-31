@@ -4,10 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 const router = express.Router();
 const prisma = new PrismaClient();
 
-/**
- * CREATE TRANSACTION
- * POST /api/transactions
- */
+/* CREATE TRANSACTION */
 router.post("/", async (req, res) => {
   console.log("Authenticated user:", req.user);
   console.log("Request body:", req.body);
@@ -87,10 +84,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-/**
- * GET TRANSACTIONS FOR LOGGED-IN USER
- * GET /api/transactions
- */
+/* GET TRANSACTIONS FOR LOGGED-IN USER */
 router.get("/", async (req, res) => {
   try {
     console.log("Fetching transactions for user:", req.user.id);
@@ -120,5 +114,29 @@ router.get("/", async (req, res) => {
     });
   }
 });
+
+// DELETE transaction by ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (!id) {
+      return res.status(400).json({ message: "Invalid transaction ID" });
+    }
+
+    await prisma.transaction.delete({
+      where: { id }
+    });
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("Delete transaction failed:", err);
+    res.status(500).json({
+      message: "Failed to delete transaction"
+    });
+  }
+});
+
 
 module.exports = router;

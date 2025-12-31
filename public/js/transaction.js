@@ -687,14 +687,34 @@ function closeDeleteModal() {
 async function confirmDeleteTransaction() {
   if (!deleteTxnId) return;
 
-  await fetch(`/api/transactions/${deleteTxnId}`, {
-    method: "DELETE",
-    credentials: "include"
-  });
+  const confirmBtn = document.getElementById("confirmDeleteBtn");
+  if (confirmBtn) confirmBtn.disabled = true;
 
-  allTransactions = allTransactions.filter(t => t.id != deleteTxnId);
-  closeDeleteModal();
-  applyTransactionFilters();
+  try {
+    const res = await fetch(`/api/transactions/${deleteTxnId}`, {
+      method: "DELETE",
+      credentials: "include"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to delete transaction");
+    }
+
+    // Remove from local cache
+    allTransactions = allTransactions.filter(
+      t => t.id !== deleteTxnId
+    );
+
+    closeDeleteModal();
+    applyTransactionFilters();
+
+  } catch (err) {
+    console.error("Delete failed:", err);
+    alert("Failed to delete transaction. Please try again.");
+  } finally {
+    if (confirmBtn) confirmBtn.disabled = false;
+    deleteTxnId = null;
+  }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {

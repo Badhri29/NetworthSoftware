@@ -171,6 +171,9 @@ function renderTransactionsTable(transactions) {
       <td data-label="Amount" class="amount">₹${tx.amount}</td>
       <td data-label="Payment Mode">${tx.paymentMode}</td>
       <td data-label="Card Type">${tx.card || '-'}</td>
+      <td class="txn-action">
+    <button class="txn-delete-btn" data-id="${tx.id}" title="Delete">✗</button>
+  </td>
     `;
 
     tbody.appendChild(tr);
@@ -423,6 +426,8 @@ function renderGetTransactionsAsCards(transactions) {
     card.className = `recent-card ${tx.type}`;
 
     card.innerHTML = `
+    <button class="txn-delete-btn" data-id="${tx.id}">✗</button>
+
       <div class="recent-row">
         <div class="recent-box">
           <div class="recent-label">Last Modified</div>

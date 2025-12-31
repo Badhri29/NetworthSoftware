@@ -132,6 +132,41 @@ html[data-theme="dark"] {
   color: #3b82f6;
 }
 
+/* Anchor for absolute delete button */
+.transactions-table td.txn-action {
+  position: relative;
+}
+
+/* Delete column */
+.txn-action {
+  width: 40px;
+  position: relative;
+}
+
+.txn-delete-btn {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #ef4444;
+  cursor: pointer;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* DESKTOP table hover */
+.transactions-table tbody tr:hover .txn-delete-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
 /* ================= DESKTOP TABLE ================= */
 
 @media (min-width: 769px) {
@@ -193,13 +228,6 @@ html[data-theme="dark"] {
     width: 200px;
     white-space: normal;
   }
-
-  /* =====================================================
-   DESKTOP – TRANSACTION TYPE BADGE (FIGMA MATCH)
-   Fixes full-cell background issue
-===================================================== */
-
-
 
   /* Remove background from full TD */
   .transaction-income td[data-label="Type"],
@@ -273,9 +301,7 @@ html[data-theme="dark"] {
 
 }
 
-/* =====================================================
-   GET TRANSACTION – MOBILE 
-===================================================== */
+/* GET TRANSACTION – MOBILE  */
 
 @media (max-width: 768px) {
 
@@ -486,9 +512,7 @@ html[data-theme="dark"] {
 
 }
 
-/* ===============================
-   FILTER SLIDE ANIMATION
-================================ */
+/* FILTER SLIDE ANIMATION */
 
 .filter-section {
   overflow: hidden;
@@ -579,9 +603,7 @@ html[data-theme="dark"] {
 }
 
 
-/* ===============================
-   MOBILE FIX
-================================ */
+/* MOBILE FIX */
 @media (max-width: 768px) {
 
   .filter-row {
@@ -589,9 +611,7 @@ html[data-theme="dark"] {
   }
 }
 
-/* ===============================
-   MOBILE FILTER MODAL
-================================ */
+/* MOBILE FILTER MODAL */
 
 .filter-modal {
   width: 95%;
@@ -655,9 +675,7 @@ html[data-theme="dark"] {
   }
 }
 
-/* =====================================================
-   MOBILE FILTER MODAL – DESIGN MATCH (MOBILE ONLY)
-===================================================== */
+/* MOBILE FILTER MODAL – DESIGN MATCH (MOBILE ONLY) */
 
 @media (max-width: 768px) {
 
@@ -753,9 +771,7 @@ html[data-theme="dark"] .filter-close-btn:hover {
   background: #1f2933;
 }
 
-/* =====================================================
-   DARK MODE – MOBILE FILTER MODAL
-===================================================== */
+/* DARK MODE – MOBILE FILTER MODAL */
 
 html[data-theme="dark"] #mobileFilterModal .filter-modal {
   background: #020617;

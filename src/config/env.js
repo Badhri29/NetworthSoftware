@@ -1,6 +1,8 @@
 // config/env.js
 const path = require("path");
 require("dotenv").config();
+console.log("DATABASE_URL AT RUNTIME =", process.env.DATABASE_URL);
+
 
 // Absolute root directory of the project
 const ROOT_DIR = path.resolve(__dirname, "..", "..");

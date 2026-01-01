@@ -4,11 +4,8 @@ const { PrismaClient } = require("@prisma/client");
 const router = express.Router();
 const prisma = new PrismaClient();
 
-/* CREATE TRANSACTION */
+/* CREATE TRANSACTION*/
 router.post("/", async (req, res) => {
-  console.log("Authenticated user:", req.user);
-  console.log("Request body:", req.body);
-
   try {
     const {
       date,
@@ -21,7 +18,6 @@ router.post("/", async (req, res) => {
       card
     } = req.body;
 
-    // ✅ Validate required fields
     if (!date || !type || amount === undefined || !paymentMode) {
       return res.status(400).json({
         success: false,
@@ -37,7 +33,6 @@ router.post("/", async (req, res) => {
       });
     }
 
-    // ✅ Create transaction with proper Prisma relation
     const transaction = await prisma.transaction.create({
       data: {
         date: new Date(date),
@@ -48,38 +43,22 @@ router.post("/", async (req, res) => {
         amount: parsedAmount,
         paymentMode,
         card: paymentMode === "credit" ? card || null : null,
-
-        // 🔥 IMPORTANT: correct way to link user
         user: {
-          connect: {
-            id: req.user.id
-          }
+          connect: { id: req.user.id }
         }
       }
     });
 
-    console.log("Transaction created successfully:", transaction);
-
     return res.status(201).json({
       success: true,
-      message: "Transaction created successfully",
       data: transaction
     });
 
   } catch (error) {
-    console.error("Transaction creation failed:", {
-      message: error.message,
-      code: error.code,
-      meta: error.meta,
-      stack: error.stack
-    });
-
+    console.error("Transaction creation failed:", error);
     return res.status(500).json({
       success: false,
-      message: "Failed to create transaction",
-      error: process.env.NODE_ENV !== "production"
-        ? error.message
-        : undefined
+      message: "Failed to create transaction"
     });
   }
 });
@@ -87,13 +66,11 @@ router.post("/", async (req, res) => {
 /* GET TRANSACTIONS FOR LOGGED-IN USER */
 router.get("/", async (req, res) => {
   try {
-    console.log("Fetching transactions for user:", req.user.id);
     const limit = req.query.limit ? Number(req.query.limit) : undefined;
+
     const transactions = await prisma.transaction.findMany({
       where: {
-        user: {
-          id: req.user.id
-        }
+        userId: req.user.id
       },
       orderBy: {
         updatedAt: "desc"
@@ -105,9 +82,9 @@ router.get("/", async (req, res) => {
       success: true,
       data: transactions
     });
+
   } catch (error) {
     console.error("Failed to fetch transactions:", error);
-
     return res.status(500).json({
       success: false,
       message: "Failed to fetch transactions"
@@ -115,28 +92,41 @@ router.get("/", async (req, res) => {
   }
 });
 
-// DELETE transaction by ID
+/* DELETE TRANSACTION (SAFE + USER-SCOPED) */
 router.delete("/:id", async (req, res) => {
   try {
     const id = Number(req.params.id);
 
     if (!id) {
-      return res.status(400).json({ message: "Invalid transaction ID" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid transaction ID"
+      });
     }
 
-    await prisma.transaction.delete({
-      where: { id }
+    const result = await prisma.transaction.deleteMany({
+      where: {
+        id,
+        userId: req.user.id   // 🔐 IMPORTANT
+      }
     });
 
-    res.json({ success: true });
+    if (result.count === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Transaction not found"
+      });
+    }
+
+    return res.json({ success: true });
 
   } catch (err) {
     console.error("Delete transaction failed:", err);
-    res.status(500).json({
+    return res.status(500).json({
+      success: false,
       message: "Failed to delete transaction"
     });
   }
 });
-
 
 module.exports = router;

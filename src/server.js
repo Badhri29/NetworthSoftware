@@ -71,5 +71,6 @@ app.use((err, _req, res, _next) => {
    SERVER START
 ======================= */
 app.listen(PORT, () => {
-  console.log(`Server running on port http://localhost:${PORT}`);
+  const env = process.env.NODE_ENV || "development";
+  console.log(`✓ Server running on port ${PORT} (${env})`);
 });

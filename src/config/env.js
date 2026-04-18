@@ -1,17 +1,28 @@
 // config/env.js
 const path = require("path");
 require("dotenv").config();
-console.log("DATABASE_URL AT RUNTIME =", process.env.DATABASE_URL);
 
+// Validate critical environment variables
+if (!process.env.DATABASE_URL) {
+  console.error("ERROR: DATABASE_URL environment variable is not set!");
+  console.error("Please set DATABASE_URL in your .env file or environment variables.");
+  process.exit(1);
+}
 
 // Absolute root directory of the project
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 
-// Use Railway's dynamic port if available, fallback to 3000 locally
+// Use cloud provider's dynamic port if available, fallback to 8080 locally
 const PORT = process.env.PORT || 8080;
 
-// Use MySQL database URL from environment, no fallback to SQLite
+// Use MySQL database URL from environment
 const DATABASE_URL = process.env.DATABASE_URL;
+
+// Log connection status (without password)
+const dbUrlObj = new URL(DATABASE_URL);
+const dbHost = dbUrlObj.hostname;
+const dbName = dbUrlObj.pathname.replace('/', '');
+console.log(`✓ Database configured: ${dbHost}/${dbName}`);
 
 module.exports = {
   PORT,

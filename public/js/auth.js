@@ -6,10 +6,10 @@ function setAuthMode(mode) {
   authState.mode = mode;
 
   document.getElementById("auth-title").textContent =
-    mode === "login" ? "Login Account" : "Create Account";
+    mode === "login" ? "Login Account " : "Create Account";
 
   document.getElementById("auth-submit").textContent =
-    mode === "login" ? "Sign in" : "Sign up";
+    mode === "login" ? "Click here to Sign in" : "Sign up";
 
   const switchText = document.getElementById("auth-switch-text");
   const switchBtn = document.getElementById("auth-switch-btn");

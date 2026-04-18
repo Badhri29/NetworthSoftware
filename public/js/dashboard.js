@@ -52,20 +52,7 @@ async function loadSummary() {
       data.totalLiabilities
     );
 
-    const tbody = document.getElementById("recent-transactions-body");
-    tbody.innerHTML = "";
-    data.recentTransactions.forEach((tx) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${new Date(tx.date).toLocaleDateString()}</td>
-        <td>${tx.category ? tx.category : "-"}</td>
-        <td class="${
-          tx.type === "INCOME" ? "tag-income" : "tag-expense"
-        }">${tx.type}</td>
-        <td>${formatCurrency(tx.amount)}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+
   } catch (err) {
     console.error('Error loading dashboard summary:', err);
   }

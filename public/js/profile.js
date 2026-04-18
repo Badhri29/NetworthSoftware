@@ -29,17 +29,44 @@
 
   form?.addEventListener('submit', async (ev) => {
     ev.preventDefault();
-    const data = new FormData(form);
-    // Optionally include file upload as FormData. Here we POST to /api/profile
     try {
-      const res = await fetch('/api/profile', { method: 'POST', body: data });
+      // Collect form data
+      const formData = new FormData(form);
+      const body = {
+        name: formData.get('name'),
+        age: formData.get('age'),
+        gender: formData.get('gender'),
+        phone: formData.get('phone'),
+        password: formData.get('password')
+      };
+      
+      const res = await fetch('/api/profile', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      
       if (!res.ok) throw new Error('Failed to save profile');
+      
+      // Handle file upload if image selected
+      const photoFile = document.querySelector('input[type="file"]').files[0];
+      if (photoFile) {
+        const photoForm = new FormData();
+        photoForm.append('photo', photoFile);
+        const photoRes = await fetch('/api/profile/photo', { 
+          method: 'POST', 
+          body: photoForm
+        });
+        if (!photoRes.ok) throw new Error('Failed to upload photo');
+      }
+      
       // success feedback
       close();
       alert('Profile saved');
+      location.reload();
     } catch (err) {
       console.error(err);
-      alert('Error saving profile');
+      alert('Error saving profile: ' + err.message);
     }
   });
 })();

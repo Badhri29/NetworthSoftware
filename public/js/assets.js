@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function refreshAssetsAndLiabilities() {
   const [assetsRes, liabilitiesRes] = await Promise.all([
-    apiRequest("/api/assets"),
-    apiRequest("/api/liabilities"),
+    apiRequest("/api/assets/assets"),
+    apiRequest("/api/assets/liabilities"),
   ]);
   const assets = assetsRes.assets || [];
   const liabilities = liabilitiesRes.liabilities || [];
@@ -99,7 +99,7 @@ function hookAssetForms() {
           throw new Error("Name and value are required.");
         }
         const method = id ? "PUT" : "POST";
-        const url = id ? "/api/assets/" + id : "/api/assets";
+        const url = id ? "/api/assets/assets/" + id : "/api/assets/assets";
         await apiRequest(url, { method, body: JSON.stringify(payload) });
         resetAssetForm();
         await refreshAssetsAndLiabilities();
@@ -127,7 +127,7 @@ function hookAssetForms() {
           throw new Error("Name and value are required.");
         }
         const method = id ? "PUT" : "POST";
-        const url = id ? "/api/liabilities/" + id : "/api/liabilities";
+        const url = id ? "/api/assets/liabilities/" + id : "/api/assets/liabilities";
         await apiRequest(url, { method, body: JSON.stringify(payload) });
         resetLiabilityForm();
         await refreshAssetsAndLiabilities();
@@ -151,7 +151,7 @@ function handleAssetsTableClick(e, assets) {
     }
   } else if (delId) {
     if (!confirm("Delete this asset?")) return;
-    apiRequest("/api/assets/" + delId, { method: "DELETE" })
+    apiRequest("/api/assets/assets/" + delId, { method: "DELETE" })
       .then(() => refreshAssetsAndLiabilities())
       .catch(console.error);
   }
@@ -170,7 +170,7 @@ function handleLiabilitiesTableClick(e, liabilities) {
     }
   } else if (delId) {
     if (!confirm("Delete this liability?")) return;
-    apiRequest("/api/liabilities/" + delId, { method: "DELETE" })
+    apiRequest("/api/assets/liabilities/" + delId, { method: "DELETE" })
       .then(() => refreshAssetsAndLiabilities())
       .catch(console.error);
   }

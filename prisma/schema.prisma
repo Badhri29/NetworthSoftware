@@ -14,9 +14,15 @@ model User {
   email         String        @unique
   password      String
   name          String?
+  age           Int?
+  gender        String?
+  phone         String?
+  photo         String?
   transactions  Transaction[]
   categories    Category[]
   subCategories SubCategory[]
+  assets        Asset[]
+  liabilities   Liability[]
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -90,4 +96,32 @@ model Default_SubCategories {
   category    Default_Categories @relation(fields: [category_id], references: [id])
 
   @@map("Default_SubCategories")
+}
+
+model Asset {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  name      String
+  type      String   // BANK, CASH, INVESTMENT, GOLD, CRYPTO, OTHER
+  value     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("assets")
+}
+
+model Liability {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  name      String
+  type      String   // LOAN, CREDIT_CARD, OTHER
+  value     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("liabilities")
 }

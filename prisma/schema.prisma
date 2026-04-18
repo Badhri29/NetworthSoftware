@@ -1,5 +1,3 @@
-// This is your Prisma schema file
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,17 +12,17 @@ model User {
   email         String        @unique
   password      String
   name          String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   age           Int?
   gender        String?
   phone         String?
   photo         String?
-  transactions  Transaction[]
-  categories    Category[]
-  subCategories SubCategory[]
   assets        Asset[]
+  categories    Category[]
   liabilities   Liability[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  subCategories SubCategory[]
+  transactions  Transaction[]
 
   @@map("users")
 }
@@ -42,24 +40,23 @@ model Transaction {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   userId      Int
-
   user        User     @relation(fields: [userId], references: [id])
 
+  @@index([userId], map: "transactions_userId_fkey")
   @@map("transactions")
 }
 
 model Category {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  type      String
-  name      String
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
+  id            Int           @id @default(autoincrement())
+  userId        Int           @map("user_id")
+  type          String
+  name          String
+  createdAt     DateTime      @default(now())
+  user          User          @relation(fields: [userId], references: [id])
   subCategories SubCategory[]
 
-  @@map("categories")
   @@unique([userId, type, name], name: "userId_type_name")
+  @@map("categories")
 }
 
 model SubCategory {
@@ -68,47 +65,25 @@ model SubCategory {
   categoryId Int      @map("category_id")
   name       String
   createdAt  DateTime @default(now())
+  category   Category @relation(fields: [categoryId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
-  user     User     @relation(fields: [userId], references: [id])
-  category Category @relation(fields: [categoryId], references: [id])
-
-  @@map("sub_categories")
   @@unique([userId, categoryId, name], name: "userId_categoryId_name")
-}
-
-model Default_Categories {
-  id        Int      @id @default(autoincrement())
-  type      String
-  name      String
-  createdAt DateTime @default(now())
-
-  subs      Default_SubCategories[]
-
-  @@map("Default_Categories")
-}
-
-model Default_SubCategories {
-  id          Int      @id @default(autoincrement())
-  category_id Int
-  name        String
-  createdAt   DateTime @default(now())
-
-  category    Default_Categories @relation(fields: [category_id], references: [id])
-
-  @@map("Default_SubCategories")
+  @@index([categoryId], map: "sub_categories_category_id_fkey")
+  @@map("sub_categories")
 }
 
 model Asset {
   id        Int      @id @default(autoincrement())
   userId    Int
   name      String
-  type      String   // BANK, CASH, INVESTMENT, GOLD, CRYPTO, OTHER
+  type      String
   value     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   user      User     @relation(fields: [userId], references: [id])
 
+  @@index([userId], map: "assets_userId_fkey")
   @@map("assets")
 }
 
@@ -116,12 +91,30 @@ model Liability {
   id        Int      @id @default(autoincrement())
   userId    Int
   name      String
-  type      String   // LOAN, CREDIT_CARD, OTHER
+  type      String
   value     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   user      User     @relation(fields: [userId], references: [id])
 
+  @@index([userId], map: "liabilities_userId_fkey")
   @@map("liabilities")
+}
+
+model default_categories {
+  id                    Int                     @id @default(autoincrement())
+  type                  String
+  name                  String
+  createdAt             DateTime                @default(now())
+  default_subcategories default_subcategories[]
+}
+
+model default_subcategories {
+  id                 Int                @id @default(autoincrement())
+  category_id        Int
+  name               String
+  createdAt          DateTime           @default(now())
+  default_categories default_categories @relation(fields: [category_id], references: [id], map: "Default_SubCategories_category_id_fkey")
+
+  @@index([category_id], map: "Default_SubCategories_category_id_fkey")
 }

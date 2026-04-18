@@ -29,6 +29,7 @@ html[data-theme="dark"] {
   width: fit-content;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
+  gap: 0.2rem;
 }
 
 .toggle-btn {
@@ -73,8 +74,36 @@ body[data-theme="dark"] .toggle-btn.active {
   color: #0b1120 !important;
   box-shadow: 0 6px 18px rgba(56, 189, 248, 0.45) !important;
 }
-@media(max-width:768px){
-  .toggle-btn{
-    padding: 0.5rem 1rem;
+
+@media (max-width: 768px) {
+  .view-toggle {
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+    padding: 0.15rem;
+    gap: 0.15rem;
+  }
+
+  .toggle-btn {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .view-toggle {
+    width: 100%;
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+    padding: 0.1rem;
+    justify-content: space-between;
+    gap: 0.1rem;
+  }
+
+  .toggle-btn {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.65rem;
+    border-radius: 10px;
+    flex: 1;
   }
 }

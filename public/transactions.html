@@ -65,11 +65,56 @@
         </button>
       </div>
 
-      <!-- add transection content -->
+      <!-- add transection content with two-column layout -->
       <div class="add-transection-content">
-        <div class="add-section">
+        <!-- Left Side: Accounts Summary -->
+        <div class="add-section accounts-section">
+          <div class="accounts-summary-section">
+            <article class="account-card primary">
+              <div class="account-card-header">
+                <div class="account-card-title">Total Amount</div>
+                <span class="account-card-icon">💼</span>
+              </div>
+              <div id="total-amount-value" class="account-card-value">₹0</div>
+              <div class="account-card-subtitle">Cash + Accounts</div>
+            </article>
+
+            <article class="account-card">
+              <div class="account-card-header">
+                <div class="account-card-title">Cash Balance</div>
+                <span class="account-card-icon">💵</span>
+              </div>
+              <div id="cash-balance-value" class="account-card-value">₹0</div>
+            </article>
+
+            <article class="account-card">
+              <div class="account-card-header">
+                <div class="account-card-title">Account Balance</div>
+                <span class="account-card-icon">🏦</span>
+              </div>
+              <div id="accounts-details" class="account-details">
+                <!-- Populated by JS -->
+              </div>
+              <div id="accounts-total" class="account-total">Total: ₹0</div>
+            </article>
+
+            <article class="account-card">
+              <div class="account-card-header">
+                <div class="account-card-title">Credit Card</div>
+                <span class="account-card-icon">💳</span>
+              </div>
+              <div id="credit-cards-details" class="account-details">
+                <!-- Populated by JS -->
+              </div>
+              <div id="credit-cards-total" class="account-total">Total Due: ₹0</div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Right Side: Form -->
+        <div class="add-section form-section">
           <div class="add-section-heading">
-            <h4>Fill Details</h4>
+            <h4>Add Transactions</h4>
           </div>
           <div class="add-section-content">
             <form id="transaction-form" class="transaction-form">
@@ -170,16 +215,6 @@
               <button type="submit" class="btn-primary">Submit</button>
             </div>
           </div>
-        </div>
-
-        <div class="add-section">
-          <div class="add-section-heading">
-            <h4>Recent Transections</h4>
-          </div>
-          <div class="add-section-content">
-            <div id="recent-transactions-list"></div>
-          </div>
-          <div class="add-section-bottom"></div>
         </div>
       </div>
 

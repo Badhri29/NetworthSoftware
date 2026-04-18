@@ -24,15 +24,11 @@ html[data-theme="dark"] {
 
 /* ------------------------------------add transection toggle content style start----------------------- */
 .add-transection-content {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  /* Reduced from 0.5rem to 10px */
-  margin: 10px 0 0 0;
-  /* Removed top margin, only bottom margin */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 1rem 0 0 0;
   width: 100%;
-  align-items: stretch;
-  /* Changed from center to stretch */
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -41,7 +37,6 @@ html[data-theme="dark"] {
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding-right: 0.6rem;
-  /* padding-bottom: 0.6rem; */
   padding-left: 0.6rem;
   transition: var(--transition);
   width: 100%;
@@ -53,8 +48,39 @@ html[data-theme="dark"] {
   max-height: 800px;
   min-height: 300px;
   overflow: hidden;
-  /* Hide scrollbar */
   margin: 0;
+}
+
+.add-section.accounts-section {
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  height: auto;
+  max-height: none;
+  min-height: auto;
+  overflow: visible;
+}
+
+.add-section.form-section {
+  height: auto;
+  max-height: none;
+}
+
+.add-section-heading {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: inherit;
+  border-bottom: 1px solid #e5e7eb;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+}
+
+.add-section.form-section .add-section-heading {
+  border-bottom: 1px solid var(--border-color);
 }
 
 .add-section::-webkit-scrollbar {
@@ -111,6 +137,7 @@ html[data-theme="dark"] {
   height: 40px;
   display: flex;
   align-items: center;
+  padding-left: 0.5rem;
 }
 
 .add-section-bottom {
@@ -129,21 +156,20 @@ html[data-theme="dark"] {
 
 @media (min-width: 768px) {
   .add-transection-content {
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 0.5rem;
+    grid-template-columns: 1fr 1fr;
   }
 
-  .add-section:first-child {
-    width: 40%;
-  }
-
-  .add-section:last-child {
-    width: 60%;
+  .add-section {
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
+  .add-transection-content {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
   .add-section {
     max-height: 550px;
   }
@@ -151,19 +177,139 @@ html[data-theme="dark"] {
   .add-section-bottom {
     margin-bottom: 1rem;
   }
-
-  /* Only Recent Transactions section */
-  .add-transection-content .add-section:last-child {
-    height: auto !important;
-    /* ✅ remove forced height */
-    max-height: none !important;
-    min-height: unset !important;
-  }
-
-  /* Allow content to size naturally */
-  .add-transection-content .add-section:last-child .add-section-content {
-    overflow: visible;
-  }
 }
 /* ------------------------------------add transection toggle content style stop----------------------- */
+
+/* -------- Accounts Summary Section Styles -------- */
+.accounts-summary-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.account-card {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: var(--transition);
+}
+
+.account-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.account-card.primary {
+  background: linear-gradient(135deg, #4a6cf7 0%, #2a4ac9 100%);
+  color: white;
+  border: none;
+}
+
+.account-card.primary .account-card-title,
+.account-card.primary .account-card-subtitle,
+.account-card.primary .account-card-value {
+  color: white;
+}
+
+.account-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.account-card-title {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-card.primary .account-card-title {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.account-card-icon {
+  font-size: 1.5rem;
+}
+
+.account-card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.account-card-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.account-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.account-detail-item:last-child {
+  border-bottom: none;
+}
+
+.account-detail-label {
+  color: var(--text-secondary);
+}
+
+.account-detail-value {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.account-total {
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .accounts-summary-section {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .account-card {
+    padding: 0.9rem;
+  }
+
+  .account-card-value {
+    font-size: 1.3rem;
+  }
+
+  .account-card-icon {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .accounts-summary-section {
+    grid-template-columns: 1fr;
+  }
+}
 

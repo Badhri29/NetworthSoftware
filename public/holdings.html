@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>NetWorth | Holdings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/components.css" />
+    <link rel="stylesheet" href="/css/pages.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="desktop-sidebar">
+          <!-- sidebar avatar removed per request -->
+        <div class="sidebar-header">
+          <div class="sidebar-menu-text">Menu</div>
+          <button class="sidebar-toggle-btn" id="sidebar-toggle">☰</button>
+        </div>
+        <div class="desktop-sidebar-nav">
+          <a href="/dashboard.html" data-nav-link><span class="icon">🏠</span><span class="nav-text">Dashboard</span></a>
+          <a href="/transactions.html" data-nav-link><span class="icon">📄</span><span class="nav-text">Transactions</span></a>
+          <a href="/holdings.html" data-nav-link><span class="icon">💼</span><span class="nav-text">Holdings</span></a>
+          <a href="/analysis.html" data-nav-link><span class="icon">📊</span><span class="nav-text">Analysis</span></a>
+          <a href="/settings.html" data-nav-link><span class="icon">⚙️</span><span class="nav-text">Settings</span></a>
+          <a href="#" id="logout-btn" class="nav-logout logout-link"><span class="icon">⏻</span><span class="nav-text">Logout</span></a>
+        </div>
+      </aside>
+      <main class="app-main">
+        <header class="app-header">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle">☰</button>
+          <div>
+            <div class="app-title">Holdings</div>
+            <div class="app-subtitle">Manage your assets and liabilities</div>
+          </div>
+          <div style="margin-left:auto; display:flex; align-items:center; gap:0.6rem;">
+            <img id="header-avatar" alt="Profile" style="width:36px;height:36px;border-radius:50%;object-fit:cover;display:none" />
+            <span id="header-username" style="font-weight:600; color:var(--muted); display:none"></span>
+          </div>
+        </header>
+
+        <section class="grid-cards" style="margin-top:0.6rem">
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Holdings</div>
+            </div>
+            <div id="holdings-networth" class="card-value">$0.00</div>
+          </article>
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Total Assets</div>
+            </div>
+            <div id="holdings-total" class="card-value">$0.00</div>
+          </article>
+          <article class="card">
+            <div class="card-header">
+              <div class="card-title">Total Liabilities</div>
+            </div>
+            <div id="liabilities-total" class="card-value">$0.00</div>
+          </article>
+          
+        </section>
+
+        <section class="holdings-section">
+          <article class="card">
+            <!-- Tab Navigation -->
+            <div class="holdings-tabs-container">
+              <button class="tab-btn-primary active" id="assets-tab-btn" data-tab="assets">Assets</button>
+              <button class="tab-btn-primary" id="liabilities-tab-btn" data-tab="liabilities">Liabilities</button>
+              <button class="btn-add-new" id="add-new-btn" style="margin-left: auto;">+ Add New Asset</button>
+            </div>
+
+            <!-- Assets Tab Content -->
+            <div id="assets-tab" class="tab-content active" style="padding: 1.5rem 0;">
+              <!-- Hidden Form -->
+              <form id="holding-form" class="holdings-form" style="display:none; margin-bottom: 1.5rem;">
+                <div class="form-overlay">
+                  <div class="form-container">
+                    <div class="form-header">
+                      <h3>Add New Asset</h3>
+                      <button type="button" class="form-close-btn" id="form-close-btn">✕</button>
+                    </div>
+                    
+                    <input type="hidden" id="holding-id" />
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="holding-name">Asset Name</label>
+                        <input id="holding-name" type="text" placeholder="e.g., Savings Account" required />
+                      </div>
+                      <div class="field">
+                        <label for="holding-type">Category</label>
+                        <select id="holding-type" required>
+                          <option value="BANK">Bank</option>
+                          <option value="CASH">Cash</option>
+                          <option value="INVESTMENT">Investment</option>
+                          <option value="GOLD">Gold</option>
+                          <option value="CRYPTO">Crypto</option>
+                          <option value="OTHER">Other</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="holding-value">Value (₹)</label>
+                        <input id="holding-value" type="number" step="0.01" placeholder="50000" required />
+                      </div>
+                    </div>
+                    <div id="holding-error" class="banner-error" style="display:none; margin-bottom: 1rem;"></div>
+                    <div class="form-actions">
+                      <button type="button" class="btn btn-secondary" id="holding-cancel-btn">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Add Asset</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <!-- Data Table -->
+              <div class="transactions-list">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Asset Name</th>
+                      <th>Category</th>
+                      <th>Value</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="holdings-body"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Liabilities Tab Content -->
+            <div id="liabilities-tab" class="tab-content" style="padding: 1.5rem 0;">
+              <!-- Hidden Form -->
+              <form id="liability-form" class="holdings-form" style="display:none; margin-bottom: 1.5rem;">
+                <div class="form-overlay">
+                  <div class="form-container">
+                    <div class="form-header">
+                      <h3>Add New Liability</h3>
+                      <button type="button" class="form-close-btn" id="form-close-liability-btn">✕</button>
+                    </div>
+                    
+                    <input type="hidden" id="liability-id" />
+                    <div class="form-grid">
+                      <div class="field">
+                        <label for="liability-name">Liability Name</label>
+                        <input id="liability-name" type="text" placeholder="e.g., Car Loan" required />
+                      </div>
+                      <div class="field">
+                        <label for="liability-type">Category</label>
+                        <select id="liability-type" required>
+                          <option value="LOAN">Loan</option>
+                          <option value="CREDIT_CARD">Credit card</option>
+                          <option value="OTHER">Other</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label for="liability-value">Value (₹)</label>
+                        <input id="liability-value" type="number" step="0.01" placeholder="25000" required />
+                      </div>
+                    </div>
+                    <div id="liability-error" class="banner-error" style="display:none; margin-bottom: 1rem;"></div>
+                    <div class="form-actions">
+                      <button type="button" class="btn btn-secondary" id="liability-cancel-btn">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Add Liability</button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+
+              <!-- Data Table -->
+              <div class="transactions-list">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Liability Name</th>
+                      <th>Category</th>
+                      <th>Value</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="liabilities-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="/dashboard.html" data-nav-link>
+          <span class="bottom-nav-icon">🏠</span>
+          <span>Home</span>
+        </a>
+        <a href="/transactions.html" data-nav-link>
+          <span class="bottom-nav-icon">📄</span>
+          <span>Transactions</span>
+        </a>
+        <a href="/holdings.html" data-nav-link>
+          <span class="bottom-nav-icon">💼</span>
+          <span>Holdings</span>
+        </a>
+        <a href="/analysis.html" data-nav-link>
+          <span class="bottom-nav-icon">📊</span>
+          <span>Analysis</span>
+        </a>
+        <a href="/settings.html" data-nav-link>
+          <span class="bottom-nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+        <a href="#" class="bottom-logout logout-link" style="display:flex; align-items:center; gap:0.4rem; justify-content:center;">
+          <span class="bottom-nav-icon">⏻</span>
+          <span style="color:#c62828; font-weight:600">Logout</span>
+        </a>
+      </nav>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/ui.js"></script>
+    <script src="/js/holdings.js"></script>
+  </body>
+</html>
+
+

@@ -16,7 +16,7 @@ A comprehensive personal finance management application built with a modern tech
 - Transaction history with detailed views
 
 ### Asset & Liability Tracking
-- Monitor all financial assets (savings, investments, property)
+- Monitor all financial holdings (savings, investments, property)
 - Track liabilities (loans, credit cards, mortgages)
 - Real-time net worth calculation
 
@@ -140,7 +140,7 @@ The app will start on `http://localhost:3000` by default.
   - `auth.js` – `/api/auth/register`, `/login`, `/logout`, `/me`, `/change-password`
   - `categories.js` – `/api/categories`, `/api/subcategories`
   - `transactions.js` – `/api/transactions` CRUD, filters, search
-  - `assets.js` – `/api/assets`, `/api/liabilities`
+  - `assets.js` – `/api/holdings/assets`, `/api/holdings/liabilities`
   - `dashboard.js` – `/api/dashboard/*` analytics & summaries
 - `prisma/schema.prisma` – SQLite datasource + models
 - `public/` – static frontend (HTML/CSS/JS)
@@ -154,7 +154,7 @@ All pages are served statically from `public/`:
 - `index.html` – Login & Register screen
 - `dashboard.html` – Overall dashboard (net worth, assets, liabilities, charts, recent transactions)
 - `transactions.html` – Transactions list with filters (date, type, category, text search) and inline add/edit form
-- `assets.html` – Assets & liabilities management with totals and computed net worth
+- `holdings.html` – Holdings & liabilities management with totals and computed net worth
 - `analysis.html` – Monthly charts for income vs expenses, savings, and top 5 spending categories
 - `settings.html` – Account info and password change form
 
@@ -171,7 +171,7 @@ Shared styles and scripts:
   - `js/auth.js` – login/register switching and form handling
   - `js/dashboard.js` – dashboard data + net worth & income/expense charts
   - `js/transactions.js` – transactions table, filters, add/edit/delete
-  - `js/assets.js` – assets/liabilities CRUD and totals computation
+  - `js/holdings.js` – holdings/liabilities CRUD and totals computation
   - `js/analysis.js` – monthly income/expenses/savings + top category charts
   - `js/settings.js` – current user display and change-password flow
 

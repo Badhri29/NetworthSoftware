@@ -5,9 +5,9 @@ const { requireFields } = require("../middleware/validation");
 const router = express.Router();
 const prisma = new PrismaClient();
 
-/* ========== ASSETS ROUTES ========== */
+/* ========== HOLDINGS ROUTES ========== */
 
-/* GET ALL ASSETS */
+/* GET ALL HOLDINGS */
 router.get("/assets", async (req, res) => {
   try {
     const assets = await prisma.asset.findMany({
@@ -21,7 +21,7 @@ router.get("/assets", async (req, res) => {
   }
 });
 
-/* CREATE ASSET */
+/* CREATE HOLDING */
 router.post(
   "/assets",
   requireFields(["name", "type", "value"]),
@@ -29,7 +29,7 @@ router.post(
     try {
       const { name, type, value } = req.body;
       if (!["BANK", "CASH", "INVESTMENT", "GOLD", "CRYPTO", "OTHER"].includes(type)) {
-        return res.status(400).json({ success: false, error: "Invalid asset type" });
+        return res.status(400).json({ success: false, error: "Invalid holding type" });
       }
 
       const asset = await prisma.asset.create({
@@ -43,13 +43,13 @@ router.post(
 
       res.status(201).json({ asset });
     } catch (err) {
-      console.error("Create asset error:", err);
+      console.error("Create holding error:", err);
       res.status(500).json({ success: false, error: "Internal server error" });
     }
   }
 );
 
-/* UPDATE ASSET */
+/* UPDATE HOLDING */
 router.put(
   "/assets/:id",
   requireFields(["name", "type", "value"]),
@@ -59,16 +59,16 @@ router.put(
       const { name, type, value } = req.body;
 
       if (!["BANK", "CASH", "INVESTMENT", "GOLD", "CRYPTO", "OTHER"].includes(type)) {
-        return res.status(400).json({ success: false, error: "Invalid asset type" });
+        return res.status(400).json({ success: false, error: "Invalid holding type" });
       }
 
-      // Check if asset exists and belongs to user
+      // Check if holding exists and belongs to user
       const existing = await prisma.asset.findFirst({
         where: { id, userId: req.user.id }
       });
 
       if (!existing) {
-        return res.status(404).json({ success: false, error: "Asset not found" });
+        return res.status(404).json({ success: false, error: "Holding not found" });
       }
 
       const updated = await prisma.asset.update({
@@ -82,24 +82,24 @@ router.put(
 
       res.json({ asset: updated });
     } catch (err) {
-      console.error("Update asset error:", err);
+      console.error("Update holding error:", err);
       res.status(500).json({ success: false, error: "Internal server error" });
     }
   }
 );
 
-/* DELETE ASSET */
+/* DELETE HOLDING */
 router.delete("/assets/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
 
-    // Check if asset exists and belongs to user
+    // Check if holding exists and belongs to user
     const existing = await prisma.asset.findFirst({
       where: { id, userId: req.user.id }
     });
 
     if (!existing) {
-      return res.status(404).json({ success: false, error: "Asset not found" });
+      return res.status(404).json({ success: false, error: "Holding not found" });
     }
 
     await prisma.asset.delete({
@@ -108,7 +108,7 @@ router.delete("/assets/:id", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("Delete asset error:", err);
+    console.error("Delete holding error:", err);
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 });

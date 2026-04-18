@@ -98,7 +98,388 @@
   transform: translateX(24px);
 }
 
-/* Light theme overrides for the toggle */
+/* Holdings Tab Styles */
+.holdings-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.tab-btn-primary {
+  padding: 0.6rem 1.2rem;
+  background-color: #e0e7ff;
+  border: none;
+  border-radius: 8px;
+  color: #4f46e5;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab-btn-primary:hover {
+  background-color: #c7d2fe;
+}
+
+.tab-btn-primary.active {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.btn-add-new {
+  padding: 0.6rem 1.2rem;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add-new:hover {
+  background-color: #4338ca;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Holdings Form Modal Styles */
+.holdings-form {
+  display: none;
+}
+
+.holdings-form.show {
+  display: block;
+}
+
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e5e7eb;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1001;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.form-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #111827;
+}
+
+.form-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-close-btn:hover {
+  color: var(--color-text);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-grid .field:nth-child(3) {
+  grid-column: 1 / 2;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: flex-end;
+}
+
+.form-actions .btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+}
+
+/* Table ID Column */
+.table tbody td:first-child {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  width: 50px;
+}
+
+.table thead th:first-child {
+  width: 50px;
+}
+
+/* Form Action Buttons */
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.form-actions button {
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.form-actions .btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.form-actions .btn-primary:hover {
+  background-color: #4338ca;
+}
+
+.form-actions .btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--color-text);
+  border: 1px solid var(--border-color);
+}
+
+.form-actions .btn-secondary:hover {
+  background-color: var(--bg-tertiary);
+}
+
+/* Responsive Modal Form */
+@media (max-width: 768px) {
+  .form-container {
+    max-width: 95%;
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid .field:nth-child(3) {
+    grid-column: 1;
+  }
+
+  .form-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .form-actions .btn {
+    width: 100%;
+  }
+
+  .holdings-tabs-container {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .tab-btn-primary {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .btn-add-new {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .grid-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .table {
+    font-size: 0.85rem;
+  }
+
+  .table thead th {
+    padding: 0.6rem 0.4rem;
+  }
+
+  .table tbody td {
+    padding: 0.6rem 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    max-width: 100%;
+    padding: 1.2rem;
+  }
+
+  .form-header h3 {
+    font-size: 1rem;
+  }
+
+  .form-header {
+    margin-bottom: 1rem;
+  }
+
+  .form-grid {
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .field label {
+    font-size: 0.85rem;
+  }
+
+  .field input,
+  .field select {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .form-actions {
+    gap: 0.4rem;
+  }
+
+  .form-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-add-new {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.8rem;
+  }
+
+  .tab-btn-primary {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .holdings-tabs-container {
+    margin-bottom: 1rem;
+  }
+
+  .table {
+    font-size: 0.75rem;
+  }
+
+  .table tbody td:last-child,
+  .table thead th:last-child {
+    min-width: 60px;
+  }
+}
+
+/* Enhanced Error Message Display */
+.banner-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #dc2626;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: block !important;
+}
+
+.holdings-form .banner-error {
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Form field styling */
+.form-grid .field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-grid .field label {
+  color: #374151;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-grid .field input,
+.form-grid .field select {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #1f2937;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-grid .field input::placeholder {
+  color: #9ca3af;
+}
+
+.form-grid .field input:focus,
+.form-grid .field select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background-color: #ffffff;
+}
 :root[data-theme="light"] .slider {
   background-color: #cbd5e1;
 }

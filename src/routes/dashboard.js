@@ -21,21 +21,41 @@ router.get("/summary", async (req, res) => {
       }),
       prisma.transaction.findMany({
         where: { userId },
-        orderBy: { updatedAt: "desc" },
-        take: 10
+        orderBy: { updatedAt: "desc" }
       })
     ]);
 
-    // Calculate totals
-    const totalAssets = assets.reduce((sum, a) => sum + Number(a.value || 0), 0);
-    const totalLiabilities = liabilities.reduce((sum, l) => sum + Number(l.value || 0), 0);
+    // Calculate asset totals
+    const assetValue = assets.reduce((sum, a) => sum + Number(a.value || 0), 0);
+    const liabilityValue = liabilities.reduce((sum, l) => sum + Number(l.value || 0), 0);
+
+    // Calculate transaction totals
+    let incomeTotal = 0;
+    let expenseTotal = 0;
+
+    transactions.forEach((tx) => {
+      if (tx.type === "INCOME") {
+        incomeTotal += Number(tx.amount || 0);
+      } else if (tx.type === "EXPENSE") {
+        expenseTotal += Number(tx.amount || 0);
+      }
+    });
+
+    // Total assets = physical assets + income
+    const totalAssets = assetValue + incomeTotal;
+    // Total liabilities = physical liabilities + expenses
+    const totalLiabilities = liabilityValue + expenseTotal;
+    // Net worth = total assets - total liabilities
     const netWorth = totalAssets - totalLiabilities;
+
+    // Get recent 10 transactions
+    const recentTransactions = transactions.slice(0, 10);
 
     res.json({
       totalAssets,
       totalLiabilities,
       netWorth,
-      recentTransactions: transactions
+      recentTransactions
     });
   } catch (err) {
     console.error("Dashboard summary error:", err);

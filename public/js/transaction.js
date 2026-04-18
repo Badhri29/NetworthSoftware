@@ -708,6 +708,12 @@ async function confirmDeleteTransaction() {
     closeDeleteModal();
     applyTransactionFilters();
 
+    // Notify dashboard to refresh
+    localStorage.setItem('transactionsUpdated', new Date().toISOString());
+    
+    // Broadcast custom event for same-tab updates
+    window.dispatchEvent(new CustomEvent('transactionsChanged'));
+
   } catch (err) {
     console.error("Delete failed:", err);
     alert("Failed to delete transaction. Please try again.");
@@ -1020,6 +1026,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       closeModal();
       resetForm();
       await loadRecentTransactions();
+      await loadAllTransactions();
+
+      // Notify other pages (and self if needed)
+      console.log('Dispatching transactionsChanged event...');
+      localStorage.setItem('transactionsUpdated', new Date().toISOString());
+      
+      // Broadcast custom event for same-tab updates
+      window.dispatchEvent(new CustomEvent('transactionsChanged'));
+      console.log('Event dispatched!');
 
       // Optional: Refresh transactions list if needed
       if (typeof loadTransactions === 'function') {

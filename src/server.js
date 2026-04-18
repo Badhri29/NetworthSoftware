@@ -11,7 +11,7 @@ const { attachUserIfPresent, requireAuth } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const categoriesRoutes = require("./routes/categories");
 const transactionsRoutes = require("./routes/transactions.js");
-const assetsRoutes = require("./routes/assets");
+const holdingsRoutes = require("./routes/holdings");
 const dashboardRoutes = require("./routes/dashboard");
 const profileRoutes = require("./routes/profile");
 
@@ -45,7 +45,7 @@ app.use("/api", requireAuth);
 
 app.use("/api/categories", categoriesRoutes);
 app.use("/api/transactions", transactionsRoutes);
-app.use("/api/assets", assetsRoutes);
+app.use("/api/holdings", holdingsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/profile", profileRoutes);
 

@@ -288,28 +288,101 @@ html[data-theme="dark"] {
 
 @media (max-width: 768px) {
   .accounts-summary-section {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-    margin-top: 0.8rem;
-    margin-bottom: 0.8rem;
+    gap: 0.5rem;
+    margin: 0;
   }
 
   .account-card {
-    padding: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .account-card-header {
+    margin-bottom: 0.4rem;
+  }
+
+  .account-card-title {
+    font-size: 0.7rem;
   }
 
   .account-card-value {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
 
   .account-card-icon {
-    font-size: 1.2rem;
+    font-size: 1rem;
+  }
+
+  .account-card-subtitle {
+    font-size: 0.65rem;
+  }
+
+  .account-details {
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .account-detail-item {
+    font-size: 0.8rem;
+    padding: 0.15rem 0;
+  }
+
+  .account-total {
+    padding-top: 0.3rem;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   .accounts-summary-section {
-    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .account-card {
+    padding: 0.6rem;
+    border-radius: 8px;
+  }
+
+  .account-card-header {
+    margin-bottom: 0.3rem;
+  }
+
+  .account-card-title {
+    font-size: 0.65rem;
+  }
+
+  .account-card-value {
+    font-size: 0.95rem;
+  }
+
+  .account-card-icon {
+    font-size: 0.9rem;
+  }
+
+  .account-card-subtitle {
+    font-size: 0.6rem;
+  }
+
+  .account-details {
+    gap: 0.2rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .account-detail-item {
+    font-size: 0.75rem;
+    padding: 0.1rem 0;
+  }
+
+  .account-total {
+    padding-top: 0.2rem;
+    font-size: 0.75rem;
+  }
+
+  .add-transection-content {
+    flex-direction: column;
+  }
+
+  .add-section.accounts-section {
+    flex-wrap: wrap;
   }
 }
 
